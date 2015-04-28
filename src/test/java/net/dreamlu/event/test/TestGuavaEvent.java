@@ -13,6 +13,7 @@ public class TestGuavaEvent {
 		// 创建一个异步的消息
 		EventBus bus = new AsyncEventBus(Executors.newFixedThreadPool(3));
 
+		// Listener 的方法上注入 @Subscribe
 		bus.register(new Test1Listener());
 		bus.register(new Test2Listener());
 		bus.register(new Test3Listener());

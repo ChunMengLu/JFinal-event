@@ -2,8 +2,6 @@ package net.dreamlu.event.core;
 
 import java.util.EventListener;
 
-import com.google.common.eventbus.Subscribe;
-
 /**
  * Interface to be implemented by application event listeners.
  * Based on the standard {@code java.util.EventListener} interface
@@ -25,7 +23,6 @@ public interface ApplicationListener<E extends ApplicationEvent> extends EventLi
 	 * Handle an application event.
 	 * @param event the event to respond to
 	 */
-	@Subscribe
 	void onApplicationEvent(E event);
 
 }
