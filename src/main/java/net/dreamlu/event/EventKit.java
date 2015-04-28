@@ -12,10 +12,10 @@ import net.dreamlu.event.core.ApplicationEvent;
  */
 public class EventKit {
 
-	private static EventHander hander;
+	private static EventHandler handler;
 
-	static void init(EventHander hander) {
-		EventKit.hander = hander;
+	static void init(EventHandler handler) {
+		EventKit.handler = handler;
 	}
 
 	/**
@@ -23,6 +23,6 @@ public class EventKit {
 	 * @param event
 	 */
 	public static void postEvent(ApplicationEvent event) {
-		hander.postEvent(event);
+		handler.postEvent(event);
 	}
 }

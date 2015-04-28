@@ -17,12 +17,12 @@ import com.google.common.collect.Multimap;
  * @date 2015年4月26日下午10:02:46
  */
 @SuppressWarnings("rawtypes")
-public class EventHander {
+public class EventHandler {
 
 	private final Multimap<Type, ApplicationListener> map;
 	private final ExecutorService pool;
 
-	public EventHander(Multimap<Type, ApplicationListener> map,
+	public EventHandler(Multimap<Type, ApplicationListener> map,
 			ExecutorService pool) {
 		super();
 		this.map = map;

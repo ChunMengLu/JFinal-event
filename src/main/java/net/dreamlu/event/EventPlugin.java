@@ -32,7 +32,7 @@ public class EventPlugin implements IPlugin {
 	// guava重复key的map，使用监听的type，取出所有的监听器
 	private final Multimap<Type, ApplicationListener> map;
 	// 事件处理器
-	private EventHander hander = null;
+	private EventHandler handler = null;
 	private ExecutorService pool = null;
 	
 	/**
@@ -77,8 +77,8 @@ public class EventPlugin implements IPlugin {
 			listener = BeanUtils.newInstance(clazz);
 			map.put(type, listener);
 		}
-		hander = new EventHander(map, pool);
-		EventKit.init(hander);
+		handler = new EventHandler(map, pool);
+		EventKit.init(handler);
 		return true;
 	}
 
@@ -90,7 +90,7 @@ public class EventPlugin implements IPlugin {
 			pool.shutdown();
 		}
 		pool = null;
-		hander = null;
+		handler = null;
 		return true;
 	}
 
