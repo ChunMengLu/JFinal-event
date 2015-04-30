@@ -17,7 +17,7 @@ import com.google.common.collect.Multimap;
  * @date 2015年4月26日下午10:02:46
  */
 @SuppressWarnings("rawtypes")
-public class EventHandler {
+class EventHandler {
 
 	private final Multimap<Type, ApplicationListener> map;
 	private final ExecutorService pool;
