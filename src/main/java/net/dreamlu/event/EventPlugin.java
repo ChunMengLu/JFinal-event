@@ -20,7 +20,7 @@ import com.jfinal.plugin.IPlugin;
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
- * @date 2015年4月26日下午10:25:04
+ * date 2015年4月26日下午10:25:04
  */
 @SuppressWarnings("rawtypes")
 public class EventPlugin implements IPlugin {
@@ -45,7 +45,8 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 异步，默认创建3个线程
-	 * @return
+	 * @param nThreads 默认线程池的容量
+	 * @return EventPlugin
 	 */
 	public EventPlugin asyn(int... nThreads) {
 		pool = Executors.newFixedThreadPool(nThreads.length==0 ? 3 : nThreads[0]);
@@ -54,8 +55,8 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 添加监听
-	 * @param listener
-	 * @return
+	 * @param listener 添加监听器
+	 * @return EventPlugin
 	 */
 	public EventPlugin addListener(Class<? extends ApplicationListener> listener) {
 		allListeners.add(listener);

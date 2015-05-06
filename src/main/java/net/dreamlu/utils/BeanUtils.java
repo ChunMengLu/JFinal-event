@@ -5,7 +5,7 @@ package net.dreamlu.utils;
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
- * @date 2015年4月26日下午5:10:42
+ * date 2015年4月26日下午5:10:42
  */
 public class BeanUtils {
 

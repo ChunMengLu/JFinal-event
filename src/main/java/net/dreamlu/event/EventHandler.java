@@ -14,7 +14,7 @@ import com.google.common.collect.Multimap;
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
- * @date 2015年4月26日下午10:02:46
+ * date 2015年4月26日下午10:02:46
  */
 @SuppressWarnings("rawtypes")
 class EventHandler {
@@ -31,7 +31,7 @@ class EventHandler {
 
 	/**
 	 * 执行发送消息
-	 * @param event
+	 * @param event ApplicationEvent
 	 */
 	@SuppressWarnings("unchecked")
 	public void postEvent(final ApplicationEvent event) {

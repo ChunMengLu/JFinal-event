@@ -8,7 +8,7 @@ import net.dreamlu.event.core.ApplicationEvent;
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
- * @date 2015年4月26日下午9:58:53
+ * date 2015年4月26日下午9:58:53
  */
 public class EventKit {
 
@@ -20,7 +20,7 @@ public class EventKit {
 
 	/**
 	 * 发布事件
-	 * @param event
+	 * @param event zhe ApplicationEvent
 	 */
 	public static void postEvent(ApplicationEvent event) {
 		handler.postEvent(event);
