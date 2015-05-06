@@ -8,10 +8,11 @@ EventPlugin plugin = new EventPlugin();
 // 设置为异步
 plugin.asyn();
 
-// 添加监听器
-plugin.addListener(Test1Listener.class);
-plugin.addListener(Test2Listener.class);
-plugin.addListener(Test3Listener.class);
+// 设置扫描jar包，默认不扫描
+plugin.scanJar();
+// 设置默认扫描的包命，默认全扫描
+plugin.scanPackage("net.dreamlu");
+
 
 // 启动插件
 plugin.start();

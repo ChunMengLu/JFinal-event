@@ -11,10 +11,10 @@ public class TestEventPlugin {
 		// 设置为异步
 		plugin.asyn();
 
-		// 添加监听器
-		plugin.addListener(Test1Listener.class);
-		plugin.addListener(Test2Listener.class);
-		plugin.addListener(Test3Listener.class);
+		// 设置扫描jar包，默认不扫描
+		plugin.scanJar();
+		// 设置默认扫描的包命，默认全扫描
+		plugin.scanPackage("net.dreamlu");
 
 		// 启动插件
 		plugin.start();
@@ -36,4 +36,5 @@ public class TestEventPlugin {
 //	https://github.com/spring-projects/spring-framework/blob/master/spring-context/src/main/java/org/springframework/context/event/AbstractApplicationEventMulticaster.java
 //	https://github.com/spring-projects/spring-framework/blob/master/spring-context/src/main/java/org/springframework/context/event/SimpleApplicationEventMulticaster.java
 
+//	Class 扫描：http://www.oschina.net/news/62178/hutool-2-8-1
 }
