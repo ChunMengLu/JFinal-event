@@ -32,6 +32,14 @@ plugin.stop();
 
 使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
+## Maven
+依赖`guava.java`，`v0.1`已上传到maven仓库~
+```
+<groupId>net.dreamlu</groupId>
+<artifactId>JFinal-event</artifactId>
+<version>0.1</version>
+```
+
 欢迎拍砖~~~
 
 ## 交流群
