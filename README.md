@@ -8,10 +8,11 @@ EventPlugin plugin = new EventPlugin();
 // 设置为异步
 plugin.asyn();
 
-// 添加监听器
-plugin.addListener(Test1Listener.class);
-plugin.addListener(Test2Listener.class);
-plugin.addListener(Test3Listener.class);
+// 设置扫描jar包，默认不扫描
+plugin.scanJar();
+// 设置默认扫描的包命，默认全扫描
+plugin.scanPackage("net.dreamlu");
+
 
 // 启动插件
 plugin.start();
@@ -30,6 +31,14 @@ plugin.stop();
 依赖: `guava.java` 多key的map，储存监听器，一个事件多个监听器监听！
 
 使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
+
+## Maven
+依赖`guava.java`，`v0.1`已上传到maven仓库~
+```
+<groupId>net.dreamlu</groupId>
+<artifactId>JFinal-event</artifactId>
+<version>0.1</version>
+```
 
 欢迎拍砖~~~
 
