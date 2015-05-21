@@ -5,13 +5,14 @@ package net.dreamlu.utils;
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
- * @date 2015年4月26日下午5:10:42
+ * date 2015年4月26日下午5:10:42
  */
 public class BeanUtil {
 
 	/**
 	 * 实例化对象
 	 * @param clazz 类
+	 * @param <T> type parameter
 	 * @return 对象
 	 */
 	@SuppressWarnings("unchecked")
@@ -26,6 +27,7 @@ public class BeanUtil {
 	/**
 	 * 实例化对象
 	 * @param clazz 类名
+	 * @param <T> type parameter
 	 * @return 对象
 	 */
 	@SuppressWarnings("unchecked")

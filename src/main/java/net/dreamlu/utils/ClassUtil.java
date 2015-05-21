@@ -45,6 +45,7 @@ public final class ClassUtil {
 	/**
 	 * 扫描指定包路径下所有包含指定注解的类
 	 * @param packageName 包路径
+	 * @param inJar 在jar包中查找
 	 * @param annotationClass 注解类
 	 * @return 类集合
 	 */
@@ -60,6 +61,7 @@ public final class ClassUtil {
 	/**
 	 * 扫描指定包路径下所有指定类的子类
 	 * @param packageName 包路径
+	 * @param inJar 在jar包中查找
 	 * @param superClass 父类 
 	 * @return 类集合
 	 */
@@ -73,11 +75,12 @@ public final class ClassUtil {
 	}
 
 	/**
-	 * 扫面包路径下满足class过滤器条件的所有class文件，</br> 
-	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException</br>
-	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改</br>
+	 * 扫面包路径下满足class过滤器条件的所有class文件
+	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException
+	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改
 	 * 
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
+	 * @param inJar 在jar包中查找
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
 	 */
@@ -138,7 +141,7 @@ public final class ClassUtil {
 	}
 
 	/**
-	 * 获得class loader<br>
+	 * 获得class loader
 	 * 若当前线程class loader不存在，取当前类的class loader
 	 * @return 类加载器
 	 */
@@ -152,7 +155,7 @@ public final class ClassUtil {
 
 	//--------------------------------------------------------------------------------------------------- Private method start
 	/** 
-	 * 文件过滤器，过滤掉不需要的文件<br>
+	 * 文件过滤器，过滤掉不需要的文件
 	 * 只保留Class文件、目录和Jar
 	 */
 	private static FileFilter fileFilter = new FileFilter(){
@@ -163,7 +166,7 @@ public final class ClassUtil {
 	};
 
 	/**
-	 * 改变 com -> com. 避免在比较的时候把比如 completeTestSuite.class类扫描进去，如果没有"."</br>
+	 * 改变 com -> com. 避免在比较的时候把比如 completeTestSuite.class类扫描进去，如果没有"."
 	 * 那class里面com开头的class类也会被扫描进去,其实名称后面或前面需要一个 ".",来添加包的特征
 	 * 
 	 * @param packageName
@@ -188,7 +191,7 @@ public final class ClassUtil {
 	}
 
 	/**
-	 * 填充满足条件的class 填充到 classes<br>
+	 * 填充满足条件的class 填充到 classes
 	 * 同时会判断给定的路径是否为Jar包内的路径，如果是，则扫描此Jar包
 	 * 
 	 * @param path Class文件路径或者所在目录Jar包路径
@@ -343,7 +346,7 @@ public final class ClassUtil {
 	//--------------------------------------------------------------------------------------------------- Private method end
 
 	/**
-	 * 类过滤器，用于过滤不需要加载的类<br>
+	 * 类过滤器，用于过滤不需要加载的类
 	 */
 	public interface ClassFilter {
 		boolean accept(Class<?> clazz);
