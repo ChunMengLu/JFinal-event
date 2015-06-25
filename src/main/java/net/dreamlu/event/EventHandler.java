@@ -6,8 +6,7 @@ import java.util.concurrent.ExecutorService;
 
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.event.core.ApplicationListener;
-
-import com.google.common.collect.Multimap;
+import net.dreamlu.utils.ArrayListMultimap;
 
 /**
  * 事件实际处理的类
@@ -19,10 +18,10 @@ import com.google.common.collect.Multimap;
 @SuppressWarnings("rawtypes")
 class EventHandler {
 
-	private final Multimap<Type, ApplicationListener> map;
+	private final ArrayListMultimap<Type, ApplicationListener> map;
 	private final ExecutorService pool;
 
-	public EventHandler(Multimap<Type, ApplicationListener> map,
+	public EventHandler(ArrayListMultimap<Type, ApplicationListener> map,
 			ExecutorService pool) {
 		super();
 		this.map = map;

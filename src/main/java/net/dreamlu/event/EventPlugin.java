@@ -9,11 +9,10 @@ import java.util.concurrent.Executors;
 
 import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.event.core.Listener;
+import net.dreamlu.utils.ArrayListMultimap;
 import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.jfinal.log.Logger;
 import com.jfinal.plugin.IPlugin;
 
@@ -32,7 +31,7 @@ public class EventPlugin implements IPlugin {
 	// 转载所有的监听器，set排重
 	private final Set<Class<? extends ApplicationListener>> allListeners;
 	// guava重复key的map，使用监听的type，取出所有的监听器
-	private final Multimap<Type, ApplicationListener> map;
+	private final ArrayListMultimap<Type, ApplicationListener> map;
 	// 事件处理器
 	private EventHandler handler = null;
 	private ExecutorService pool = null;
@@ -47,7 +46,7 @@ public class EventPlugin implements IPlugin {
 	 */
 	public EventPlugin() {
 		this.allListeners = new LinkedHashSet<Class<? extends ApplicationListener>>();
-		this.map = ArrayListMultimap.create();
+		this.map = new ArrayListMultimap<Type, ApplicationListener>();
 	}
 
 	/**
@@ -55,7 +54,7 @@ public class EventPlugin implements IPlugin {
 	 * @param nThreads 默认线程池的容量
 	 * @return EventPlugin
 	 */
-	public EventPlugin asyn(int... nThreads) {
+	public EventPlugin async(int... nThreads) {
 		this.pool = Executors.newFixedThreadPool(nThreads.length==0 ? 3 : nThreads[0]);
 		return this;
 	}

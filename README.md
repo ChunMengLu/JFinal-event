@@ -33,18 +33,32 @@ plugin.stop();
 使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
 ## Maven
-依赖`guava.java`，`v0.2、v0.1`已上传到maven仓库~
+`v0.3`除了JFinal，不依赖任何jar包
+
+`v0.2、v0.1`依赖`guava.java`
+
+以上版本均已上传到maven仓库~
+
 ```
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
+## 更新说明
+>## 2015-06-25 v0.3
+>1. 去除`guava.java`依赖
+>2. 更改EventPlugin `asyn`方法为`async`
+
+>## 2015-05-21 v0.2
+>1. 添加@Listener注解，方便使用
+
 ## 交流群
+如梦技术：`237587118`
 
 JFinal-bbs: `206034609`
 
