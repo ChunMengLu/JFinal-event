@@ -6,7 +6,7 @@
 // 初始化插件
 EventPlugin plugin = new EventPlugin();
 // 设置为异步，默认同步
-plugin.asyn();
+plugin.async();
 
 // 设置扫描jar包，默认不扫描
 plugin.scanJar();
