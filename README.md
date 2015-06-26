@@ -58,7 +58,7 @@ plugin.stop();
 >1. 添加@Listener注解，方便使用
 
 ## 交流群
-如梦技术：`237587118`
+如梦技术：[`237587118`](http://shang.qq.com/wpa/qunwpa?idkey=f78fcb750b4f72c92ff4d375d2884dd69b552301a1f2681af956bd32700eb2c0)
 
 JFinal-bbs: `206034609`
 
