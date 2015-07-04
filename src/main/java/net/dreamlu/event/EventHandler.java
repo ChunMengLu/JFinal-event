@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
 import net.dreamlu.event.core.ApplicationEvent;
-import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.utils.ArrayListMultimap;
 
 /**
@@ -15,13 +14,12 @@ import net.dreamlu.utils.ArrayListMultimap;
  * site:http://www.dreamlu.net
  * date 2015年4月26日下午10:02:46
  */
-@SuppressWarnings("rawtypes")
 class EventHandler {
 
-	private final ArrayListMultimap<Type, ApplicationListener> map;
+	private final ArrayListMultimap<Type, ListenerHelper> map;
 	private final ExecutorService pool;
 
-	public EventHandler(ArrayListMultimap<Type, ApplicationListener> map,
+	EventHandler(ArrayListMultimap<Type, ListenerHelper> map,
 			ExecutorService pool) {
 		super();
 		this.map = map;
@@ -34,18 +32,18 @@ class EventHandler {
 	 */
 	@SuppressWarnings("unchecked")
 	public void postEvent(final ApplicationEvent event) {
-		Collection<ApplicationListener> listenerList = map.get(event.getClass());
-		for (final ApplicationListener listener : listenerList) {
-			if (null != pool) {
+		Collection<ListenerHelper> listenerList = map.get(event.getClass());
+		for (final ListenerHelper helper : listenerList) {
+			if (null != pool && helper.enableAsync) {
 				pool.execute(new Runnable() {
 
 					@Override
 					public void run() {
-						listener.onApplicationEvent(event);
+						helper.listener.onApplicationEvent(event);
 					}
 				});
 			} else {
-				listener.onApplicationEvent(event);
+				helper.listener.onApplicationEvent(event);
 			}
 		}
 	}

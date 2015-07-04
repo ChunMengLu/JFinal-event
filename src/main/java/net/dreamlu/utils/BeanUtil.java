@@ -19,7 +19,9 @@ public class BeanUtil {
 	public static <T> T newInstance(Class<?> clazz) {
 		try {
 			return (T) clazz.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -34,8 +36,11 @@ public class BeanUtil {
 	public static <T> T newInstance(String clazz) {
 		try {
 			return (T) Class.forName(clazz).newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}

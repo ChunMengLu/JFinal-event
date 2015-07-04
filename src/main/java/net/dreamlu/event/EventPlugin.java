@@ -2,7 +2,10 @@ package net.dreamlu.event;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,10 +31,10 @@ public class EventPlugin implements IPlugin {
 
 	private final Logger logger = Logger.getLogger(EventPlugin.class);
 
-	// 转载所有的监听器，set排重
-	private final Set<Class<? extends ApplicationListener>> allListeners;
+	// 转载所有的监听器
+	private final List<Class<? extends ApplicationListener>> allListeners;
 	// guava重复key的map，使用监听的type，取出所有的监听器
-	private final ArrayListMultimap<Type, ApplicationListener> map;
+	private final ArrayListMultimap<Type, ListenerHelper> map;
 	// 事件处理器
 	private EventHandler handler = null;
 	private ExecutorService pool = null;
@@ -45,8 +48,8 @@ public class EventPlugin implements IPlugin {
 	 * 初始化实践插件
 	 */
 	public EventPlugin() {
-		this.allListeners = new LinkedHashSet<Class<? extends ApplicationListener>>();
-		this.map = new ArrayListMultimap<Type, ApplicationListener>();
+		this.allListeners = new ArrayList<Class<? extends ApplicationListener>>();
+		this.map = new ArrayListMultimap<Type, ListenerHelper>();
 	}
 
 	/**
@@ -98,6 +101,9 @@ public class EventPlugin implements IPlugin {
 			logger.warn("Listener is empty! Please check @Listener is right?");
 			return false;
 		}
+		// 监听器排序
+		sortListeners(allListeners);
+
 		Type type;
 		ApplicationListener listener;
 		for (Class<? extends ApplicationListener> clazz : allListeners) {
@@ -105,11 +111,32 @@ public class EventPlugin implements IPlugin {
 			type = ((ParameterizedType) clazz.getGenericInterfaces()[0]).getActualTypeArguments()[0];
 			// 实例化监听器
 			listener = BeanUtil.newInstance(clazz);
-			map.put(type, listener);
+
+			boolean enableAsync = clazz.getAnnotation(Listener.class).enableAsync();
+
+			map.put(type, new ListenerHelper(listener, enableAsync));
+			logger.debug(clazz + " init~");
 		}
 		handler = new EventHandler(map, pool);
 		EventKit.init(handler);
 		return true;
+	}
+
+	/**
+	 * 对所有的监听器进行排序
+	 */
+	public void sortListeners(List<Class<? extends ApplicationListener>> listeners) {
+		Collections.sort(listeners, new Comparator<Class<? extends ApplicationListener>>() {
+
+			@Override
+			public int compare(Class<? extends ApplicationListener> o1,
+					Class<? extends ApplicationListener> o2) {
+
+				int order1 = o1.getAnnotation(Listener.class).order();
+				int order2 = o2.getAnnotation(Listener.class).order();
+				return Integer.compare(order1, order2);
+			}
+		});
 	}
 
 	@Override
