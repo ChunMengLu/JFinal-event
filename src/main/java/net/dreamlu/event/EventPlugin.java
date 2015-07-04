@@ -31,10 +31,6 @@ public class EventPlugin implements IPlugin {
 
 	private final Logger logger = Logger.getLogger(EventPlugin.class);
 
-	// 转载所有的监听器
-	private final List<Class<? extends ApplicationListener>> allListeners;
-	// guava重复key的map，使用监听的type，取出所有的监听器
-	private final ArrayListMultimap<Type, ListenerHelper> map;
 	// 事件处理器
 	private EventHandler handler = null;
 	private ExecutorService pool = null;
@@ -47,10 +43,7 @@ public class EventPlugin implements IPlugin {
 	/**
 	 * 初始化实践插件
 	 */
-	public EventPlugin() {
-		this.allListeners = new ArrayList<Class<? extends ApplicationListener>>();
-		this.map = new ArrayListMultimap<Type, ListenerHelper>();
-	}
+	public EventPlugin() {}
 
 	/**
 	 * 异步，默认创建3个线程
@@ -89,6 +82,8 @@ public class EventPlugin implements IPlugin {
 			logger.warn("Listener is empty! Please check it!");
 			return false;
 		}
+
+		List<Class<? extends ApplicationListener>> allListeners = new ArrayList<Class<? extends ApplicationListener>>();
 		// 装载所有 {@code ApplicationListener} 的子类
 		Class superClass;
 		for (Class<?> clazz : clazzSet) {
@@ -101,8 +96,12 @@ public class EventPlugin implements IPlugin {
 			logger.warn("Listener is empty! Please check @Listener is right?");
 			return false;
 		}
+
 		// 监听器排序
 		sortListeners(allListeners);
+
+		// 重复key的map，使用监听的type，取出所有的监听器
+		ArrayListMultimap<Type, ListenerHelper> map = new ArrayListMultimap<Type, ListenerHelper>();
 
 		Type type;
 		ApplicationListener listener;
@@ -117,6 +116,7 @@ public class EventPlugin implements IPlugin {
 			map.put(type, new ListenerHelper(listener, enableAsync));
 			logger.debug(clazz + " init~");
 		}
+
 		handler = new EventHandler(map, pool);
 		EventKit.init(handler);
 		return true;
@@ -141,8 +141,6 @@ public class EventPlugin implements IPlugin {
 
 	@Override
 	public boolean stop() {
-		allListeners.clear();
-		map.clear();
 		if (null != pool) {
 			pool.shutdown();
 		}
