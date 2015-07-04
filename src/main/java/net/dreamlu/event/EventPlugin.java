@@ -41,17 +41,31 @@ public class EventPlugin implements IPlugin {
 	private String scanPackage = "";
 
 	/**
-	 * 初始化实践插件
+	 * 构造EventPlugin
 	 */
 	public EventPlugin() {}
 
 	/**
+	 * 构造EventPlugin
+	 * @param scanJar 是否扫描jar
+	 * @param scanPackage 扫描的包名
+	 * @param asyncThreads 异步的线程池的大小，不传、小于或者等于0时不开启
+	 */
+	public EventPlugin(boolean scanJar, String scanPackage, int... asyncThreads) {
+		this.scanJar = scanJar;
+		this.scanPackage = scanPackage;
+		if (asyncThreads.length > 0 && asyncThreads[0] > 0) {
+			async(asyncThreads);
+		}
+	}
+
+	/**
 	 * 异步，默认创建3个线程
-	 * @param nThreads 默认线程池的容量
+	 * @param nThreads 线程池的容量，不传或小于1时默认为3
 	 * @return EventPlugin
 	 */
 	public EventPlugin async(int... nThreads) {
-		this.pool = Executors.newFixedThreadPool(nThreads.length==0 ? 3 : nThreads[0]);
+		this.pool = Executors.newFixedThreadPool(nThreads.length == 0 || nThreads[0] < 1 ? 3 : nThreads[0]);
 		return this;
 	}
 

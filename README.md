@@ -43,14 +43,14 @@ plugin.stop();
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>0.4.1</version>
+    <version>0.4.2</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
->## 2015-07-04 v0.4.1
+>## 2015-07-04 v0.4.2
 >1. 编译改为JDK1.6
 >2. 新增监听器执行顺序@Listener(order = 1) 越小越优先执行，Default is Integer.MAX_VALUE
 >3. 新增单个监听器的，同步或者异步开关@Listener(enableAsync = true)

@@ -1,22 +1,16 @@
 package net.dreamlu.event.test;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import net.dreamlu.event.EventKit;
 import net.dreamlu.event.EventPlugin;
 
+import org.junit.Test;
+
 public class EventPluginTest {
 
-	EventPlugin plugin = null;
-
-	/**
-	 * 配置并启动插件
-	 */
-	@Before
-	public void setUp() {
+	@Test
+	public void test1() {
 		// 初始化插件
-		plugin = new EventPlugin();
+		EventPlugin plugin = new EventPlugin();
 		// 全局开启异步
 		plugin.async();
 
@@ -27,10 +21,7 @@ public class EventPluginTest {
 
 		// 启动插件
 		plugin.start();
-	}
-
-	@Test
-	public void test() {
+		
 		// 发送第一个消息
 		EventKit.postEvent(new Test1Event("hello1"));
 		// 发送第二个消息
@@ -45,4 +36,39 @@ public class EventPluginTest {
 		// 停止插件
 		plugin.stop();
 	}
+
+	@Test
+	public void test2() {
+		EventPlugin plugin = new EventPlugin();
+		plugin.async(0);
+
+		plugin.start();
+
+		EventKit.postEvent(new Test1Event("hello test2"));
+
+		plugin.stop();
+	}
+
+	@Test
+	public void test3() {
+		EventPlugin plugin = new EventPlugin(false, "net.dreamlu");
+
+		plugin.start();
+
+		EventKit.postEvent(new Test1Event("hello test3"));
+
+		plugin.stop();
+	}
+
+	@Test
+	public void test4() {
+		EventPlugin plugin = new EventPlugin(false, "net.dreamlu", 2);
+
+		plugin.start();
+
+		EventKit.postEvent(new Test2Event(123123));
+
+		plugin.stop();
+	}
+
 }
