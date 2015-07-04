@@ -125,7 +125,7 @@ public class EventPlugin implements IPlugin {
 	/**
 	 * 对所有的监听器进行排序
 	 */
-	public void sortListeners(List<Class<? extends ApplicationListener>> listeners) {
+	private void sortListeners(List<Class<? extends ApplicationListener>> listeners) {
 		Collections.sort(listeners, new Comparator<Class<? extends ApplicationListener>>() {
 
 			@Override
