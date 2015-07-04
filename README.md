@@ -43,7 +43,7 @@ plugin.stop();
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
 </dependency>
 ```
 
@@ -52,8 +52,8 @@ plugin.stop();
 ## 更新说明
 >## 2015-07-04 v0.4
 >1. 编译改为JDK1.6
->2. 新增监听器执行顺序
->3. 新增单个监听器的，同步或者异步开关
+>2. 新增监听器执行顺序@Listener(order = 1) 越小越优先执行，Default is Integer.MAX_VALUE
+>3. 新增单个监听器的，同步或者异步开关@Listener(enableAsync = true)
 
 >## 2015-06-25 v0.3
 >1. 去除`guava.java`依赖
