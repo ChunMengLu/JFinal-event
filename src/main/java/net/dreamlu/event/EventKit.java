@@ -1,6 +1,11 @@
 package net.dreamlu.event;
 
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+
 import net.dreamlu.event.core.ApplicationEvent;
+import net.dreamlu.utils.ArrayListMultimap;
 
 
 /**
@@ -12,17 +17,35 @@ import net.dreamlu.event.core.ApplicationEvent;
  */
 public class EventKit {
 
-	private static EventHandler handler;
+	private static ArrayListMultimap<Type, ListenerHelper> map;
+	private static ExecutorService pool;
 
-	static void init(EventHandler handler) {
-		EventKit.handler = handler;
+	static void init(ArrayListMultimap<Type, ListenerHelper> map, ExecutorService pool) {
+		EventKit.map = map;
+		EventKit.pool = pool;
 	}
 
 	/**
 	 * 发布事件
-	 * @param event zhe ApplicationEvent
+	 * 执行发送消息
+	 * @param event ApplicationEvent
 	 */
-	public static void postEvent(ApplicationEvent event) {
-		handler.postEvent(event);
+	@SuppressWarnings("unchecked")
+	public static void postEvent(final ApplicationEvent event) {
+		Collection<ListenerHelper> listenerList = map.get(event.getClass());
+		for (final ListenerHelper helper : listenerList) {
+			if (null != pool && helper.enableAsync) {
+				pool.execute(new Runnable() {
+
+					@Override
+					public void run() {
+						helper.listener.onApplicationEvent(event);
+					}
+				});
+			} else {
+				helper.listener.onApplicationEvent(event);
+			}
+		}
 	}
+
 }

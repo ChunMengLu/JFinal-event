@@ -31,9 +31,10 @@ public class EventPlugin implements IPlugin {
 
 	private final Logger logger = Logger.getLogger(EventPlugin.class);
 
-	// 事件处理器
-	private EventHandler handler = null;
-	private ExecutorService pool = null;
+	// 线程池
+	private static ExecutorService pool = null;
+	// 重复key的map，使用监听的type，取出所有的监听器
+	private static ArrayListMultimap<Type, ListenerHelper> map = null;
 
 	// 默认不扫描jar包
 	private boolean scanJar = false;
@@ -65,7 +66,7 @@ public class EventPlugin implements IPlugin {
 	 * @return EventPlugin
 	 */
 	public EventPlugin async(int... nThreads) {
-		this.pool = Executors.newFixedThreadPool(nThreads.length == 0 || nThreads[0] < 1 ? 3 : nThreads[0]);
+		pool = Executors.newFixedThreadPool(nThreads.length == 0 || nThreads[0] < 1 ? 3 : nThreads[0]);
 		return this;
 	}
 
@@ -90,11 +91,22 @@ public class EventPlugin implements IPlugin {
 
 	@Override
 	public boolean start() {
+		create();
+		EventKit.init(map, pool);
+		return true;
+	}
+
+	/**
+	 * 构造
+	 */
+	private void create() {
+		if (null != map) {
+			return;
+		}
 		// 扫描注解 {@code Listener}
 		Set<Class<?>> clazzSet = ClassUtil.scanPackageByAnnotation(scanPackage, scanJar, Listener.class);
 		if (clazzSet.isEmpty()) {
 			logger.warn("Listener is empty! Please check it!");
-			return false;
 		}
 
 		List<Class<? extends ApplicationListener>> allListeners = new ArrayList<Class<? extends ApplicationListener>>();
@@ -108,14 +120,13 @@ public class EventPlugin implements IPlugin {
 		}
 		if (allListeners.isEmpty()) {
 			logger.warn("Listener is empty! Please check @Listener is right?");
-			return false;
 		}
 
 		// 监听器排序
 		sortListeners(allListeners);
 
 		// 重复key的map，使用监听的type，取出所有的监听器
-		ArrayListMultimap<Type, ListenerHelper> map = new ArrayListMultimap<Type, ListenerHelper>();
+		map = new ArrayListMultimap<Type, ListenerHelper>();
 
 		Type type;
 		ApplicationListener listener;
@@ -131,9 +142,6 @@ public class EventPlugin implements IPlugin {
 			logger.debug(clazz + " init~");
 		}
 
-		handler = new EventHandler(map, pool);
-		EventKit.init(handler);
-		return true;
 	}
 
 	/**
@@ -157,9 +165,12 @@ public class EventPlugin implements IPlugin {
 	public boolean stop() {
 		if (null != pool) {
 			pool.shutdown();
+			pool = null;
 		}
-		pool = null;
-		handler = null;
+		if (null != map) {
+			map.clear();
+			map = null;
+		}
 		return true;
 	}
 
