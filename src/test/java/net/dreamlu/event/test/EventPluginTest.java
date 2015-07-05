@@ -28,7 +28,7 @@ public class EventPluginTest {
 		EventKit.postEvent(new Test2Event(123123));
 
 		try {
-			Thread.sleep(Integer.MAX_VALUE);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
