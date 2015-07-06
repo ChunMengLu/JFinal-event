@@ -38,7 +38,7 @@ plugin.stop();
 `v0.2、v0.1`依赖`guava.java`
 
 jar包下载
-http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/1.0
+http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/
 
 以上版本均已上传到maven仓库~
 
