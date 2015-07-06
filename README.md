@@ -32,10 +32,13 @@ plugin.stop();
 
 使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
-## Maven
-`v0.3`除了JFinal，不依赖任何jar包
+## 依赖说明
+`v0.3`以上版本除了JFinal，不依赖任何jar包
 
 `v0.2、v0.1`依赖`guava.java`
+
+jar包下载
+http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/1.0
 
 以上版本均已上传到maven仓库~
 
