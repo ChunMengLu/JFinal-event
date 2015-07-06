@@ -46,7 +46,7 @@ http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/1.0
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
