@@ -154,9 +154,9 @@ public class EventPlugin implements IPlugin {
 			public int compare(Class<? extends ApplicationListener> o1,
 					Class<? extends ApplicationListener> o2) {
 
-				int order1 = o1.getAnnotation(Listener.class).order();
-				int order2 = o2.getAnnotation(Listener.class).order();
-				return Integer.compare(order1, order2);
+				int x = o1.getAnnotation(Listener.class).order();
+				int y = o2.getAnnotation(Listener.class).order();
+				return (x < y) ? -1 : ((x == y) ? 0 : 1);
 			}
 		});
 	}
