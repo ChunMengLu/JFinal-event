@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -92,13 +93,15 @@ public final class ClassUtil {
 
 		final Set<Class<?>> classes = new HashSet<Class<?>>();
 		for (String classPath : getClassPaths(packageName)) {
-			// 填充 classes
+			// 填充 classes, 并对classpath解码
+			classPath = decodeUrl(classPath);
 			fillClasses(classPath, packageName, classFilter, classes);
 		}
 		//如果在项目的ClassPath中未找到，去系统定义的ClassPath里找
 		if(inJar) {
 			for (String classPath : getJavaClassPaths()) {
-				// 填充 classes
+				// 填充 classes, 并对classpath解码
+				classPath = decodeUrl(classPath);
 				fillClasses(classPath, new File(classPath), packageName, classFilter, classes);
 			}
 		}
@@ -313,9 +316,8 @@ public final class ClassUtil {
 					classes.add(clazz);
 				}
 			} catch (Throwable ex) {
-				//Log.error(log, ex, "Load class [{}] error!", className);
-
-				//Pass Load Error.
+//				log.error(ex.getMessage(), ex);
+//				Pass Load Error.
 			}
 		}
 	}
@@ -351,4 +353,18 @@ public final class ClassUtil {
 	public interface ClassFilter {
 		boolean accept(Class<?> clazz);
 	}
+
+	/**
+	 * 对路径解码
+	 * @param url 路径
+	 * @return String 解码后的路径
+	 */
+	private static String decodeUrl(String url) {
+		try {
+			return URLDecoder.decode(url, "utf-8");
+		} catch (java.io.UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }
