@@ -53,6 +53,9 @@ http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2015-08-20 v1.2.0
+>1. 解决部署时中文路径或者是空格找不到监听器
+
 >## 2015-07-05 v1.0
 >1. 调优，减少不必要的实例
 
