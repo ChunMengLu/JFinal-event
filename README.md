@@ -50,8 +50,6 @@ http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/
 </dependency>
 ```
 
-直接下载Jar包：http://mvnrepository.com/artifact/net.dreamlu/JFinal-event
-
 欢迎拍砖~~~
 
 ## 更新说明
