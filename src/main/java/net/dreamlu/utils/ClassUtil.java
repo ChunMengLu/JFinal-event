@@ -14,7 +14,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import com.jfinal.kit.StrKit;
-import com.jfinal.log.Logger;
+import com.jfinal.log.Log;
 
 /**
  * 该类来源于#hutool#
@@ -28,7 +28,7 @@ import com.jfinal.log.Logger;
  *
  */
 public final class ClassUtil {
-	private static Logger log = Logger.getLogger(ClassUtil.class);
+	private static Log log = Log.getLog(ClassUtil.class);
 	
 	private ClassUtil() {
 		// 静态类不可实例化

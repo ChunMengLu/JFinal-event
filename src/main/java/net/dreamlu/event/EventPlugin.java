@@ -16,7 +16,7 @@ import net.dreamlu.utils.ArrayListMultimap;
 import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
 
-import com.jfinal.log.Logger;
+import com.jfinal.log.Log;
 import com.jfinal.plugin.IPlugin;
 
 /**
@@ -29,7 +29,7 @@ import com.jfinal.plugin.IPlugin;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class EventPlugin implements IPlugin {
 
-	private final Logger logger = Logger.getLogger(EventPlugin.class);
+	private static Log log = Log.getLog(ClassUtil.class);
 
 	// 线程池
 	private static ExecutorService pool = null;
@@ -106,7 +106,7 @@ public class EventPlugin implements IPlugin {
 		// 扫描注解 {@code Listener}
 		Set<Class<?>> clazzSet = ClassUtil.scanPackageByAnnotation(scanPackage, scanJar, Listener.class);
 		if (clazzSet.isEmpty()) {
-			logger.warn("Listener is empty! Please check it!");
+			log.warn("Listener is empty! Please check it!");
 		}
 
 		List<Class<? extends ApplicationListener>> allListeners = new ArrayList<Class<? extends ApplicationListener>>();
@@ -119,7 +119,7 @@ public class EventPlugin implements IPlugin {
 			}
 		}
 		if (allListeners.isEmpty()) {
-			logger.warn("Listener is empty! Please check @Listener is right?");
+			log.warn("Listener is empty! Please check @Listener is right?");
 		}
 
 		// 监听器排序
@@ -139,7 +139,7 @@ public class EventPlugin implements IPlugin {
 			boolean enableAsync = clazz.getAnnotation(Listener.class).enableAsync();
 
 			map.put(type, new ListenerHelper(listener, enableAsync));
-			logger.debug(clazz + " init~");
+			log.debug(clazz + " init~");
 		}
 
 	}
