@@ -79,6 +79,14 @@ http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/
 
 JFinal-bbs: `206034609`
 
+## 捐助共勉
+<img src="http://soft.dreamlu.net/weixin-9.jpg" width = "200" alt="微信捐助" align=center />
+<img src="http://soft.dreamlu.net/weixin-19.jpg" width = "200" alt="微信捐助" align=center />
+<img src="http://soft.dreamlu.net/alipay.png" width = "200" alt="支付宝捐助" align=center />
+
+<img src="http://soft.dreamlu.net/qq-9.jpg" width = "200" alt="QQ捐助" align=center />
+<img src="http://soft.dreamlu.net/qq-19.jpg" width = "200" alt="QQ捐助" align=center />
+
 ## License
 
 ( The MIT License )
