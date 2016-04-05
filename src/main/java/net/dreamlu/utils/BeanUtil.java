@@ -32,14 +32,9 @@ public class BeanUtil {
 	 * @param <T> type parameter
 	 * @return 对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(String clazz) {
 		try {
-			return (T) Class.forName(clazz).newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+			return BeanUtil.newInstance(Class.forName(clazz));
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
