@@ -10,6 +10,10 @@ public class Test2Listener implements ApplicationListener<Test2Event> {
 	public void onApplicationEvent(Test2Event event) {
 		Integer xx = (Integer) event.getSource();
 		System.out.println(Thread.currentThread().getName() + "\tsource:" + xx);
+		
+		// 新增
+		EventType eventType = event.getEventType();
+		System.out.println(eventType);
 	}
 
 }

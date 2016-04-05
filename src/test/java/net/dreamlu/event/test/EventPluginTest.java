@@ -26,6 +26,9 @@ public class EventPluginTest {
 		EventKit.postEvent(new Test1Event("hello1"));
 		// 发送第二个消息
 		EventKit.postEvent(new Test2Event(123123));
+		
+		// 发送时附带类型
+		EventKit.postEvent(new Test2Event(123123, EventType.SAVE));
 
 		try {
 			Thread.sleep(1000);

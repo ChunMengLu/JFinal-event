@@ -11,4 +11,17 @@ public class Test2Event extends ApplicationEvent {
 		super(source);
 	}
 
+	//-------------------------------------------------------//
+	// 枚举类型，类型你自己去定义，你可以根据你的业务来构造，比如说 Order，Email等
+	private EventType eventType;
+	// 新增的构造器
+	public Test2Event(Object source, EventType eventType) {
+		super(source);
+		this.eventType = eventType;
+	}
+
+	public EventType getEventType() {
+		return eventType;
+	}
+	//-------------------------------------------------------//
 }
