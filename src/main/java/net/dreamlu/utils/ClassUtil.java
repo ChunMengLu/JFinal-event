@@ -1,5 +1,8 @@
 package net.dreamlu.utils;
 
+import com.jfinal.kit.StrKit;
+import com.jfinal.log.Log;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -12,9 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import com.jfinal.kit.StrKit;
-import com.jfinal.log.Log;
 
 /**
  * 该类来源于#hutool#
@@ -29,10 +29,9 @@ import com.jfinal.log.Log;
  */
 public final class ClassUtil {
 	private static Log log = Log.getLog(ClassUtil.class);
-	
-	private ClassUtil() {
-		// 静态类不可实例化
-	}
+
+	// 静态类不可实例化
+	private ClassUtil() {}
 
 	/** Class文件扩展名 */
 	private static final String CLASS_EXT = ".class";
@@ -132,11 +131,11 @@ public final class ClassUtil {
 	 * @return 获得Java ClassPath路径，不包括 jre
 	 */
 	public static String[] getJavaClassPaths() {
-		String[] classPaths = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
-		return classPaths;
+		return System.getProperty("java.class.path").split(System.getProperty("path.separator"));
 	}
 
 	/**
+	 * 获取当前线程的ClassLoader
 	 * @return 当前线程的class loader
 	 */
 	public static ClassLoader getContextClassLoader() {
@@ -156,6 +155,28 @@ public final class ClassUtil {
 		return classLoader;
 	}
 
+	/**
+	 * 根据指定的类名称加载类
+	 * @param className 完整类名
+	 * @return {Class}
+	 * @throws ClassNotFoundException 找不到异常
+	 */
+	public static Class<?> loadClass(String className) throws ClassNotFoundException {
+		try {
+			return ClassUtil.getContextClassLoader().loadClass(className);
+		} catch (ClassNotFoundException e) {
+			try {
+				return Class.forName(className, false, ClassUtil.getClassLoader());
+			} catch (ClassNotFoundException ex) {
+				try {
+					return ClassLoader.class.getClassLoader().loadClass(className);
+				} catch (ClassNotFoundException exc) {
+					throw exc;
+				}
+			}
+		}
+	}
+
 	//--------------------------------------------------------------------------------------------------- Private method start
 	/** 
 	 * 文件过滤器，过滤掉不需要的文件
@@ -172,7 +193,7 @@ public final class ClassUtil {
 	 * 改变 com -> com. 避免在比较的时候把比如 completeTestSuite.class类扫描进去，如果没有"."
 	 * 那class里面com开头的class类也会被扫描进去,其实名称后面或前面需要一个 ".",来添加包的特征
 	 * 
-	 * @param packageName
+	 * @param packageName 包名
 	 * @return 格式化后的包名
 	 */
 	private static String getWellFormedPackageName(String packageName) {
@@ -207,7 +228,6 @@ public final class ClassUtil {
 		int index = path.lastIndexOf(JAR_PATH_EXT);
 		if(index != -1) {
 			//Jar文件
-
 			path = path.substring(0, index + JAR_FILE_EXT.length());	//截取jar路径
 
 			path = removePrefix(path, PATH_FILE_PRE);	//去掉文件前缀
@@ -311,7 +331,7 @@ public final class ClassUtil {
 	private static void fillClass(String className, String packageName, Set<Class<?>> classes, ClassFilter classFilter) {
 		if (className.startsWith(packageName)) {
 			try {
-				final Class<?> clazz = Class.forName(className, false, getClassLoader());
+				final Class<?> clazz = ClassUtil.loadClass(className);
 				if (classFilter == null || classFilter.accept(clazz)) {
 					classes.add(clazz);
 				}
@@ -361,7 +381,7 @@ public final class ClassUtil {
 	 */
 	private static String decodeUrl(String url) {
 		try {
-			return URLDecoder.decode(url, "utf-8");
+			return URLDecoder.decode(url, "UTF-8");
 		} catch (java.io.UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}

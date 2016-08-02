@@ -8,7 +8,6 @@ package net.dreamlu.utils;
  * date 2015年4月26日下午5:10:42
  */
 public class BeanUtil {
-
 	/**
 	 * 实例化对象
 	 * @param clazz 类
@@ -22,20 +21,6 @@ public class BeanUtil {
 		} catch (InstantiationException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * 实例化对象
-	 * @param clazz 类名
-	 * @param <T> type parameter
-	 * @return 对象
-	 */
-	public static <T> T newInstance(String clazz) {
-		try {
-			return BeanUtil.newInstance(Class.forName(clazz));
-		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
