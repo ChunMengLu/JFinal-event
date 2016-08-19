@@ -1,9 +1,9 @@
 package net.dreamlu.event.test;
 
+import org.junit.Test;
+
 import net.dreamlu.event.EventKit;
 import net.dreamlu.event.EventPlugin;
-
-import org.junit.Test;
 
 public class EventPluginTest {
 
@@ -23,13 +23,14 @@ public class EventPluginTest {
 		plugin.start();
 		
 		// 发送第一个消息
-		EventKit.postEvent(new Test1Event("hello1"));
+		EventKit.post(new Test1Event("hello1"));
 		// 发送第二个消息
-		EventKit.postEvent(new Test2Event(123123));
+		EventKit.post(new Test2Event(123123));
 		
-		// 发送时附带类型
-		EventKit.postEvent(new Test2Event(123123, EventType.SAVE));
-
+		// 发送带tag的消息
+		EventKit.post("save", new Test2Event(123123));
+		EventKit.post("update", new Test2Event(456456));
+		
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -47,7 +48,7 @@ public class EventPluginTest {
 
 		plugin.start();
 
-		EventKit.postEvent(new Test1Event("hello test2"));
+		EventKit.post(new Test1Event("hello test2"));
 
 		plugin.stop();
 	}
@@ -58,7 +59,7 @@ public class EventPluginTest {
 
 		plugin.start();
 
-		EventKit.postEvent(new Test1Event("hello test3"));
+		EventKit.post(new Test1Event("hello test3"));
 
 		plugin.stop();
 	}
@@ -69,7 +70,7 @@ public class EventPluginTest {
 
 		plugin.start();
 
-		EventKit.postEvent(new Test2Event(123123));
+		EventKit.post(new Test2Event(123123));
 
 		plugin.stop();
 	}

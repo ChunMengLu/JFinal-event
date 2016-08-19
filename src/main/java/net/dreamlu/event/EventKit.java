@@ -1,6 +1,5 @@
 package net.dreamlu.event;
 
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
@@ -16,23 +15,42 @@ import net.dreamlu.utils.ArrayListMultimap;
  * date 2015年4月26日下午9:58:53
  */
 public class EventKit {
-
-	private static ArrayListMultimap<Type, ListenerHelper> map;
+	private static ArrayListMultimap<EventType, ListenerHelper> map;
 	private static ExecutorService pool;
 
-	static void init(ArrayListMultimap<Type, ListenerHelper> map, ExecutorService pool) {
+	static void init(ArrayListMultimap<EventType, ListenerHelper> map, ExecutorService pool) {
 		EventKit.map = map;
 		EventKit.pool = pool;
 	}
-
+	
 	/**
 	 * 发布事件
-	 * 执行发送消息
 	 * @param event ApplicationEvent
+	 * @since 1.4.0
+	 */
+	public static void post(final ApplicationEvent event) {
+		post(EventType.DEFAULT_TAG, event);
+	}
+	
+	/**
+	 * 发布事件
+	 * @param tag
+	 * @param event
+	 * @since 1.4.0
+	 */
+	public static void post(final String tag, final ApplicationEvent event) {
+		Class<?> eventClazz = event.getClass();
+		EventType eventType = new EventType(tag, eventClazz);
+		post(eventType, event);
+	}
+	
+	/**
+	 * 发布事件
+	 * @param eventType 事件封装
 	 */
 	@SuppressWarnings("unchecked")
-	public static void postEvent(final ApplicationEvent event) {
-		Collection<ListenerHelper> listenerList = map.get(event.getClass());
+	private static void post(final EventType eventType, final ApplicationEvent event) {
+		Collection<ListenerHelper> listenerList = map.get(eventType);
 		for (final ListenerHelper helper : listenerList) {
 			if (null != pool && helper.enableAsync) {
 				pool.execute(new Runnable() {
@@ -46,6 +64,16 @@ public class EventKit {
 				helper.listener.onApplicationEvent(event);
 			}
 		}
+	}
+	
+	/**
+	 * 发布事件
+	 * 执行发送消息
+	 * @param event ApplicationEvent
+	 */
+	@Deprecated
+	public static void postEvent(final ApplicationEvent event) {
+		post(event);
 	}
 
 }

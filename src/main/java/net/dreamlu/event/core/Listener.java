@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import net.dreamlu.event.EventType;
+
 /**
  * 注解标记需要扫描的监听器
  * @author L.cm
@@ -16,10 +18,22 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Listener {
 
-	// The order value. Default is {@link Integer#MAX_VALUE}.
+	/**
+	 * The order value. Default is {@link Integer#MAX_VALUE}.
+	 * @return order
+	 */
 	int order() default Integer.MAX_VALUE;
 
-	// 标记Listener是否为异步，Default is false
+	/**
+	 * 标记Listener是否为异步，Default is false
+	 * @return async
+	 */
 	boolean enableAsync() default false;
 
+	/**
+	 * 事件的tag，事件的标识符 by L.cm 2016-08-19
+	 * @since 1.4.0
+	 * @return tag
+	 */
+	String tag() default EventType.DEFAULT_TAG;
 }

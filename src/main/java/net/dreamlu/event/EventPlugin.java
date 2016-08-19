@@ -1,18 +1,23 @@
 package net.dreamlu.event;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.jfinal.log.Log;
 import com.jfinal.plugin.IPlugin;
+
 import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.event.core.Listener;
 import net.dreamlu.utils.ArrayListMultimap;
 import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * 模拟spring的消息机制插件
@@ -28,7 +33,7 @@ public class EventPlugin implements IPlugin {
 	// 线程池
 	private static ExecutorService pool = null;
 	// 重复key的map，使用监听的type，取出所有的监听器
-	private static ArrayListMultimap<Type, ListenerHelper> map = null;
+	private static ArrayListMultimap<EventType, ListenerHelper> map = null;
 
 	// 默认不扫描jar包
 	private boolean scanJar = false;
@@ -120,7 +125,7 @@ public class EventPlugin implements IPlugin {
 		sortListeners(allListeners);
 
 		// 重复key的map，使用监听的type，取出所有的监听器
-		map = new ArrayListMultimap<Type, ListenerHelper>();
+		map = new ArrayListMultimap<EventType, ListenerHelper>();
 
 		Type type;
 		ApplicationListener listener;
@@ -130,9 +135,13 @@ public class EventPlugin implements IPlugin {
 			// 实例化监听器
 			listener = BeanUtil.newInstance(clazz);
 
-			boolean enableAsync = clazz.getAnnotation(Listener.class).enableAsync();
-
-			map.put(type, new ListenerHelper(listener, enableAsync));
+			// 监听器上的注解
+			Listener annotation = clazz.getAnnotation(Listener.class);
+			boolean enableAsync = annotation.enableAsync();
+			String tag = annotation.tag();
+			
+			EventType eventType = new EventType(tag, type);
+			map.put(eventType, new ListenerHelper(listener, enableAsync));
 			if (log.isDebugEnabled()) {
 				log.debug(clazz + " init~");
 			}

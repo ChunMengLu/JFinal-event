@@ -1,5 +1,7 @@
 模仿的Spring中的消息事件：[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
+专为JFinal设计，无任何第三方依赖，小巧玲珑。
+
 :laughing: `JFinal`event 插件，使用请查看[文档 wiki](http://git.oschina.net/596392912/JFinal-event/wikis/home)
 
 ```
@@ -13,14 +15,13 @@ plugin.scanJar();
 // 设置监听器默认包，默认全扫描
 plugin.scanPackage("net.dreamlu");
 
-
 // 启动插件
 plugin.start();
 
 // 发送第一个消息
-EventKit.postEvent(new Test1Event("hello1"));
-// 发送第二个消息
-EventKit.postEvent(new Test2Event(123123));
+EventKit.post(new Test1Event("hello1"));
+// 发送带tag的消息
+EventKit.post("save", new Test2Event(123123));
 
 Thread.sleep(1000);
 
@@ -28,17 +29,15 @@ Thread.sleep(1000);
 plugin.stop();
 ```
 
-依赖: `guava.java` 多key的map，储存监听器，一个事件多个监听器监听！
-
 使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
 ## 依赖说明
 `v0.3`以上版本除了JFinal，不依赖任何jar包
 
-`v0.2、v0.1`依赖`guava.java`
+`v0.2、v0.1`依赖`guava.java`，建议直接升级到最新版本。
 
 jar包下载
-http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/
+http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 
 以上版本均已上传到maven仓库~
 
@@ -46,13 +45,18 @@ http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2016-08-19 v1.4.0
+>1. 升级到JFinal2.2，JFinal低版本用户请使用`v1.2.0`。
+>2. `EventKit.postEvent(event)`更改为`EventKit.post(event)`，`postEvent`不再建议使用。
+>3. 添加`EventKit.post(tag, event)`方法，`@Listener(order = 2, tag = "save")`添加`tag`。
+
 >## 2015-12-30 v1.3.0
 >1. 升级到JFinal2.1，JFinal低版本用户请使用`v1.2.0`
 
@@ -77,15 +81,10 @@ http://mvnrepository.com/artifact/net.dreamlu/JFinal-event/
 ## 交流群
 如梦技术：[`237587118`](http://shang.qq.com/wpa/qunwpa?idkey=f78fcb750b4f72c92ff4d375d2884dd69b552301a1f2681af956bd32700eb2c0)
 
-JFinal-bbs: `206034609`
-
 ## 捐助共勉
 <img src="http://soft.dreamlu.net/weixin-9.jpg" width = "200" alt="微信捐助" align=center />
-<img src="http://soft.dreamlu.net/weixin-19.jpg" width = "200" alt="微信捐助" align=center />
 <img src="http://soft.dreamlu.net/alipay.png" width = "200" alt="支付宝捐助" align=center />
-
 <img src="http://soft.dreamlu.net/qq-9.jpg" width = "200" alt="QQ捐助" align=center />
-<img src="http://soft.dreamlu.net/qq-19.jpg" width = "200" alt="QQ捐助" align=center />
 
 ## License
 
