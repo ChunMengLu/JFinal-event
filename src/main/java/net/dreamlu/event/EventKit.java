@@ -1,10 +1,10 @@
 package net.dreamlu.event;
 
-import java.util.Collection;
-import java.util.concurrent.ExecutorService;
-
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.utils.ArrayListMultimap;
+
+import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -34,8 +34,8 @@ public class EventKit {
 	
 	/**
 	 * 发布事件
-	 * @param tag
-	 * @param event
+	 * @param tag 标记
+	 * @param event 事件
 	 * @since 1.4.0
 	 */
 	public static void post(final String tag, final ApplicationEvent event) {
