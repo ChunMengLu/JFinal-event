@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
  * site:http://www.dreamlu.net
  * date 2016年8月19日下午9:58:53
  */
-class EventType {
+public class EventType {
 	/**
 	 * 默认的tag
 	 */
