@@ -1,11 +1,8 @@
 package net.dreamlu.event.core;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import net.dreamlu.event.EventType;
+
+import java.lang.annotation.*;
 
 /**
  * 注解标记需要扫描的监听器
@@ -16,6 +13,7 @@ import net.dreamlu.event.EventType;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Documented
 public @interface Listener {
 
 	/**
