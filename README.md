@@ -7,7 +7,7 @@
 ```
 // 初始化插件
 EventPlugin plugin = new EventPlugin();
-// 设置为异步，默认同步
+// 设置为异步，默认同步，或者使用`threadPool(ExecutorService executorService)`自定义线程池。
 plugin.async();
 
 // 设置扫描jar包，默认不扫描
@@ -15,7 +15,7 @@ plugin.scanJar();
 // 设置监听器默认包，默认全扫描
 plugin.scanPackage("net.dreamlu");
 
-// 启动插件
+// 手动启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 plugin.start();
 
 // 发送第一个消息
@@ -25,7 +25,7 @@ EventKit.post("save", new Test2Event(123123));
 
 Thread.sleep(1000);
 
-// 停止插件
+// 停止插件，用于main方法测试
 plugin.stop();
 ```
 
@@ -45,13 +45,16 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2017-02-15 v1.4.1
+>1. 添加自定义线程池
+
 >## 2016-08-19 v1.4.0
 >1. 升级到JFinal2.2，JFinal低版本用户请使用`v1.2.0`。
 >2. `EventKit.postEvent(event)`更改为`EventKit.post(event)`，`postEvent`不再建议使用。

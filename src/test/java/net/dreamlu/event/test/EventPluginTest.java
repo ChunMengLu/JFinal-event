@@ -19,7 +19,7 @@ public class EventPluginTest {
 		// 设置默认扫描的包命，默认全扫描
 		plugin.scanPackage("net.dreamlu");
 
-		// 启动插件
+		// 启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 		plugin.start();
 		
 		// 发送第一个消息

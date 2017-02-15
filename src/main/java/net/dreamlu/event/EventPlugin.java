@@ -68,7 +68,17 @@ public class EventPlugin implements IPlugin {
 		pool = Executors.newFixedThreadPool(nThreads.length == 0 || nThreads[0] < 1 ? 3 : nThreads[0]);
 		return this;
 	}
-
+	
+	/**
+	 * 自定义线程池
+	 * @param executorService 线程池
+	 * @return EventPlugin
+	 */
+	public EventPlugin threadPool(ExecutorService executorService) {
+		pool = executorService;
+		return this;
+	}
+	
 	/**
 	 * 从jar包中搜索监听器
 	 * @return EventPlugin
