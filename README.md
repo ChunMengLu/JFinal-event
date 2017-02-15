@@ -53,7 +53,7 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 
 ## 更新说明
 >## 2017-02-15 v1.4.1
->1. 添加自定义线程池
+>1. 添加自定义线程池EventPlugin.threadPool(ExecutorService executorService)方法
 
 >## 2016-08-19 v1.4.0
 >1. 升级到JFinal2.2，JFinal低版本用户请使用`v1.2.0`。
