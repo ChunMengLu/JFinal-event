@@ -82,7 +82,7 @@ public class EventPlugin implements IPlugin {
 	}
 	
 	/**
-	 * 异步，默认创建3个线程
+	 * 异步，默认SingleThreadExecutor
 	 * @return EventPlugin
 	 */
 	public EventPlugin async() {

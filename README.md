@@ -54,7 +54,9 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 ## 更新说明
 >## 2017-03-22 v1.4.2
 >1. 更改默认线程池为SingleThreadExecutor，使异步执行有序化。
->2. 添加EventThreadFactory，处理异步时的异常。
+>2. 添加EventThreadFactory，处理异步时的异常避免影响服务请求。
+> 建议：如果event需要发送大量的异步事件，建议使用自定义线程池。
+> `eventPlugin.threadPool(Executors.newCachedThreadPool(new EventThreadFactory()));`
 
 >## 2017-02-15 v1.4.1
 >1. 添加自定义线程池EventPlugin.threadPool(ExecutorService executorService)方法
