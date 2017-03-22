@@ -20,7 +20,7 @@ public class EventThreadFactory implements ThreadFactory {
 	EventThreadFactory() {
 		SecurityManager s = System.getSecurityManager();
 		group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-		namePrefix = "jfinal-event-pool-" + poolNumber.getAndIncrement() + "-thread-";
+		namePrefix = "event-pool-" + poolNumber.getAndIncrement() + "-thread-";
 	}
 
 	public Thread newThread(Runnable r) {
@@ -37,7 +37,7 @@ public class EventThreadFactory implements ThreadFactory {
 		private static Log log = Log.getLog(ThreadUncaughtExceptionHandler.class);
 
 		public void uncaughtException(Thread t, Throwable e) {
-			log.error("[Thread]: " + t.getName() + " [class]: " + e.getClass().getSimpleName() + " [error]: " + e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 	}
 
