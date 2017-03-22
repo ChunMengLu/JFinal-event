@@ -45,13 +45,17 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2017-03-22 v1.4.2
+>1. 更改默认线程池为SingleThreadExecutor，使异步执行有序化。
+>2. 添加EventThreadFactory，处理异步时的异常。
+
 >## 2017-02-15 v1.4.1
 >1. 添加自定义线程池EventPlugin.threadPool(ExecutorService executorService)方法
 

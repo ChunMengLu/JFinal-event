@@ -44,7 +44,7 @@ public class EventPluginTest {
 	@Test
 	public void test2() {
 		EventPlugin plugin = new EventPlugin();
-		plugin.async(0);
+		plugin.async();
 
 		plugin.start();
 
@@ -65,13 +65,14 @@ public class EventPluginTest {
 	}
 
 	@Test
-	public void test4() {
-		EventPlugin plugin = new EventPlugin(false, "net.dreamlu", 2);
-
+	public void test4() throws InterruptedException {
+		EventPlugin plugin = new EventPlugin(false, "net.dreamlu", true);
 		plugin.start();
 
 		EventKit.post(new Test2Event(123123));
-
+		System.out.println("begin xxxxx");
+		Thread.sleep(500);
+		System.out.println("end xxxxx");
 		plugin.stop();
 	}
 

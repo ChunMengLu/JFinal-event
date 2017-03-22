@@ -10,6 +10,7 @@ public class Test3Listener implements ApplicationListener<Test2Event> {
 	public void onApplicationEvent(Test2Event event) {
 		if (event.getSource() instanceof Integer) {
 			System.out.println(Thread.currentThread().getName() + "\tsource:" + event.getSource());
+			throw new RuntimeException("xxxx");
 		}
 	}
 
