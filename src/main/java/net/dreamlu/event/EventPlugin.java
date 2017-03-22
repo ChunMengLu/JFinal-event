@@ -86,7 +86,9 @@ public class EventPlugin implements IPlugin {
 	 * @return EventPlugin
 	 */
 	public EventPlugin async() {
-		pool = Executors.newSingleThreadExecutor(new EventThreadFactory());
+		if (pool == null) {
+			pool = Executors.newSingleThreadExecutor(new EventThreadFactory());
+		}
 		return this;
 	}
 	

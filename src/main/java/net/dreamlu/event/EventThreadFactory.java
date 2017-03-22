@@ -17,7 +17,7 @@ public class EventThreadFactory implements ThreadFactory {
 	private final AtomicInteger threadNumber = new AtomicInteger(1);
 	private final String namePrefix;
 
-	EventThreadFactory() {
+	public EventThreadFactory() {
 		SecurityManager s = System.getSecurityManager();
 		group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
 		namePrefix = "event-pool-" + poolNumber.getAndIncrement() + "-thread-";
