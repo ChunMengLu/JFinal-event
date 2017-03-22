@@ -83,7 +83,6 @@ public class EventPlugin implements IPlugin {
 	
 	/**
 	 * 异步，默认创建3个线程
-	 * @param nThreads 线程池的容量，不传或小于1时默认为3
 	 * @return EventPlugin
 	 */
 	public EventPlugin async() {
