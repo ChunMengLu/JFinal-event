@@ -31,7 +31,7 @@ public class RmiTest {
 		// 发送第一个消息
 		EventKit.postRemote(new Test1Event("hello1"));
 		
-		Thread.sleep(50000);
+		Thread.sleep(2000);
 		plugin.stop();
 	}
 }
