@@ -1,6 +1,7 @@
 package net.dreamlu.event;
 
 import net.dreamlu.event.core.ApplicationEvent;
+import net.dreamlu.event.service.EventService;
 import net.dreamlu.utils.ArrayListMultimap;
 
 import java.util.Collection;
@@ -17,10 +18,15 @@ import java.util.concurrent.ExecutorService;
 public class EventKit {
 	private static ArrayListMultimap<EventType, ListenerHelper> map;
 	private static ExecutorService pool;
+	private static EventService eventService;
 
 	static void init(ArrayListMultimap<EventType, ListenerHelper> map, ExecutorService pool) {
 		EventKit.map = map;
 		EventKit.pool = pool;
+	}
+	
+	static void setEventService(EventService eventService) {
+		EventKit.eventService = eventService;
 	}
 	
 	/**
@@ -67,13 +73,23 @@ public class EventKit {
 	}
 	
 	/**
-	 * 发布事件
+	 * 发布远程事件
 	 * 执行发送消息
 	 * @param event ApplicationEvent
+	 * @since 1.5.0
 	 */
-	@Deprecated
-	public static void postEvent(final ApplicationEvent event) {
-		post(event);
+	public static void postRemote(final ApplicationEvent event) {
+		postRemote(EventType.DEFAULT_TAG, event);
+	}
+
+	/**
+	 * 发布远程事件
+	 * @param tag 标记
+	 * @param event 事件
+	 * @since 1.5.0
+	 */
+	public static void postRemote(final String tag, final ApplicationEvent event) {
+		EventKit.eventService.post(tag, event);
 	}
 
 }

@@ -15,6 +15,8 @@ import com.jfinal.plugin.IPlugin;
 
 import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.event.core.Listener;
+import net.dreamlu.event.rmi.RmiClientConfig;
+import net.dreamlu.event.rmi.RmiServerConfig;
 import net.dreamlu.utils.ArrayListMultimap;
 import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
@@ -29,16 +31,16 @@ import net.dreamlu.utils.ClassUtil;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class EventPlugin implements IPlugin {
 	private static Log log = Log.getLog(ClassUtil.class);
-
 	// 线程池
 	private static ExecutorService pool = null;
 	// 重复key的map，使用监听的type，取出所有的监听器
 	private static ArrayListMultimap<EventType, ListenerHelper> map = null;
-
 	// 默认不扫描jar包
 	private boolean scanJar = false;
 	// 默认扫描所有的包
 	private String scanPackage = "";
+	private RmiServerConfig rmiServerConfig;
+	private RmiClientConfig rmiClientConfig;
 
 	/**
 	 * 构造EventPlugin
@@ -120,6 +122,16 @@ public class EventPlugin implements IPlugin {
 		this.scanPackage = scanPackage;
 		return this;
 	}
+	
+	public EventPlugin setRmiServerConfig(RmiServerConfig rmiServerConfig) {
+		this.rmiServerConfig = rmiServerConfig;
+		return this;
+	}
+
+	public EventPlugin setRmiClientConfig(RmiClientConfig rmiClientConfig) {
+		this.rmiClientConfig = rmiClientConfig;
+		return this;
+	}
 
 	@Override
 	public boolean start() {
@@ -179,7 +191,22 @@ public class EventPlugin implements IPlugin {
 				log.debug(clazz + " init~");
 			}
 		}
-
+		if (rmiServerConfig != null) {
+			try {
+				rmiServerConfig.bindEventService();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				e.printStackTrace();
+			}
+		}
+		if (rmiClientConfig != null) {
+			try {
+				rmiClientConfig.getEventService();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
