@@ -1,6 +1,7 @@
 package net.dreamlu.event.service;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 import net.dreamlu.event.core.ApplicationEvent;
 
@@ -10,5 +11,5 @@ import net.dreamlu.event.core.ApplicationEvent;
  *
  */
 public interface EventService extends Remote {
-	void post(final String tag, final ApplicationEvent event);
+	void post(final String tag, final ApplicationEvent event) throws RemoteException;
 }

@@ -1,11 +1,12 @@
 package net.dreamlu.event;
 
+import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.event.service.EventService;
 import net.dreamlu.utils.ArrayListMultimap;
-
-import java.util.Collection;
-import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -89,7 +90,11 @@ public class EventKit {
 	 * @since 1.5.0
 	 */
 	public static void postRemote(final String tag, final ApplicationEvent event) {
-		EventKit.eventService.post(tag, event);
+		try {
+			EventKit.eventService.post(tag, event);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

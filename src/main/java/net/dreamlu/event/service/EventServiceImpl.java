@@ -11,14 +11,13 @@ import net.dreamlu.event.core.ApplicationEvent;
  * @author L.cm
  *
  */
-@RmiService(EventService.class)
 public class EventServiceImpl extends UnicastRemoteObject implements EventService {
 	private static final long serialVersionUID = -1700474712741128882L;
 
-	protected EventServiceImpl() throws RemoteException {}
+	public EventServiceImpl() throws RemoteException {}
 
 	@Override
-	public void post(String tag, ApplicationEvent event) {
+	public void post(String tag, ApplicationEvent event) throws RemoteException {
 		EventKit.post(tag, event);
 	}
 

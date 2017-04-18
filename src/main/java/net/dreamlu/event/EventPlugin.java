@@ -17,6 +17,7 @@ import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.event.core.Listener;
 import net.dreamlu.event.rmi.RmiClientConfig;
 import net.dreamlu.event.rmi.RmiServerConfig;
+import net.dreamlu.event.service.EventService;
 import net.dreamlu.utils.ArrayListMultimap;
 import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
@@ -201,7 +202,8 @@ public class EventPlugin implements IPlugin {
 		}
 		if (rmiClientConfig != null) {
 			try {
-				rmiClientConfig.getEventService();
+				EventService eventService = rmiClientConfig.getEventService();
+				EventKit.setEventService(eventService);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				e.printStackTrace();
@@ -235,6 +237,12 @@ public class EventPlugin implements IPlugin {
 		if (null != map) {
 			map.clear();
 			map = null;
+		}
+		try {
+			rmiServerConfig.unbindEventService();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 		return true;
 	}

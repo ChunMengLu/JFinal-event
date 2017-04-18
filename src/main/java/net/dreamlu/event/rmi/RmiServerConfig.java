@@ -2,14 +2,12 @@ package net.dreamlu.event.rmi;
 
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
-import java.rmi.Remote;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 import net.dreamlu.event.service.EventService;
 import net.dreamlu.event.service.EventServiceImpl;
-import net.dreamlu.event.service.RmiService;
-import net.dreamlu.utils.BeanUtil;
 
 /**
  * Rmi服务端配置
@@ -24,10 +22,12 @@ public class RmiServerConfig extends RmiConfig {
 	}
 	
 	public void bindEventService() throws AccessException, RemoteException, AlreadyBoundException {
-		RmiService rmiService = EventServiceImpl.class.getAnnotation(RmiService.class);
-		Class<? extends Remote> clazz = rmiService.value();
-		String name = clazz.getSimpleName();
-		EventService eventService = BeanUtil.newInstance(EventServiceImpl.class);
+		String name = EventService.class.getSimpleName();
+		EventService eventService = new EventServiceImpl();
 		registry.bind(name, eventService);
+	}
+	
+	public void unbindEventService() throws AccessException, RemoteException, NotBoundException {
+		registry.unbind(EventService.class.getSimpleName());
 	}
 }
