@@ -30,4 +30,9 @@ public class RmiClientConfig extends RmiConfig {
 	public String getHost() {
 		return host;
 	}
+
+	@Override
+	public boolean start() {
+		return false;
+	}
 }

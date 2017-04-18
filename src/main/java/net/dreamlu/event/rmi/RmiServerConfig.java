@@ -30,4 +30,9 @@ public class RmiServerConfig extends RmiConfig {
 	public void unbindEventService() throws AccessException, RemoteException, NotBoundException {
 		registry.unbind(EventService.class.getSimpleName());
 	}
+
+	@Override
+	public boolean start() {
+		return false;
+	}
 }
