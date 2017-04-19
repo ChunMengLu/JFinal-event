@@ -4,8 +4,6 @@ import java.rmi.RemoteException;
 
 import net.dreamlu.event.EventKit;
 import net.dreamlu.event.EventPlugin;
-import net.dreamlu.event.rmi.RmiClientConfig;
-import net.dreamlu.event.rmi.RmiServerConfig;
 
 public class RmiTest {
 	public static void main(String[] args) throws RemoteException, InterruptedException {
@@ -22,9 +20,9 @@ public class RmiTest {
 		// 设置默认扫描的包命，默认全扫描
 		plugin.scanPackage("net.dreamlu");
 		
-		plugin.setRmiServerConfig(new RmiServerConfig(8880));
+		plugin.setRmiServer(8880);
 		Thread.sleep(500);
-		plugin.setRmiClientConfig(new RmiClientConfig(8880, "localhost"));
+		plugin.setRmiClient("localhost", 8880);
 		
 		// 启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 		plugin.start();

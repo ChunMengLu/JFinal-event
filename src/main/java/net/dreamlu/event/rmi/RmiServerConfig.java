@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
+import net.dreamlu.event.RmiConfig;
 import net.dreamlu.event.service.EventService;
 import net.dreamlu.event.service.EventServiceImpl;
 
@@ -16,23 +17,38 @@ import net.dreamlu.event.service.EventServiceImpl;
  */
 public class RmiServerConfig extends RmiConfig {
 	
-	public RmiServerConfig(int port) throws RemoteException {
+	public RmiServerConfig(int port) {
 		super(port);
-		super.registry = LocateRegistry.createRegistry(port);
 	}
 	
-	public void bindEventService() throws AccessException, RemoteException, AlreadyBoundException {
-		String name = EventService.class.getSimpleName();
-		EventService eventService = new EventServiceImpl();
-		registry.bind(name, eventService);
-	}
-	
-	public void unbindEventService() throws AccessException, RemoteException, NotBoundException {
-		registry.unbind(EventService.class.getSimpleName());
+	@Override
+	public boolean start() {
+		try {
+			registry = LocateRegistry.createRegistry(port);
+			String name = EventService.class.getSimpleName();
+			EventService eventService = new EventServiceImpl();
+			registry.bind(name, eventService);
+			return true;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
-	public boolean start() {
+	protected boolean stop() {
+		try {
+			registry.unbind(EventService.class.getSimpleName());
+			return true;
+		} catch (AccessException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 }

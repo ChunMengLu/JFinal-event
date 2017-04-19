@@ -17,7 +17,6 @@ import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.event.core.Listener;
 import net.dreamlu.event.rmi.RmiClientConfig;
 import net.dreamlu.event.rmi.RmiServerConfig;
-import net.dreamlu.event.service.EventService;
 import net.dreamlu.utils.ArrayListMultimap;
 import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
@@ -40,8 +39,8 @@ public class EventPlugin implements IPlugin {
 	private boolean scanJar = false;
 	// 默认扫描所有的包
 	private String scanPackage = "";
-	private RmiServerConfig rmiServerConfig;
-	private RmiClientConfig rmiClientConfig;
+	private RmiConfig rmiServerConfig;
+	private RmiConfig rmiClientConfig;
 
 	/**
 	 * 构造EventPlugin
@@ -124,13 +123,13 @@ public class EventPlugin implements IPlugin {
 		return this;
 	}
 	
-	public EventPlugin setRmiServerConfig(RmiServerConfig rmiServerConfig) {
-		this.rmiServerConfig = rmiServerConfig;
+	public EventPlugin setRmiServer(int port) {
+		this.rmiServerConfig = new RmiServerConfig(port);
 		return this;
 	}
 
-	public EventPlugin setRmiClientConfig(RmiClientConfig rmiClientConfig) {
-		this.rmiClientConfig = rmiClientConfig;
+	public EventPlugin setRmiClient(String host, int port) {
+		this.rmiClientConfig = new RmiClientConfig(port, host);
 		return this;
 	}
 
@@ -138,6 +137,13 @@ public class EventPlugin implements IPlugin {
 	public boolean start() {
 		create();
 		EventKit.init(map, pool);
+		if (rmiServerConfig != null) {
+			rmiServerConfig.start();
+		}
+		if (rmiClientConfig != null) {
+			rmiClientConfig.start();
+			EventKit.initEventService(rmiClientConfig.registry);
+		}
 		return true;
 	}
 
@@ -192,23 +198,6 @@ public class EventPlugin implements IPlugin {
 				log.debug(clazz + " init~");
 			}
 		}
-		if (rmiServerConfig != null) {
-			try {
-				rmiServerConfig.bindEventService();
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-				e.printStackTrace();
-			}
-		}
-		if (rmiClientConfig != null) {
-			try {
-				EventService eventService = rmiClientConfig.getEventService();
-				EventKit.setEventService(eventService);
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/**
@@ -238,11 +227,8 @@ public class EventPlugin implements IPlugin {
 			map.clear();
 			map = null;
 		}
-		try {
-			rmiServerConfig.unbindEventService();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			e.printStackTrace();
+		if (rmiServerConfig != null) {
+			rmiServerConfig.stop();
 		}
 		return true;
 	}

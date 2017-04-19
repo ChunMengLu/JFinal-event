@@ -1,6 +1,9 @@
 package net.dreamlu.event;
 
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
@@ -26,8 +29,16 @@ public class EventKit {
 		EventKit.pool = pool;
 	}
 	
-	static void setEventService(EventService eventService) {
-		EventKit.eventService = eventService;
+	static void initEventService(Registry registry) {
+		try {
+			eventService = (EventService) registry.lookup(EventService.class.getSimpleName());
+		} catch (AccessException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

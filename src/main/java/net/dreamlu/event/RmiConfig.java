@@ -1,12 +1,19 @@
-package net.dreamlu.event.rmi;
+package net.dreamlu.event;
 
 import java.rmi.registry.Registry;
 
+/**
+ * Rmi配置抽象
+ * 
+ * @author L.cm
+ *
+ */
 public abstract class RmiConfig {
-	private final int port;
+	protected final int port;
 	protected Registry registry;
 	
-	public abstract boolean start();
+	protected abstract boolean start();
+	protected abstract boolean stop();
 	
 	public RmiConfig(int port) {
 		this.port = port;
