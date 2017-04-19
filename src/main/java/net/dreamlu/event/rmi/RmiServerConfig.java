@@ -22,7 +22,7 @@ public class RmiServerConfig extends RmiConfig {
 	}
 	
 	@Override
-	public boolean start() {
+	protected boolean start() {
 		try {
 			registry = LocateRegistry.createRegistry(port);
 			String name = EventService.class.getSimpleName();

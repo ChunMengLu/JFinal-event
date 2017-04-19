@@ -26,6 +26,7 @@ public class RmiClientConfig extends RmiConfig {
 	protected boolean start() {
 		try {
 			registry = LocateRegistry.getRegistry(host, port);
+			return true;
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -34,6 +35,6 @@ public class RmiClientConfig extends RmiConfig {
 
 	@Override
 	protected boolean stop() {
-		return false;
+		return true;
 	}
 }
