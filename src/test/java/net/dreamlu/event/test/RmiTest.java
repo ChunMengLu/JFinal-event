@@ -28,8 +28,17 @@ public class RmiTest {
 		plugin.start();
 		// 发送第一个消息
 		EventKit.postRemote(new Test1Event("hello1"));
+		// 发送第二个消息
+		for (int i = 0; i < 100; i++) {
+			EventKit.postRemote(new Test1Event("hello:->" + i));
+		}
+		// 发送带tag的消息
+		EventKit.postRemote("save", new Test2Event(123123));
+		EventKit.postRemote("update", new Test2Event(456456));
 		
 		Thread.sleep(2000);
+		
+		// 停止插件，用于main方法启动，jfinal中不需要，添加插件即可。
 		plugin.stop();
 	}
 }

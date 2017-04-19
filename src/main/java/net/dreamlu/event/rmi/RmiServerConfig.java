@@ -3,8 +3,10 @@ package net.dreamlu.event.rmi;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 
 import net.dreamlu.event.RmiConfig;
 import net.dreamlu.event.service.EventService;
@@ -30,17 +32,21 @@ public class RmiServerConfig extends RmiConfig {
 			registry.bind(name, eventService);
 			return true;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (AlreadyBoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		return false;
 	}
 
 	@Override
 	protected boolean stop() {
 		try {
-			registry.unbind(EventService.class.getSimpleName());
+			String[] services = registry.list();
+			for (String service : services) {
+				Remote remote = registry.lookup(service);
+				UnicastRemoteObject.unexportObject(remote, true);
+				registry.unbind(service);
+			}
 			return true;
 		} catch (AccessException e) {
 			e.printStackTrace();

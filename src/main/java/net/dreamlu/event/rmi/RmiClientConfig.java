@@ -28,9 +28,8 @@ public class RmiClientConfig extends RmiConfig {
 			registry = LocateRegistry.getRegistry(host, port);
 			return true;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		return false;
 	}
 
 	@Override
