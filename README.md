@@ -39,7 +39,7 @@ plugin.setRmiServer(int port);
 
 客户端：
 ```java
-setRmiClient(String host, int port);
+plugin.setRmiClient(String host, int port);
 ```
 
 使用：
