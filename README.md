@@ -31,10 +31,25 @@ plugin.stop();
 
 使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
-## 依赖说明
-`v0.3`以上版本除了JFinal，不依赖任何jar包
+## 远程事件
+服务端：
+```java
+plugin.setRmiServer(int port);
+```
 
-`v0.2、v0.1`依赖`guava.java`，建议直接升级到最新版本。
+客户端：
+```java
+setRmiClient(String host, int port);
+```
+
+使用：
+```java
+EventKit.postRemote(final ApplicationEvent event);
+// 或者
+EventKit.postRemote(final String tag, final ApplicationEvent event);
+```
+
+建议：将服务端和客户端通用的`event`类文件打成maven模块。
 
 jar包下载
 http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
@@ -82,13 +97,6 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 >1. 编译改为JDK1.6
 >2. 新增监听器执行顺序@Listener(order = 1) 越小越优先执行，Default is Integer.MAX_VALUE
 >3. 新增单个监听器的，同步或者异步开关@Listener(enableAsync = true)
-
->## 2015-06-25 v0.3
->1. 去除`guava.java`依赖
->2. 更改EventPlugin `asyn`方法为`async`
-
->## 2015-05-21 v0.2
->1. 添加@Listener注解，方便使用
 
 ## 交流群
 如梦技术：[`237587118`](http://shang.qq.com/wpa/qunwpa?idkey=f78fcb750b4f72c92ff4d375d2884dd69b552301a1f2681af956bd32700eb2c0)
