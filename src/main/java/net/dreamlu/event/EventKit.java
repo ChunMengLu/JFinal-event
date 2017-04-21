@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
 import net.dreamlu.event.core.ApplicationEvent;
+import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.event.service.EventService;
 import net.dreamlu.utils.ArrayListMultimap;
 
@@ -19,6 +20,7 @@ import net.dreamlu.utils.ArrayListMultimap;
  * site:http://www.dreamlu.net
  * date 2015年4月26日下午9:58:53
  */
+@SuppressWarnings("rawtypes")
 public class EventKit {
 	private static ArrayListMultimap<EventType, ListenerHelper> map;
 	private static ExecutorService pool;
@@ -57,9 +59,7 @@ public class EventKit {
 	 * @since 1.4.0
 	 */
 	public static void post(final String tag, final ApplicationEvent event) {
-		Class<?> eventClazz = event.getClass();
-		EventType eventType = new EventType(tag, eventClazz);
-		post(eventType, event);
+		post(new EventType(tag, event.getClass()), event);
 	}
 	
 	/**
@@ -68,6 +68,24 @@ public class EventKit {
 	 */
 	@SuppressWarnings("unchecked")
 	private static void post(final EventType eventType, final ApplicationEvent event) {
+		EventKit.eventActuator(eventType, new EventCall() {
+			@Override
+			public void exec(ApplicationListener listener) {
+				listener.onApplicationEvent(event);
+			}
+		});
+	}
+	
+	public interface EventCall {
+		void exec(ApplicationListener listener);
+	}
+	
+	/**
+	 * 事件执行方法
+	 * @param eventType 事件类型
+	 * @param call EventCall
+	 */
+	private static void eventActuator(final EventType eventType, final EventCall call) {
 		Collection<ListenerHelper> listenerList = map.get(eventType);
 		for (final ListenerHelper helper : listenerList) {
 			if (null != pool && helper.enableAsync) {
@@ -75,11 +93,11 @@ public class EventKit {
 
 					@Override
 					public void run() {
-						helper.listener.onApplicationEvent(event);
+						call.exec(helper.listener);
 					}
 				});
 			} else {
-				helper.listener.onApplicationEvent(event);
+				call.exec(helper.listener);
 			}
 		}
 	}
@@ -101,11 +119,17 @@ public class EventKit {
 	 * @since 1.5.0
 	 */
 	public static void postRemote(final String tag, final ApplicationEvent event) {
-		try {
-			EventKit.eventService.post(tag, event);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+		EventType eventType = new EventType(tag, event.getClass());
+		EventKit.eventActuator(eventType, new EventCall() {
+			@Override
+			public void exec(ApplicationListener listener) {
+				try {
+					EventKit.eventService.post(tag, event);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }

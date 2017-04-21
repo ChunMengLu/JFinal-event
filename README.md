@@ -39,7 +39,7 @@ plugin.setRmiServer(int port);
 
 客户端：
 ```java
-plugin.setRmiClient(String host, int port);
+setRmiClient(String host, int port);
 ```
 
 使用：
@@ -60,14 +60,14 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
->## 2017-04-20 v1.5.0
+>## 2017-04-20 v1.5.1
 >基于rmi的远程Event
 
 >## 2017-03-22 v1.4.2

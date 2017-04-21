@@ -3,7 +3,7 @@ package net.dreamlu.event.test;
 import net.dreamlu.event.core.ApplicationListener;
 import net.dreamlu.event.core.Listener;
 
-@Listener(order = 1, enableAsync = false)
+@Listener(order = 1, enableAsync = true)
 public class Test1Listener implements ApplicationListener<Test1Event> {
 
 	@Override
