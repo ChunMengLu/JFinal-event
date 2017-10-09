@@ -1,8 +1,11 @@
 package net.dreamlu.event.core;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+
+import net.dreamlu.utils.BeanUtil;
 
 public class ApplicationListenerMethodAdapter implements ApplicationListener<ApplicationEvent> {
 	private final Method method;
@@ -31,7 +34,12 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
-//		this.method.invoke(obj, event);
+		try {
+			this.method.invoke(BeanUtil.newInstance(targetClass), event);
+		} catch (IllegalAccessException | IllegalArgumentException
+		        | InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Method getMethod() {

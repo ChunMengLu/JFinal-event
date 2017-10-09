@@ -19,6 +19,7 @@ public class DevTest {
 		System.out.println(list.size());
 		
 		for (ApplicationListenerMethodAdapter a : list) {
+			a.onApplicationEvent(new Test1Event("hello1"));
 			System.out.println(a);
 		}
 	}
