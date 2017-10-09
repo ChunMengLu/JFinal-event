@@ -5,6 +5,10 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import com.jfinal.kit.ElKit;
+import com.jfinal.kit.Kv;
+import com.jfinal.kit.StrKit;
+
 import net.dreamlu.utils.BeanUtil;
 
 public class ApplicationListenerMethodAdapter implements ApplicationListener<ApplicationEvent> {
@@ -34,10 +38,28 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
+		String condition = this.getCondition();
+		if (StrKit.notBlank(condition)) {
+			boolean elPass = ElKit.eval(condition, Kv.by("event", event));
+			if (!elPass) {
+				return;
+			}
+		}
+		// 限制的消息类型
+		Class<?> eventType = event.getClass();
+		if (!declaredEventClasses.isEmpty()) {
+			
+		}
+		// 参数类型
+		Class<?> paramType = method.getParameterTypes()[0];
+		if (!paramType.isAssignableFrom(eventType)) {
+			return;
+		}
 		try {
 			this.method.invoke(BeanUtil.newInstance(targetClass), event);
-		} catch (IllegalAccessException | IllegalArgumentException
-		        | InvocationTargetException e) {
+		} catch (IllegalAccessException 
+				| IllegalArgumentException
+				| InvocationTargetException e) {
 			e.printStackTrace();
 		}
 	}

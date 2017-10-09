@@ -4,7 +4,7 @@ import net.dreamlu.event.core.EventListener;
 
 public class Test2SaveListener {
 
-	@EventListener
+	@EventListener(order = 1)
 	public void onApplicationEvent(Test2Event event) {
 		Integer xx = (Integer) event.getSource();
 		System.out.println(Thread.currentThread().getName() + " " + this.getClass() + " " + "\tsource:" + xx);
