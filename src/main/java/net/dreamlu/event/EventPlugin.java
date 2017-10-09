@@ -1,10 +1,7 @@
 package net.dreamlu.event;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -13,10 +10,8 @@ import java.util.concurrent.Executors;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.IPlugin;
 
-import net.dreamlu.event.core.ApplicationListener;
+import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
 import net.dreamlu.event.core.EventListener;
-import net.dreamlu.utils.ArrayListMultimap;
-import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
 
 /**
@@ -26,13 +21,12 @@ import net.dreamlu.utils.ClassUtil;
  * site:http://www.dreamlu.net
  * date 2015年4月26日下午10:25:04
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class EventPlugin implements IPlugin {
-	private static Log log = Log.getLog(ClassUtil.class);
+	private static Log log = Log.getLog(EventPlugin.class);
 	// 线程池
 	private static ExecutorService pool = null;
-	// 重复key的map，使用监听的type，取出所有的监听器
-	private static ArrayListMultimap<Type, ApplicationListener> map = null;
+	// 事件监听处理器
+	private static List<ApplicationListenerMethodAdapter> listenerList = null;
 	// 默认不扫描jar包
 	private boolean scanJar = false;
 	// 默认扫描所有的包
@@ -60,8 +54,7 @@ public class EventPlugin implements IPlugin {
 	 * @param async 是否异步
 	 */
 	public EventPlugin(boolean scanJar, String scanPackage, boolean async) {
-		this.scanJar = scanJar;
-		this.scanPackage = scanPackage;
+		this(scanJar, scanPackage);
 		if (async) {
 			async();
 		}
@@ -74,8 +67,7 @@ public class EventPlugin implements IPlugin {
 	 * @param executorService 自定义线程池
 	 */
 	public EventPlugin(boolean scanJar, String scanPackage, ExecutorService executorService) {
-		this.scanJar = scanJar;
-		this.scanPackage = scanPackage;
+		this(scanJar, scanPackage);
 		pool = executorService;
 	}
 	
@@ -122,7 +114,7 @@ public class EventPlugin implements IPlugin {
 	@Override
 	public boolean start() {
 		create();
-//		EventKit.init(map, pool);
+		EventKit.init(listenerList, pool);
 		return true;
 	}
 
@@ -130,68 +122,38 @@ public class EventPlugin implements IPlugin {
 	 * 构造
 	 */
 	private void create() {
-		if (null != map) {
+		if (null != listenerList) {
 			return;
 		}
-		// 扫描注解 {@code Listener}
-		Set<Class<?>> clazzSet = ClassUtil.scanPackageByAnnotation(scanPackage, scanJar, EventListener.class);
-		if (clazzSet.isEmpty()) {
-			log.error("Listener is empty! Please check it!");
+		// 扫描注解 {@code EventListener}
+		MethodEventFilter filter = new MethodEventFilter(EventListener.class);
+		ClassUtil.scanPackage(scanPackage, scanJar, filter);
+		
+		Set<Method> methodSet = filter.getListeners();
+		if (methodSet.isEmpty()) {
+			log.error("@EventListener is empty! Please check it!");
+			return;
 		}
-
-		List<Class<? extends ApplicationListener>> allListeners = new ArrayList<Class<? extends ApplicationListener>>();
-		// 装载所有 {@code ApplicationListener} 的子类
-		Class superClass;
-		for (Class<?> clazz : clazzSet) {
-			superClass = ApplicationListener.class;
-			if (superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
-				allListeners.add((Class<? extends ApplicationListener>) clazz);
-			}
+		
+		// 装载兼听
+		List<ApplicationListenerMethodAdapter> allListeners = new ArrayList<ApplicationListenerMethodAdapter>();
+		for (Method method : methodSet) {
+			Class<?> targetClass = method.getDeclaringClass();
+			allListeners.add(new ApplicationListenerMethodAdapter(targetClass, method));
 		}
+		
 		if (allListeners.isEmpty()) {
-			log.error("Listener is empty! Please check @Listener is right?");
+			log.error("Listener is empty! Please check @EventListener is right?");
+			return;
 		}
-
-		// 监听器排序
-		sortListeners(allListeners);
-
-		// 重复key的map，使用监听的type，取出所有的监听器
-//		map = new ArrayListMultimap<EventType, ListenerHelper>();
-//
-//		Type type;
-//		ApplicationListener listener;
-//		for (Class<? extends ApplicationListener> clazz : allListeners) {
-//			// 获取监听器上的泛型信息
-//			type = ((ParameterizedType) clazz.getGenericInterfaces()[0]).getActualTypeArguments()[0];
-//			// 实例化监听器
-//			listener = BeanUtil.newInstance(clazz);
-//
-//			// 监听器上的注解
-//			EventListener annotation = clazz.getAnnotation(EventListener.class);
-//			boolean enableAsync = annotation.async();
-//			EventType eventType = new EventType(tag, type);
-//			map.put(eventType, new ListenerHelper(listener, enableAsync));
-//			if (log.isDebugEnabled()) {
-//				log.debug(clazz + " init~");
-//			}
-//		}
-	}
-
-	/**
-	 * 对所有的监听器进行排序
-	 */
-	private void sortListeners(List<Class<? extends ApplicationListener>> listeners) {
-		Collections.sort(listeners, new Comparator<Class<? extends ApplicationListener>>() {
-
-			@Override
-			public int compare(Class<? extends ApplicationListener> o1,
-					Class<? extends ApplicationListener> o2) {
-
-				int x = o1.getAnnotation(EventListener.class).order();
-				int y = o2.getAnnotation(EventListener.class).order();
-				return (x < y) ? -1 : ((x == y) ? 0 : 1);
+		
+		listenerList = new ArrayList<ApplicationListenerMethodAdapter>();
+		for (ApplicationListenerMethodAdapter applicationListener : allListeners) {
+			listenerList.add(applicationListener);
+			if (log.isDebugEnabled()) {
+				log.debug(applicationListener + " init~");
 			}
-		});
+		}
 	}
 
 	@Override
@@ -200,9 +162,9 @@ public class EventPlugin implements IPlugin {
 			pool.shutdown();
 			pool = null;
 		}
-		if (null != map) {
-			map.clear();
-			map = null;
+		if (null != listenerList) {
+			listenerList.clear();
+			listenerList = null;
 		}
 		return true;
 	}

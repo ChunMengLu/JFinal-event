@@ -22,6 +22,8 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 
 	private final int order;
 
+	private final boolean async;
+
 	private final AnnotatedElementKey methodKey;
 	
 	public ApplicationListenerMethodAdapter(Class<?> targetClass, Method method) {
@@ -29,9 +31,10 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 		this.targetClass = targetClass;
 		
 		EventListener ann = method.getAnnotation(EventListener.class);
-		this.declaredEventClasses = Arrays.asList(ann.classes());
+		this.declaredEventClasses = Arrays.asList(ann.events());
 		this.condition = (ann != null ? ann.condition() : null);
 		this.order = ann.order();
+		this.async = ann.async();
 		
 		this.methodKey = new AnnotatedElementKey(method, targetClass);
 	}
@@ -39,19 +42,27 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		String condition = this.getCondition();
+		// 判断表达式
 		if (StrKit.notBlank(condition)) {
 			boolean elPass = ElKit.eval(condition, Kv.by("event", event));
 			if (!elPass) {
 				return;
 			}
 		}
-		// 限制的消息类型
-		Class<?> eventType = event.getClass();
-		if (!declaredEventClasses.isEmpty()) {
-			
-		}
-		// 参数类型
+		// 用户事件类型限制
 		Class<?> paramType = method.getParameterTypes()[0];
+		if (!declaredEventClasses.isEmpty()) {
+			boolean canExec = false;
+			for (Class<?> clazz : declaredEventClasses) {
+				if (paramType.isAssignableFrom(clazz)) {
+					canExec = true;
+					break;
+				}
+			}
+			if (!canExec) return;
+		}
+		// 参数支持的事件类型
+		Class<?> eventType = event.getClass();
 		if (!paramType.isAssignableFrom(eventType)) {
 			return;
 		}
@@ -87,4 +98,11 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 	public AnnotatedElementKey getMethodKey() {
 		return methodKey;
 	}
+
+	@Override
+	public String toString() {
+		return "ApplicationListenerMethodAdapter [targetClass=" + targetClass
+		        + ", method=" + method + "]";
+	}
+
 }

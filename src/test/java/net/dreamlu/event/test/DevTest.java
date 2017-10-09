@@ -15,11 +15,11 @@ import net.dreamlu.utils.ClassUtil;
 public class DevTest {
 
 	public static void main(String[] args) {
-		MethodEventFilter f = new MethodEventFilter(EventListener.class);
+		MethodEventFilter filter = new MethodEventFilter(EventListener.class);
 		
-		ClassUtil.scanPackage("", true, f);
+		ClassUtil.scanPackage("", true, filter);
 		
-		Set<Method> set = f.getListeners();
+		Set<Method> set = filter.getListeners();
 		
 		System.out.println(set.size());
 		

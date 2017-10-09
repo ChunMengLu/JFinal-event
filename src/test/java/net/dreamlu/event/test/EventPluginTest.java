@@ -34,8 +34,8 @@ public class EventPluginTest {
 		EventKit.post(new Test2Event(123123));
 		
 		// 发送带tag的消息
-		EventKit.post("save", new Test2Event(123123));
-		EventKit.post("update", new Test2Event(456456));
+//		EventKit.post("save", new Test2Event(123123));
+//		EventKit.post("update", new Test2Event(456456));
 		
 		try {
 			Thread.sleep(1000);

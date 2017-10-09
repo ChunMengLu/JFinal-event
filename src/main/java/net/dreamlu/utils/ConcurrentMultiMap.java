@@ -1,23 +1,23 @@
 package net.dreamlu.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * 自己实现的ArrayListMultimap 重复key的map，使用监听的type，取出所有的监听器
+ * 自己实现的ConcurrentMultiMap 重复key的map，使用监听的type，取出所有的监听器
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
  * date 2015年6月25日下午8:36:17
  */
-public class ArrayListMultimap<K, V> {
+public class ConcurrentMultiMap<K, V> {
 
-	private transient final Map<K, List<V>> map;
+	private transient final ConcurrentMap<K, List<V>> map;
 
-	public ArrayListMultimap() {
-		map = new HashMap<K, List<V>>();
+	public ConcurrentMultiMap() {
+		map = new ConcurrentHashMap<K, List<V>>();
 	}
 
 	List<V> createlist() {
@@ -61,7 +61,7 @@ public class ArrayListMultimap<K, V> {
 	}
 
 	/**
-	 * clear ArrayListMultimap
+	 * clear ConcurrentMultiMap
 	 */
 	public void clear() {
 		map.clear();

@@ -25,7 +25,7 @@ public @interface EventListener {
 	 * However, if this attribute is specified with multiple values,
 	 * the annotated method must <em>not</em> declare any parameters.
 	 */
-	Class<?>[] classes() default {};
+	Class<?>[] events() default {};
 	
 	/**
 	 * The order value. Default is {@link Integer#MAX_VALUE}.
