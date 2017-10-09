@@ -14,9 +14,7 @@ import com.jfinal.log.Log;
 import com.jfinal.plugin.IPlugin;
 
 import net.dreamlu.event.core.ApplicationListener;
-import net.dreamlu.event.core.Listener;
-import net.dreamlu.event.rmi.RmiClientConfig;
-import net.dreamlu.event.rmi.RmiServerConfig;
+import net.dreamlu.event.core.EventListener;
 import net.dreamlu.utils.ArrayListMultimap;
 import net.dreamlu.utils.BeanUtil;
 import net.dreamlu.utils.ClassUtil;
@@ -34,13 +32,11 @@ public class EventPlugin implements IPlugin {
 	// 线程池
 	private static ExecutorService pool = null;
 	// 重复key的map，使用监听的type，取出所有的监听器
-	private static ArrayListMultimap<EventType, ListenerHelper> map = null;
+	private static ArrayListMultimap<Type, ApplicationListener> map = null;
 	// 默认不扫描jar包
 	private boolean scanJar = false;
 	// 默认扫描所有的包
 	private String scanPackage = "";
-	private RmiConfig rmiServerConfig;
-	private RmiConfig rmiClientConfig;
 
 	/**
 	 * 构造EventPlugin
@@ -122,28 +118,11 @@ public class EventPlugin implements IPlugin {
 		this.scanPackage = scanPackage;
 		return this;
 	}
-	
-	public EventPlugin setRmiServer(int port) {
-		this.rmiServerConfig = new RmiServerConfig(port);
-		return this;
-	}
-
-	public EventPlugin setRmiClient(String host, int port) {
-		this.rmiClientConfig = new RmiClientConfig(port, host);
-		return this;
-	}
 
 	@Override
 	public boolean start() {
 		create();
-		EventKit.init(map, pool);
-		if (rmiServerConfig != null) {
-			rmiServerConfig.start();
-		}
-		if (rmiClientConfig != null) {
-			rmiClientConfig.start();
-			EventKit.initEventService(rmiClientConfig.registry);
-		}
+//		EventKit.init(map, pool);
 		return true;
 	}
 
@@ -155,7 +134,7 @@ public class EventPlugin implements IPlugin {
 			return;
 		}
 		// 扫描注解 {@code Listener}
-		Set<Class<?>> clazzSet = ClassUtil.scanPackageByAnnotation(scanPackage, scanJar, Listener.class);
+		Set<Class<?>> clazzSet = ClassUtil.scanPackageByAnnotation(scanPackage, scanJar, EventListener.class);
 		if (clazzSet.isEmpty()) {
 			log.error("Listener is empty! Please check it!");
 		}
@@ -177,27 +156,25 @@ public class EventPlugin implements IPlugin {
 		sortListeners(allListeners);
 
 		// 重复key的map，使用监听的type，取出所有的监听器
-		map = new ArrayListMultimap<EventType, ListenerHelper>();
-
-		Type type;
-		ApplicationListener listener;
-		for (Class<? extends ApplicationListener> clazz : allListeners) {
-			// 获取监听器上的泛型信息
-			type = ((ParameterizedType) clazz.getGenericInterfaces()[0]).getActualTypeArguments()[0];
-			// 实例化监听器
-			listener = BeanUtil.newInstance(clazz);
-
-			// 监听器上的注解
-			Listener annotation = clazz.getAnnotation(Listener.class);
-			boolean enableAsync = annotation.enableAsync();
-			String tag = annotation.tag();
-			
-			EventType eventType = new EventType(tag, type);
-			map.put(eventType, new ListenerHelper(listener, enableAsync));
-			if (log.isDebugEnabled()) {
-				log.debug(clazz + " init~");
-			}
-		}
+//		map = new ArrayListMultimap<EventType, ListenerHelper>();
+//
+//		Type type;
+//		ApplicationListener listener;
+//		for (Class<? extends ApplicationListener> clazz : allListeners) {
+//			// 获取监听器上的泛型信息
+//			type = ((ParameterizedType) clazz.getGenericInterfaces()[0]).getActualTypeArguments()[0];
+//			// 实例化监听器
+//			listener = BeanUtil.newInstance(clazz);
+//
+//			// 监听器上的注解
+//			EventListener annotation = clazz.getAnnotation(EventListener.class);
+//			boolean enableAsync = annotation.async();
+//			EventType eventType = new EventType(tag, type);
+//			map.put(eventType, new ListenerHelper(listener, enableAsync));
+//			if (log.isDebugEnabled()) {
+//				log.debug(clazz + " init~");
+//			}
+//		}
 	}
 
 	/**
@@ -210,8 +187,8 @@ public class EventPlugin implements IPlugin {
 			public int compare(Class<? extends ApplicationListener> o1,
 					Class<? extends ApplicationListener> o2) {
 
-				int x = o1.getAnnotation(Listener.class).order();
-				int y = o2.getAnnotation(Listener.class).order();
+				int x = o1.getAnnotation(EventListener.class).order();
+				int y = o2.getAnnotation(EventListener.class).order();
 				return (x < y) ? -1 : ((x == y) ? 0 : 1);
 			}
 		});
@@ -226,9 +203,6 @@ public class EventPlugin implements IPlugin {
 		if (null != map) {
 			map.clear();
 			map = null;
-		}
-		if (rmiServerConfig != null) {
-			rmiServerConfig.stop();
 		}
 		return true;
 	}

@@ -1,12 +1,10 @@
 package net.dreamlu.event.test;
 
-import net.dreamlu.event.core.ApplicationListener;
-import net.dreamlu.event.core.Listener;
+import net.dreamlu.event.core.EventListener;
 
-@Listener(order = 3, enableAsync = true)
-public class Test3Listener implements ApplicationListener<Test2Event> {
+public class Test3Listener {
 
-	@Override
+	@EventListener
 	public void onApplicationEvent(Test2Event event) {
 		if (event.getSource() instanceof Integer) {
 			System.out.println(Thread.currentThread().getName() + "\tsource:" + event.getSource());

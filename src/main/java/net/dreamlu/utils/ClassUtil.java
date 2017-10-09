@@ -1,8 +1,5 @@
 package net.dreamlu.utils;
 
-import com.jfinal.kit.StrKit;
-import com.jfinal.log.Log;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -16,8 +13,11 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.jfinal.kit.StrKit;
+import com.jfinal.log.Log;
+
 /**
- * 该类来源于#hutool#
+ * 该类参考于#hutool#
  * 
  * 地址：http://git.oschina.net/loolly/hutool
  * 
@@ -50,14 +50,23 @@ public final class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, boolean inJar, final Class<? extends Annotation> annotationClass) {
-		return scanPackage(packageName, inJar, new ClassFilter() {
+		final Set<Class<?>> classes = new HashSet<Class<?>>();
+		
+		scanPackage(packageName, inJar, new ClassFilter() {
 			@Override
 			public boolean accept(Class<?> clazz) {
 				return clazz.isAnnotationPresent(annotationClass);
 			}
+			
+			@Override
+			public void addClass(Class<?> clazz) {
+				classes.add(clazz);
+			}
 		});
+		
+		return classes;
 	}
-
+	
 	/**
 	 * 扫描指定包路径下所有指定类的子类
 	 * @param packageName 包路径
@@ -66,12 +75,21 @@ public final class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, boolean inJar, final Class<?> superClass) {
-		return scanPackage(packageName, inJar, new ClassFilter() {
+		final Set<Class<?>> classes = new HashSet<Class<?>>();
+		
+		scanPackage(packageName, inJar, new ClassFilter() {
 			@Override
 			public boolean accept(Class<?> clazz) {
 				return superClass.isAssignableFrom(clazz) && !superClass.equals(clazz);
 			}
+			
+			@Override
+			public void addClass(Class<?> clazz) {
+				classes.add(clazz);
+			}
 		});
+		
+		return classes;
 	}
 
 	/**
@@ -84,27 +102,25 @@ public final class ClassUtil {
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackage(String packageName, boolean inJar, ClassFilter classFilter) {
+	public static void scanPackage(String packageName, boolean inJar, ClassFilter classFilter) {
 		if(StrKit.isBlank(packageName)) {
 			packageName = "";
 		}
 		packageName = getWellFormedPackageName(packageName);
-
-		final Set<Class<?>> classes = new HashSet<Class<?>>();
+		
 		for (String classPath : getClassPaths(packageName)) {
 			// 填充 classes, 并对classpath解码
 			classPath = decodeUrl(classPath);
-			fillClasses(classPath, packageName, classFilter, classes);
+			fillClasses(classPath, packageName, classFilter);
 		}
 		//如果在项目的ClassPath中未找到，去系统定义的ClassPath里找
 		if(inJar) {
 			for (String classPath : getJavaClassPaths()) {
-				// 填充 classes, 并对classpath解码
+				// 填充classes, 并对classpath解码
 				classPath = decodeUrl(classPath);
-				fillClasses(classPath, new File(classPath), packageName, classFilter, classes);
+				fillClasses(classPath, new File(classPath), packageName, classFilter);
 			}
 		}
-		return classes;
 	}
 
 	/**
@@ -113,7 +129,7 @@ public final class ClassUtil {
 	 * @return ClassPath路径字符串集合
 	 */
 	public static Set<String> getClassPaths(String packageName){
-		String packagePath = packageName.replace(".", "/");
+		String packagePath = packageName.replace('.', '/');
 		Enumeration<URL> resources;
 		try {
 			resources = getClassLoader().getResources(packagePath);
@@ -223,18 +239,17 @@ public final class ClassUtil {
 	 * @param classFilter class过滤器
 	 * @param classes List 集合
 	 */
-	private static void fillClasses(String path, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void fillClasses(String path, String packageName, ClassFilter classFilter) {
 		//判定给定的路径是否为Jar
 		int index = path.lastIndexOf(JAR_PATH_EXT);
 		if(index != -1) {
 			//Jar文件
-			path = path.substring(0, index + JAR_FILE_EXT.length());	//截取jar路径
+			path = path.substring(0, index + JAR_FILE_EXT.length()); //截取jar路径
+			path = removePrefix(path, PATH_FILE_PRE); //去掉文件前缀
 
-			path = removePrefix(path, PATH_FILE_PRE);	//去掉文件前缀
-
-			processJarFile(new File(path), packageName, classFilter, classes);
+			processJarFile(new File(path), packageName, classFilter);
 		}else {
-			fillClasses(path, new File(path), packageName, classFilter, classes);
+			fillClasses(path, new File(path), packageName, classFilter);
 		}
 	}
 	
@@ -247,13 +262,13 @@ public final class ClassUtil {
 	 * @param classFilter class过滤器
 	 * @param classes List 集合
 	 */
-	private static void fillClasses(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void fillClasses(String classPath, File file, String packageName, ClassFilter classFilter) {
 		if (file.isDirectory()) {
-			processDirectory(classPath, file, packageName, classFilter, classes);
+			processDirectory(classPath, file, packageName, classFilter);
 		} else if (isClassFile(file)) {
-			processClassFile(classPath, file, packageName, classFilter, classes);
+			processClassFile(classPath, file, packageName, classFilter);
 		} else if (isJarFile(file)) {
-			processJarFile(file, packageName, classFilter, classes);
+			processJarFile(file, packageName, classFilter);
 		}
 	}
 
@@ -265,9 +280,9 @@ public final class ClassUtil {
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processDirectory(String classPath, File directory, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void processDirectory(String classPath, File directory, String packageName, ClassFilter classFilter) {
 		for (File file : directory.listFiles(fileFilter)) {
-			fillClasses(classPath, file, packageName, classFilter, classes);
+			fillClasses(classPath, file, packageName, classFilter);
 		}
 	}
 
@@ -280,22 +295,22 @@ public final class ClassUtil {
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processClassFile(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void processClassFile(String classPath, File file, String packageName, ClassFilter classFilter) {
 		if(false == classPath.endsWith(File.separator)) {
-			classPath += File.separator;
+			classPath += File.separatorChar;
 		}
 		String path = file.getAbsolutePath();
 		if(StrKit.isBlank(packageName)) {
 			path = removePrefix(path, classPath);
 		}
-		final String filePathWithDot = path.replace(File.separator, ".");
+		final String filePathWithDot = path.replace(File.separatorChar, '.');
 
 		int subIndex = -1;
 		if ((subIndex = filePathWithDot.indexOf(packageName)) != -1) {
 			final int endIndex = filePathWithDot.lastIndexOf(CLASS_EXT);
 
 			final String className = filePathWithDot.substring(subIndex, endIndex);
-			fillClass(className, packageName, classes, classFilter);
+			fillClass(className, packageName, classFilter);
 		}
 	}
 
@@ -307,12 +322,12 @@ public final class ClassUtil {
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processJarFile(File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void processJarFile(File file, String packageName, ClassFilter classFilter) {
 		try {
 			for (JarEntry entry : Collections.list(new JarFile(file).entries())) {
 				if (isClass(entry.getName())) {
-					final String className = entry.getName().replace("/", ".").replace(CLASS_EXT, "");
-					fillClass(className, packageName, classes, classFilter);
+					final String className = entry.getName().replace('/', '.').replace(CLASS_EXT, "");
+					fillClass(className, packageName, classFilter);
 				}
 			}
 		} catch (Throwable ex) {
@@ -328,12 +343,12 @@ public final class ClassUtil {
 	 * @param classes 类集合
 	 * @param classFilter 类过滤器
 	 */
-	private static void fillClass(String className, String packageName, Set<Class<?>> classes, ClassFilter classFilter) {
+	private static void fillClass(String className, String packageName, ClassFilter classFilter) {
 		if (className.startsWith(packageName)) {
 			try {
 				final Class<?> clazz = ClassUtil.loadClass(className);
 				if (classFilter == null || classFilter.accept(clazz)) {
-					classes.add(clazz);
+					classFilter.addClass(clazz);
 				}
 			} catch (Throwable ex) {
 //				log.error(ex.getMessage(), ex);
@@ -372,6 +387,7 @@ public final class ClassUtil {
 	 */
 	public interface ClassFilter {
 		boolean accept(Class<?> clazz);
+		void addClass(Class<?> clazz);
 	}
 
 	/**
