@@ -2,7 +2,7 @@
 
 专为JFinal设计，无任何第三方依赖，小巧玲珑。
 
-:laughing: `JFinal`event 插件，使用请查看[文档 wiki](http://git.oschina.net/596392912/JFinal-event/wikis/home)
+:laughing: `JFinal-event` 插件，`老版本`使用请查看[文档 wiki](http://git.oschina.net/596392912/JFinal-event/wikis/home)
 
 ## 初始化插件
 ```
@@ -50,7 +50,32 @@ public void listenTest1Event(Test1Event event) {
 EventKit.post(new Test1Event("hello1"));
 ```
 
-使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
+## @EventListener注解说明
+
+### 示例
+```java
+@EventListener(events = Test1Event.class, order = 1, async = true, condition = "event.isExec()")
+```
+
+### 说明
+> `events`支持的事件类型数组，用于将事件方法定义为`ApplicationEvent`或者自定义父类。
+
+```java
+@EventListener(events = Test1Event.class)
+public void applicationEvent(ApplicationEvent event) {
+    String xx = (String) event.getSource();
+    System.out.println(Thread.currentThread().getName() + "\tsource:" + xx);
+}
+```
+
+> `order`排序，数值越小越先执行，默认为`Integer.MAX_VALUE`
+
+> `async`异步执行，需要插件开启`async()`或者自定义线程池。
+
+> `condition`表达式条件，使用`event.xxxx，event.isExec() == true`判定event的属性或者方法。
+
+## 使用的场景优势
+请参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
 jar包下载
 http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event

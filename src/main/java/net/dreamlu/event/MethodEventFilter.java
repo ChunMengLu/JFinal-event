@@ -8,7 +8,7 @@ import java.util.Set;
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.utils.ClassUtil.ClassFilter;
 
-public class MethodEventFilter implements ClassFilter {
+class MethodEventFilter implements ClassFilter {
 	
 	private final Class<? extends Annotation> annotationClass;
 	private final Set<Method> methodSet;
