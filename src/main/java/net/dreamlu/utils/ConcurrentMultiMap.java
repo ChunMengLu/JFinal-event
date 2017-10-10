@@ -13,19 +13,18 @@ import java.util.concurrent.ConcurrentMap;
  * date 2015年6月25日下午8:36:17
  */
 public class ConcurrentMultiMap<K, V> {
-
 	private transient final ConcurrentMap<K, List<V>> map;
-
+	
 	public ConcurrentMultiMap() {
 		map = new ConcurrentHashMap<K, List<V>>();
 	}
-
+	
 	List<V> createlist() {
 		return new ArrayList<V>();
 	}
-
+	
 	/**
-	 * put to ArrayListMultimap
+	 * put to ConcurrentMultiMap
 	 * @param key 键
 	 * @param value 值
 	 * @return boolean
@@ -46,7 +45,22 @@ public class ConcurrentMultiMap<K, V> {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * put list to ConcurrentMultiMap
+	 * @param key 键
+	 * @param list 值列表
+	 * @return boolean
+	 */
+	public boolean putAll(K key, List<V> list) {
+		if (list == null) {
+			return false;
+		} else {
+			map.put(key, list);
+			return true;
+		}
+	}
+	
 	/**
 	 * get List by key
 	 * @param key 键
@@ -54,12 +68,9 @@ public class ConcurrentMultiMap<K, V> {
 	 */
 	public List<V> get(K key) {
 		List<V> list = map.get(key);
-		if (list == null) {
-			list = createlist();
-		}
 		return list;
 	}
-
+	
 	/**
 	 * clear ConcurrentMultiMap
 	 */

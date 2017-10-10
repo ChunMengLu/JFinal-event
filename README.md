@@ -4,6 +4,7 @@
 
 :laughing: `JFinal`event 插件，使用请查看[文档 wiki](http://git.oschina.net/596392912/JFinal-event/wikis/home)
 
+## 初始化插件
 ```
 // 初始化插件
 EventPlugin plugin = new EventPlugin();
@@ -18,38 +19,38 @@ plugin.scanPackage("net.dreamlu");
 // 手动启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 plugin.start();
 
-// 发送第一个消息
-EventKit.post(new Test1Event("hello1"));
-// 发送带tag的消息
-EventKit.post("save", new Test2Event(123123));
-
-Thread.sleep(1000);
-
 // 停止插件，用于main方法测试
 plugin.stop();
 ```
 
+## 新建事件类
+```java
+// 继承 ApplicationEvent
+public class Test1Event extends ApplicationEvent {
+
+    private static final long serialVersionUID = 6994987952247306131L;
+    
+    public Test1Event(Object source) {
+        super(source);
+    }
+
+}
+```
+
+## 编写兼听
+```java
+@EventListener
+public void listenTest1Event(Test1Event event) {
+    System.out.println("Test1Event：" + event.getSource());
+}
+```
+
+## 发送事件
+```java
+EventKit.post(new Test1Event("hello1"));
+```
+
 使用的场景，已经优势什么的可以参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
-
-## 远程事件
-服务端：
-```java
-plugin.setRmiServer(int port);
-```
-
-客户端：
-```java
-setRmiClient(String host, int port);
-```
-
-使用：
-```java
-EventKit.postRemote(final ApplicationEvent event);
-// 或者
-EventKit.postRemote(final String tag, final ApplicationEvent event);
-```
-
-建议：将服务端和客户端通用的`event`类文件打成maven模块。
 
 jar包下载
 http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
@@ -60,13 +61,16 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>1.5.1</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2017-10-10 v2.0.0
+>基于注解和方法的兼听，简化使用，不兼容1.x
+
 >## 2017-04-20 v1.5.1
 >基于rmi的远程Event
 
