@@ -23,10 +23,10 @@ import net.dreamlu.utils.ClassUtil;
  */
 public class EventPlugin implements IPlugin {
 	private static Log log = Log.getLog(EventPlugin.class);
-	// 线程池
-	private static ExecutorService pool = null;
 	// 事件监听处理器
 	private static List<ApplicationListenerMethodAdapter> listenerList = null;
+	// 线程池
+	private static ExecutorService pool = null;
 	// 默认不扫描jar包
 	private boolean scanJar = false;
 	// 默认扫描所有的包
@@ -143,7 +143,7 @@ public class EventPlugin implements IPlugin {
 		}
 		
 		if (allListeners.isEmpty()) {
-			log.error("Listener is empty! Please check @EventListener is right?");
+			log.warn("EventListener List is empty! Please check @EventListener is right?");
 			return;
 		}
 		
@@ -166,6 +166,7 @@ public class EventPlugin implements IPlugin {
 			listenerList.clear();
 			listenerList = null;
 		}
+		EventKit.cache.clear();
 		return true;
 	}
 

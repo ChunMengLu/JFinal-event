@@ -26,7 +26,7 @@ public class EventKit {
 	private static List<ApplicationListenerMethodAdapter> listeners;
 	private static ExecutorService pool;
 	// 缓存提高性能
-	private static ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter> cache 
+	protected static ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter> cache 
 			= new ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter>();
 	private static Object locker = new Object();
 	
@@ -105,7 +105,7 @@ public class EventKit {
 	 */
 	public static void post(final ApplicationEvent event) {
 		final List<ApplicationListenerMethodAdapter> _listeners = getListener(event);
-		for (ApplicationListenerMethodAdapter listener : _listeners) {
+		for (final ApplicationListenerMethodAdapter listener : _listeners) {
 			if (null != pool && listener.isAsync()) {
 				pool.submit(new Runnable() {
 					@Override

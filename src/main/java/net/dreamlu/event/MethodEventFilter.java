@@ -8,8 +8,14 @@ import java.util.Set;
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.utils.ClassUtil.ClassFilter;
 
+/**
+ * 类方法查找器
+ * @author L.cm
+ * email: 596392912@qq.com
+ * site:http://www.dreamlu.net
+ * date 2017年10月10日上午11:27:24
+ */
 class MethodEventFilter implements ClassFilter {
-	
 	private final Class<? extends Annotation> annotationClass;
 	private final Set<Method> methodSet;
 	

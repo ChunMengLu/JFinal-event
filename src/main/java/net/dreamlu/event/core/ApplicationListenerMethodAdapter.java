@@ -10,8 +10,6 @@ import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.log.Log;
 
-import net.dreamlu.utils.BeanUtil;
-
 /**
  * 监听器封装
  * @author L.cm
@@ -49,16 +47,16 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
-		String condition = this.getCondition();
 		// 判断表达式
-		if (StrKit.notBlank(condition)) {
-			boolean elPass = ElKit.eval(condition, Kv.by("event", event));
+		if (StrKit.notBlank(this.condition)) {
+			boolean elPass = ElKit.eval(this.condition, Kv.by("event", event));
+			log.debug("method:[" + this.method + "]-condition:[" + this.condition + "]-result:[" + elPass + "]");
 			if (!elPass) {
 				return;
 			}
 		}
 		try {
-			Object bean = BeanUtil.newInstance(targetClass);
+			Object bean = targetClass.newInstance();
 			this.method.invoke(bean, event);
 		} catch (IllegalAccessException e) {
 			log.error(e.getMessage(), e);
@@ -67,6 +65,9 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 			log.error(e.getMessage(), e);
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			log.error(e.getMessage(), e);
+			e.printStackTrace();
+		} catch (InstantiationException e) {
 			log.error(e.getMessage(), e);
 			e.printStackTrace();
 		}
