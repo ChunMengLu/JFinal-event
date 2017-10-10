@@ -100,7 +100,6 @@ public final class ClassUtil {
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @param inJar 在jar包中查找
 	 * @param classFilter class过滤器，过滤掉不需要的class
-	 * @return 类集合
 	 */
 	public static void scanPackage(String packageName, boolean inJar, ClassFilter classFilter) {
 		if(StrKit.isBlank(packageName)) {

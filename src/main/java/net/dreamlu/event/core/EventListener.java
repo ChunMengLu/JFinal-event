@@ -24,6 +24,7 @@ public @interface EventListener {
 	 * annotated method may optionally accept a single parameter.
 	 * However, if this attribute is specified with multiple values,
 	 * the annotated method must <em>not</em> declare any parameters.
+	 * @return Class[]
 	 */
 	Class<?>[] events() default {};
 	
@@ -41,6 +42,7 @@ public @interface EventListener {
 
 	/**
 	 * JFinal el
+	 * @return el
 	 */
 	String condition() default "";
 
