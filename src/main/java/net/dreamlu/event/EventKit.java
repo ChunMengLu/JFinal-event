@@ -28,6 +28,7 @@ public class EventKit {
 	// 缓存提高性能
 	private static ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter> cache 
 			= new ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter>();
+	private static Object locker = new Object();
 	
 	static void init(List<ApplicationListenerMethodAdapter> listeners, ExecutorService pool) {
 		EventKit.listeners = listeners;
@@ -48,13 +49,12 @@ public class EventKit {
 		// 事件类
 		Class<?> eventType = event.getClass();
 		List<ApplicationListenerMethodAdapter> _listeners = cache.get(eventType);
-		if (_listeners != null) {
-			return _listeners;
-		}
-		synchronized (EventKit.class) {
-			if (_listeners == null) {
-				_listeners = initListeners(listeners, eventType);
-				cache.putAll(eventType, _listeners);
+		if (_listeners == null) {
+			synchronized (locker) {
+				if (_listeners == null) {
+					_listeners = initListeners(listeners, eventType);
+					cache.putAll(eventType, _listeners);
+				}
 			}
 		}
 		return _listeners;
@@ -87,13 +87,15 @@ public class EventKit {
 			list.add(listener);
 		}
 		// 对兼听器排序
-		Collections.sort(list, new Comparator<ApplicationListenerMethodAdapter>() {
-			@Override
-			public int compare(ApplicationListenerMethodAdapter o1, ApplicationListenerMethodAdapter o2) {
-				int x = o1.getOrder(); int y = o2.getOrder();
-				return (x < y) ? -1 : ((x == y) ? 0 : 1);
-			}
-		});
+		if (list.size() > 1) {
+			Collections.sort(list, new Comparator<ApplicationListenerMethodAdapter>() {
+				@Override
+				public int compare(ApplicationListenerMethodAdapter o1, ApplicationListenerMethodAdapter o2) {
+					int x = o1.getOrder(); int y = o2.getOrder();
+					return (x < y) ? -1 : ((x == y) ? 0 : 1);
+				}
+			});
+		}
 		return list;
 	}
 	
