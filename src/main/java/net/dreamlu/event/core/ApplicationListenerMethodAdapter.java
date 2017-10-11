@@ -1,6 +1,5 @@
 package net.dreamlu.event.core;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -59,20 +58,21 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 			}
 		}
 		try {
-			Object bean = beanFactory.getBean(getTargetClass());
+			Object bean = beanFactory.getBean(this.targetClass);
 			this.method.invoke(bean, event);
-		} catch (IllegalAccessException e) {
-			log.error(e.getMessage(), e);
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			log.error(e.getMessage(), e);
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			log.error(e.getMessage(), e);
-			e.printStackTrace();
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			e.printStackTrace();
+			handleException(e);
+		}
+	}
+
+	// 对异常进行处理，使异常更加准确
+	private void handleException(Exception e) {
+		Throwable cause = e.getCause();
+		Throwable throwable = cause == null ? e : cause;
+		if (log.isErrorEnabled()) {
+			log.error(throwable.getMessage(), throwable);
+		} else {
+			throwable.printStackTrace();
 		}
 	}
 
