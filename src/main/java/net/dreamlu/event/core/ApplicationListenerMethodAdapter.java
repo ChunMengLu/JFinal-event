@@ -1,5 +1,6 @@
 package net.dreamlu.event.core;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -65,14 +66,19 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 		}
 	}
 
-	// 对异常进行处理，使异常更加准确
+	/**
+	 * 将异常抛出更加合理
+	 */
 	private void handleException(Exception e) {
-		Throwable cause = e.getCause();
-		Throwable throwable = cause == null ? e : cause;
-		if (log.isErrorEnabled()) {
-			log.error(throwable.getMessage(), throwable);
+		if (e instanceof IllegalAccessException || e instanceof IllegalArgumentException
+				|| e instanceof NoSuchMethodException) {
+			throw new IllegalArgumentException(e);
+		} else if (e instanceof InvocationTargetException) {
+			throw new RuntimeException(((InvocationTargetException) e).getTargetException());
+		} else if (e instanceof RuntimeException) {
+			throw (RuntimeException) e;
 		} else {
-			throwable.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -11,7 +11,7 @@ import net.dreamlu.event.support.DuangBeanFactory;
 
 public class EventPluginTest {
 
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void test1() {
 		// 初始化插件
 		EventPlugin plugin = new EventPlugin();
@@ -68,7 +68,7 @@ public class EventPluginTest {
 		plugin.stop();
 	}
 
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void test4() throws InterruptedException {
 		EventPlugin plugin = new EventPlugin(false, "net.dreamlu", Executors.newCachedThreadPool(new EventThreadFactory()));
 		plugin.start();
