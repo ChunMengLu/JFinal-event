@@ -19,6 +19,8 @@ import com.jfinal.log.Log;
  */
 public class ApplicationListenerMethodAdapter implements ApplicationListener<ApplicationEvent> {
 	private static Log log = Log.getLog(ApplicationListenerMethodAdapter.class);
+	private final IBeanFactory beanFactory;
+
 	private final Method method;
 
 	private final Class<?> paramType;
@@ -33,7 +35,8 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 
 	private final boolean async;
 
-	public ApplicationListenerMethodAdapter(Class<?> targetClass, Method method) {
+	public ApplicationListenerMethodAdapter(IBeanFactory beanFactory, Class<?> targetClass, Method method) {
+		this.beanFactory = beanFactory;
 		this.method = method;
 		this.paramType = method.getParameterTypes()[0];
 		this.targetClass = targetClass;
@@ -56,7 +59,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 			}
 		}
 		try {
-			Object bean = targetClass.newInstance();
+			Object bean = beanFactory.getBean(getTargetClass());
 			this.method.invoke(bean, event);
 		} catch (IllegalAccessException e) {
 			log.error(e.getMessage(), e);
@@ -67,7 +70,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 		} catch (InvocationTargetException e) {
 			log.error(e.getMessage(), e);
 			e.printStackTrace();
-		} catch (InstantiationException e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			e.printStackTrace();
 		}

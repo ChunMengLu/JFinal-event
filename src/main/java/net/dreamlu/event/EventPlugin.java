@@ -12,6 +12,8 @@ import com.jfinal.plugin.IPlugin;
 
 import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
 import net.dreamlu.event.core.EventListener;
+import net.dreamlu.event.core.IBeanFactory;
+import net.dreamlu.event.support.DefaultBeanFactory;
 import net.dreamlu.utils.ClassUtil;
 
 /**
@@ -31,11 +33,15 @@ public class EventPlugin implements IPlugin {
 	private boolean scanJar = false;
 	// 默认扫描所有的包
 	private String scanPackage = "";
+	// Bean工厂，方便扩展
+	private IBeanFactory beanFactory;
 
 	/**
 	 * 构造EventPlugin
 	 */
-	public EventPlugin() {}
+	public EventPlugin() {
+		this.beanFactory = new DefaultBeanFactory();
+	}
 	
 	/**
 	 * 构造EventPlugin
@@ -43,6 +49,7 @@ public class EventPlugin implements IPlugin {
 	 * @param scanPackage 扫描的包名
 	 */
 	public EventPlugin(boolean scanJar, String scanPackage) {
+		this();
 		this.scanJar = scanJar;
 		this.scanPackage = scanPackage;
 	}
@@ -110,7 +117,17 @@ public class EventPlugin implements IPlugin {
 		this.scanPackage = scanPackage;
 		return this;
 	}
-
+	
+	/**
+	 * 设定bean工厂
+	 * @param beanFactory 设定bean工厂
+	 * @return EventPlugin
+	 */
+	public EventPlugin beanFactory(IBeanFactory beanFactory) {
+		this.beanFactory = beanFactory;
+		return this;
+	}
+	
 	@Override
 	public boolean start() {
 		create();
@@ -139,7 +156,7 @@ public class EventPlugin implements IPlugin {
 		List<ApplicationListenerMethodAdapter> allListeners = new ArrayList<ApplicationListenerMethodAdapter>();
 		for (Method method : methodSet) {
 			Class<?> targetClass = method.getDeclaringClass();
-			allListeners.add(new ApplicationListenerMethodAdapter(targetClass, method));
+			allListeners.add(new ApplicationListenerMethodAdapter(beanFactory, targetClass, method));
 		}
 		
 		if (allListeners.isEmpty()) {

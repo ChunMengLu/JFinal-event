@@ -7,6 +7,7 @@ import org.junit.Test;
 import net.dreamlu.event.EventKit;
 import net.dreamlu.event.EventPlugin;
 import net.dreamlu.event.EventThreadFactory;
+import net.dreamlu.event.support.DuangBeanFactory;
 
 public class EventPluginTest {
 
@@ -46,6 +47,7 @@ public class EventPluginTest {
 	@Test
 	public void test2() {
 		EventPlugin plugin = new EventPlugin();
+		plugin.beanFactory(new DuangBeanFactory());
 		plugin.async();
 
 		plugin.start();

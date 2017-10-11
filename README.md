@@ -15,6 +15,8 @@ plugin.async();
 plugin.scanJar();
 // 设置监听器默认包，默认全扫描
 plugin.scanPackage("net.dreamlu");
+// bean工厂，默认为DefaultBeanFactory，可实现IBeanFactory自定义扩展
+plugin.beanFactory(new DuangBeanFactory());
 
 // 手动启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 plugin.start();
@@ -37,7 +39,7 @@ public class Test1Event extends ApplicationEvent {
 }
 ```
 
-## 编写兼听
+## 编写监听
 ```java
 @EventListener
 public void listenTest1Event(Test1Event event) {
@@ -86,13 +88,18 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2017-10-11 v2.0.1
+>插件添加Bean工厂，方便IOC容器和自定义扩展。
+>默认为`DefaultBeanFactory`，可实现IBeanFactory自定义扩展。
+>`plugin.beanFactory(new DuangBeanFactory());`
+
 >## 2017-10-10 v2.0.0
 >基于注解和方法的兼听，简化使用，不兼容1.x
 
