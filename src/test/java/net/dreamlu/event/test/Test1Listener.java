@@ -25,4 +25,5 @@ public class Test1Listener {
 		boolean x = ElKit.eval("event.isExec()", Kv.by("event", new Test1Event("hello")));
 		System.out.println(x);
 	}
+
 }

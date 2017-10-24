@@ -8,7 +8,13 @@ public class Test2Listener {
 	@EventListener(order = 1, events = Test1Event.class)
 	public void xxxx(ApplicationEvent event) {
 		Object xx = event.getSource();
-		System.out.println(Thread.currentThread().getName() + " " + this.getClass() + " " + "\tsource:" + xx);
+		System.out.println(Thread.currentThread().getName() + " ----- " + this.getClass() + " " + "\tsource:" + xx);
+	}
+	
+	@EventListener(order = 1, events = Test2Event.class)
+	public void xxxxx(ApplicationEvent event) {
+		Object xx = event.getSource();
+		System.out.println(Thread.currentThread().getName() + " xxxxx " + this.getClass() + " " + "\tsource:" + xx);
 	}
 	
 	@EventListener

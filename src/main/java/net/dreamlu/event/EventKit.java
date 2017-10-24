@@ -66,12 +66,19 @@ public class EventKit {
 	private static List<ApplicationListenerMethodAdapter> initListeners(List<ApplicationListenerMethodAdapter> listeners, Class<?> eventType) {
 		final List<ApplicationListenerMethodAdapter> list = new ArrayList<ApplicationListenerMethodAdapter>();
 		for (ApplicationListenerMethodAdapter listener : listeners) {
+			// 方法参数事件类型
 			Class<?> paramType = listener.getParamType();
+			// 1.判断参数类型
+			if (!paramType.isAssignableFrom(eventType)) {
+				continue;
+			}
+			// 注解上的事件类型
 			List<Class<?>> declaredEventClasses = listener.getDeclaredEventClasses();
 			if (!declaredEventClasses.isEmpty()) {
 				boolean canExec = false;
-				for (Class<?> clazz : declaredEventClasses) {
-					if (paramType.isAssignableFrom(clazz)) {
+				for (Class<?> annType : declaredEventClasses) {
+					// 2.判断注解类型
+					if (eventType.isAssignableFrom(annType)) {
 						canExec = true;
 						break;
 					}
@@ -79,10 +86,6 @@ public class EventKit {
 				if (!canExec) {
 					continue;
 				}
-			}
-			// 参数支持的事件类型
-			if (!paramType.isAssignableFrom(eventType)) {
-				continue;
 			}
 			list.add(listener);
 		}

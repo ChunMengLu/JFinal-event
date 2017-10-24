@@ -95,6 +95,9 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2017-10-11 v2.0.2
+>2.x bug修复版
+
 >## 2017-10-11 v2.0.1
 >插件添加Bean工厂，方便IOC容器和自定义扩展。
 >默认为`DefaultBeanFactory`，可实现IBeanFactory自定义扩展。
