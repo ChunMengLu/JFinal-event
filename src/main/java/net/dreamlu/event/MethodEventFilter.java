@@ -30,10 +30,10 @@ class MethodEventFilter implements ClassFilter {
 		for (Method method : methods) {
 			Annotation ann = method.getAnnotation(annotationClass);
 			if (ann == null) continue;
-			Class<?>[] classx = method.getParameterTypes();
-			if (classx.length != 1) continue;
-			Class<?> eventClass = classx[0];
-			if (ApplicationEvent.class.isAssignableFrom(eventClass)) {
+			Class<?>[] paramTypes = method.getParameterTypes();
+			if (paramTypes.length != 1) continue;
+			Class<?> eventType = paramTypes[0];
+			if (ApplicationEvent.class.isAssignableFrom(eventType)) {
 				methodSet.add(method);
 			}
 		}
