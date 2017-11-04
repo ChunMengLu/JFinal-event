@@ -88,13 +88,18 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>2.0.2</version>
+    <version>2.0.3</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2017-10-11 v2.0.3
+>用户反馈的问题 #IFX3Z
+>支持多包名，用`;`分割，如：`net.dreamlu.a;net.dreamlu.b`。
+>插件初始化时，没有扫描到监听时依然初始化成功。
+
 >## 2017-10-11 v2.0.2
 >2.x bug修复版
 

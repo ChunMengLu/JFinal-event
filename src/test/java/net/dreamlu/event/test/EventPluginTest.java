@@ -24,7 +24,7 @@ public class EventPluginTest {
 		// 设置扫描jar包，默认不扫描
 		plugin.scanJar();
 		// 设置默认扫描的包命，默认全扫描
-		plugin.scanPackage("net.dreamlu");
+		plugin.scanPackage("net.dreamlu.a;net.dreamlu.b;net.dreamlu");
 
 		// 启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 		plugin.start();

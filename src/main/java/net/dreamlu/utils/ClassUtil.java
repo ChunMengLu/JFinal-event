@@ -102,22 +102,28 @@ public final class ClassUtil {
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 */
 	public static void scanPackage(String packageName, boolean inJar, ClassFilter classFilter) {
-		if(StrKit.isBlank(packageName)) {
+		if(packageName == null) {
 			packageName = "";
 		}
-		packageName = getWellFormedPackageName(packageName);
-		
-		for (String classPath : getClassPaths(packageName)) {
-			// 填充 classes, 并对classpath解码
-			classPath = decodeUrl(classPath);
-			fillClasses(classPath, packageName, classFilter);
+		// 支持;分割多个包
+		String[] pkgs = packageName.split(";");
+		for (String pkg : pkgs) {
+			String pkgName = getWellFormedPackageName(pkg);
+			for (String classPath : getClassPaths(pkgName)) {
+				// 填充 classes, 并对classpath解码
+				classPath = decodeUrl(classPath);
+				fillClasses(classPath, pkgName, classFilter);
+			}
 		}
 		//如果在项目的ClassPath中未找到，去系统定义的ClassPath里找
 		if(inJar) {
 			for (String classPath : getJavaClassPaths()) {
-				// 填充classes, 并对classpath解码
-				classPath = decodeUrl(classPath);
-				fillClasses(classPath, new File(classPath), packageName, classFilter);
+				for (String pkg : pkgs) {
+					String pkgName = getWellFormedPackageName(pkg);
+					// 填充classes, 并对classpath解码
+					classPath = decodeUrl(classPath);
+					fillClasses(classPath, new File(classPath), pkgName, classFilter);
+				}
 			}
 		}
 	}

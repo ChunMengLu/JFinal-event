@@ -148,8 +148,7 @@ public class EventPlugin implements IPlugin {
 		
 		Set<Method> methodSet = filter.getListeners();
 		if (methodSet.isEmpty()) {
-			log.error("@EventListener is empty! Please check it!");
-			return;
+			log.warn("@EventListener is empty! Please check it!");
 		}
 		
 		// 装载兼听
@@ -161,7 +160,6 @@ public class EventPlugin implements IPlugin {
 		
 		if (allListeners.isEmpty()) {
 			log.warn("EventListener List is empty! Please check @EventListener is right?");
-			return;
 		}
 		
 		listenerList = new ArrayList<ApplicationListenerMethodAdapter>();

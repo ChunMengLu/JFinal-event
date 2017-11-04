@@ -40,6 +40,7 @@ public class EventKit {
 	 */
 	private static List<ApplicationListenerMethodAdapter> getListener(final ApplicationEvent event) {
 		if (listeners == null) {
+			log.error("listeners is null, 请先初始化EventPlugin");
 			throw new NullPointerException("请先初始化EventPlugin");
 		}
 		if (listeners.isEmpty()) {
