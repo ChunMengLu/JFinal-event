@@ -13,7 +13,7 @@ plugin.async();
 
 // 设置扫描jar包，默认不扫描
 plugin.scanJar();
-// 设置监听器默认包，默认全扫描
+// 设置监听器默认包，多个包名使用;分割，默认全扫描
 plugin.scanPackage("net.dreamlu");
 // bean工厂，默认为DefaultBeanFactory，可实现IBeanFactory自定义扩展
 plugin.beanFactory(new DuangBeanFactory());
