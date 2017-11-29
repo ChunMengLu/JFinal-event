@@ -16,6 +16,7 @@ plugin.scanJar();
 // 设置监听器默认包，多个包名使用;分割，默认全扫描
 plugin.scanPackage("net.dreamlu");
 // bean工厂，默认为DefaultBeanFactory，可实现IBeanFactory自定义扩展
+// 对于将@EventListener写在不含无参构造器的类需要使用`ObjenesisBeanFactory`
 plugin.beanFactory(new DuangBeanFactory());
 
 // 手动启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
@@ -80,7 +81,7 @@ public void applicationEvent(ApplicationEvent event) {
 请参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
 jar包下载
-http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
+http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 
 以上版本均已上传到maven仓库~
 
@@ -88,13 +89,17 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>2.0.3</version>
+    <version>2.0.4</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2017-11-29 v2.0.4
+>添加`ObjenesisBeanFactory`处理不含有默认构造器的Bean
+>依赖`objenesis`jar包，下载地址：http://mvnrepository.com/artifact/org.objenesis/objenesis/2.6
+
 >## 2017-10-11 v2.0.3
 >用户反馈的问题 #IFX3Z
 >支持多包名，用`;`分割，如：`net.dreamlu.a;net.dreamlu.b`。
@@ -110,6 +115,7 @@ http://maven.aliyun.com/nexus/#nexus-search;quick~jfinal-event
 
 >## 2017-10-10 v2.0.0
 >基于注解和方法的兼听，简化使用，不兼容1.x
+>支持JFinal 3.1和3.1以上版本
 
 >## 2017-04-20 v1.5.1
 >基于rmi的远程Event
