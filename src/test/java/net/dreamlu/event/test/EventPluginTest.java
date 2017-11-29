@@ -102,7 +102,7 @@ public class EventPluginTest {
 	 * 
 	 * ObjenesisBeanFactory
 	 */
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void testX2() {
 		EventPlugin plugin = new EventPlugin();
 		plugin.beanFactory(new ObjenesisBeanFactory());
