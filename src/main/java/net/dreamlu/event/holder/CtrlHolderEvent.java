@@ -1,8 +1,5 @@
 package net.dreamlu.event.holder;
 
-import com.jfinal.core.Controller;
-import com.jfinal.kit.LogKit;
-
 import net.dreamlu.event.core.ApplicationEvent;
 
 /**
@@ -23,11 +20,5 @@ public class CtrlHolderEvent extends ApplicationEvent {
 	public CtrlHolder getCtrlHolder() {
 		return ctrlHolder;
 	}
-	
-	public Controller getCtrl() {
-		if (!ctrlHolder.isRequestActive()) {
-			LogKit.warn("Request is completed");
-		}
-		return ctrlHolder.getCtrl();
-	}
+
 }

@@ -89,13 +89,26 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>2.0.4</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2018-03-02 v2.1.0
+>添加`CtrlHolderEvent`处理同步、异步中request、session、attr、header参数传递。
+>使用：
+>需先在Config中添加`me.add(new CtrlHolderInterceptor());`拦截器。
+>然后继承`CtrlHolderEvent`编写自己的事件类
+```java
+CtrlHolder holder = event.getCtrlHolder();
+holder.getPara("p");
+holder.getAttr("x");
+holder.getHeader("x");
+holder.getSessionAttr("x");
+```
+
 >## 2017-11-29 v2.0.4
 >添加`ObjenesisBeanFactory`处理不含有默认构造器的Bean
 >依赖`objenesis`jar包，下载地址：http://mvnrepository.com/artifact/org.objenesis/objenesis/2.6
