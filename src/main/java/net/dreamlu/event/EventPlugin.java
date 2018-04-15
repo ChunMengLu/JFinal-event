@@ -133,7 +133,7 @@ public class EventPlugin implements IPlugin {
 	
 	/**
 	 * 手动注册的监听类
-	 * @param beanFactory 设定bean工厂
+	 * @param clazz 包含监听注解的类
 	 * @return EventPlugin
 	 */
 	public EventPlugin register(Class<?> clazz) {
