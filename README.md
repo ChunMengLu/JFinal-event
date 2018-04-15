@@ -4,6 +4,8 @@
 
 :laughing: `JFinal-event` 插件，`老版本`使用请查看[文档 wiki](http://git.oschina.net/596392912/JFinal-event/wikis/home)
 
+:laughing: `如梦技术VIP` 限时￥99，[欢迎加入](https://www.dreamlu.net/spring-boot/spring-security/thymeleaf/maven/gradle/2018/04/14/dream-security.html)
+
 ## 初始化插件
 ```
 // 初始化插件
@@ -96,6 +98,9 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2018-04-15 v2.2.0
+> 插件添加手动注册监听类 `plugin.register(Class<?> clazz)`, 多个类，多次调用`register`方法即可。
+
 >## 2018-03-02 v2.1.0
 >添加`CtrlHolderEvent`处理同步、异步中request、session、attr、header参数传递。
 >使用：

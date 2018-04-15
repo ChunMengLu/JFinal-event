@@ -46,4 +46,10 @@ class MethodEventFilter implements ClassFilter {
 	public Set<Method> getListeners() {
 		return methodSet;
 	}
+
+	public void filter(Set<Class<?>> registeredClass) {
+		for (Class<?> clazz : registeredClass) {
+			accept(clazz);
+		}
+	}
 }

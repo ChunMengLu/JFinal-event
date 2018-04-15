@@ -2,6 +2,7 @@ package net.dreamlu.event;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +36,9 @@ public class EventPlugin implements IPlugin {
 	private String scanPackage = "";
 	// Bean工厂，方便扩展
 	private IBeanFactory beanFactory;
-
+	// 手动注册的监听类
+	private Set<Class<?>> registeredClass = new HashSet<Class<?>>();
+	
 	/**
 	 * 构造EventPlugin
 	 */
@@ -128,6 +131,16 @@ public class EventPlugin implements IPlugin {
 		return this;
 	}
 	
+	/**
+	 * 手动注册的监听类
+	 * @param beanFactory 设定bean工厂
+	 * @return EventPlugin
+	 */
+	public EventPlugin register(Class<?> clazz) {
+		registeredClass.add(clazz);
+		return this;
+	}
+	
 	@Override
 	public boolean start() {
 		create();
@@ -145,12 +158,13 @@ public class EventPlugin implements IPlugin {
 		// 扫描注解 {@code EventListener}
 		MethodEventFilter filter = new MethodEventFilter(EventListener.class);
 		ClassUtil.scanPackage(scanPackage, scanJar, filter);
+		// 读取手动注册的类
+		filter.filter(registeredClass);
 		
 		Set<Method> methodSet = filter.getListeners();
 		if (methodSet.isEmpty()) {
 			log.warn("@EventListener is empty! Please check it!");
 		}
-		
 		// 装载兼听
 		List<ApplicationListenerMethodAdapter> allListeners = new ArrayList<ApplicationListenerMethodAdapter>();
 		for (Method method : methodSet) {
