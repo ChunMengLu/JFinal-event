@@ -7,16 +7,16 @@ package net.dreamlu.event.core;
  * @author Rod Johnson
  * @author Juergen Hoeller
  */
-public abstract class ApplicationEvent implements java.io.Serializable {
+public abstract class ApplicationEvent<T> implements java.io.Serializable {
 	private static final long serialVersionUID = 7099057708183571937L;
-	protected final Object source;
+	protected final T source;
 	private final long timestamp;
 
 	/**
 	 * Create a new ApplicationEvent.
 	 * @param source the component that published the event (never {@code null})
 	 */
-	public ApplicationEvent(Object source) {
+	public ApplicationEvent(T source) {
 		if (source == null)
 			throw new IllegalArgumentException("null source");
 		this.source = source;
@@ -27,7 +27,7 @@ public abstract class ApplicationEvent implements java.io.Serializable {
 	 * The object on which the Event initially occurred.
 	 * @return   The object on which the Event initially occurred.
 	 */
-	public Object getSource() {
+	public T getSource() {
 		return source;
 	}
 

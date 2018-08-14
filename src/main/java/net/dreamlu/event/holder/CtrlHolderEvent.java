@@ -7,12 +7,12 @@ import net.dreamlu.event.core.ApplicationEvent;
  * 
  * @author L.cm
  */
-public class CtrlHolderEvent extends ApplicationEvent {
+public class CtrlHolderEvent<T> extends ApplicationEvent<T> {
 	private static final long serialVersionUID = 2175945135772538498L;
 	
 	private final CtrlHolder ctrlHolder;
 	
-	public CtrlHolderEvent(Object source) {
+	public CtrlHolderEvent(T source) {
 		super(source);
 		this.ctrlHolder = CtrlHolderKit.get();
 	}

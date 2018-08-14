@@ -98,6 +98,9 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2018-04-15 v2.2.1
+> ApplicationEvent 添加泛型，方便类型转换。
+
 >## 2018-04-15 v2.2.0
 > 插件添加手动注册监听类 `plugin.register(Class<?> clazz)`, 多个类，多次调用`register`方法即可。
 

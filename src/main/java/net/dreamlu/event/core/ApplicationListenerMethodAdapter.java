@@ -17,7 +17,7 @@ import com.jfinal.log.Log;
  * site:http://www.dreamlu.net
  * date 2017年10月10日上午11:27:24
  */
-public class ApplicationListenerMethodAdapter implements ApplicationListener<ApplicationEvent> {
+public class ApplicationListenerMethodAdapter implements ApplicationListener<ApplicationEvent<?>> {
 	private static Log log = Log.getLog(ApplicationListenerMethodAdapter.class);
 	private final IBeanFactory beanFactory;
 
@@ -49,7 +49,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 	}
 
 	@Override
-	public void onApplicationEvent(ApplicationEvent event) {
+	public void onApplicationEvent(ApplicationEvent<?> event) {
 		// 判断表达式
 		if (StrKit.notBlank(this.condition)) {
 			boolean elPass = ElKit.eval(this.condition, Kv.by("event", event));

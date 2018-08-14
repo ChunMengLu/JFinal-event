@@ -38,7 +38,7 @@ public class EventKit {
 	/**
 	 * 获取监听器
 	 */
-	private static List<ApplicationListenerMethodAdapter> getListener(final ApplicationEvent event) {
+	private static List<ApplicationListenerMethodAdapter> getListener(final ApplicationEvent<?> event) {
 		if (listeners == null) {
 			log.error("listeners is null, 请先初始化EventPlugin");
 			throw new NullPointerException("请先初始化EventPlugin");
@@ -107,7 +107,7 @@ public class EventKit {
 	 * 发布事件
 	 * @param event ApplicationEvent
 	 */
-	public static void post(final ApplicationEvent event) {
+	public static void post(final ApplicationEvent<?> event) {
 		final List<ApplicationListenerMethodAdapter> _listeners = getListener(event);
 		for (final ApplicationListenerMethodAdapter listener : _listeners) {
 			if (null != pool && listener.isAsync()) {
