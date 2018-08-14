@@ -9,7 +9,7 @@ public class Test1Listener {
 
 	@EventListener(condition = "event.isExec()")
 	public void xxx(Test1Event event) {
-		String xx = (String) event.getSource();
+		String xx = event.getSource();
 		System.out.println(Thread.currentThread().getName() + "\tsource:" + xx);
 	}
 	

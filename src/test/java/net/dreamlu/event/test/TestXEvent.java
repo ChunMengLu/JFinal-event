@@ -9,7 +9,7 @@ import net.dreamlu.event.core.EventListener;
  * @author L.cm
  *
  */
-public class TestXEvent extends ApplicationEvent {
+public class TestXEvent extends ApplicationEvent<Object> {
 
 	private static final long serialVersionUID = -2701800830876732190L;
 
