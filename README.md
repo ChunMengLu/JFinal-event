@@ -98,7 +98,7 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 欢迎拍砖~~~
 
 ## 更新说明
->## 2018-04-15 v2.2.1
+>## 2018-08-14 v2.2.1
 > ApplicationEvent 添加泛型，方便类型转换。
 
 >## 2018-04-15 v2.2.0
