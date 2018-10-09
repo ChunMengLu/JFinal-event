@@ -17,8 +17,9 @@ public abstract class ApplicationEvent<T> implements java.io.Serializable {
 	 * @param source the component that published the event (never {@code null})
 	 */
 	public ApplicationEvent(T source) {
-		if (source == null)
+		if (source == null) {
 			throw new IllegalArgumentException("null source");
+		}
 		this.source = source;
 		this.timestamp = System.currentTimeMillis();
 	}
@@ -35,6 +36,7 @@ public abstract class ApplicationEvent<T> implements java.io.Serializable {
 	 * Returns a String representation of this EventObject.
 	 * @return  A a String representation of this EventObject.
 	 */
+	@Override
 	public String toString() {
 		return getClass().getName() + "[source=" + source + "]";
 	}

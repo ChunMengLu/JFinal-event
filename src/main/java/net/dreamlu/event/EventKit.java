@@ -1,9 +1,6 @@
 package net.dreamlu.event;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 import com.jfinal.log.Log;
@@ -11,7 +8,6 @@ import com.jfinal.log.Log;
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
 import net.dreamlu.utils.ConcurrentMultiMap;
-
 
 /**
  * 事件工具类
@@ -25,11 +21,12 @@ public class EventKit {
 	
 	private static List<ApplicationListenerMethodAdapter> listeners;
 	private static ExecutorService pool;
-	// 缓存提高性能
-	protected static ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter> cache 
-			= new ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter>();
-	private static Object locker = new Object();
-	
+	/**
+	 * 缓存提高性能
+	 */
+	static ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter> cache
+			= new ConcurrentMultiMap<>();
+
 	static void init(List<ApplicationListenerMethodAdapter> listeners, ExecutorService pool) {
 		EventKit.listeners = listeners;
 		EventKit.pool = pool;
@@ -39,33 +36,30 @@ public class EventKit {
 	 * 获取监听器
 	 */
 	private static List<ApplicationListenerMethodAdapter> getListener(final ApplicationEvent<?> event) {
-		if (listeners == null) {
-			log.error("listeners is null, 请先初始化EventPlugin");
-			throw new NullPointerException("请先初始化EventPlugin");
-		}
+		Objects.requireNonNull(listeners, "listeners is null, 请先初始化EventPlugin");
 		if (listeners.isEmpty()) {
 			log.error("EventListener is empty!");
 			return Collections.emptyList();
 		}
 		// 事件类
 		Class<?> eventType = event.getClass();
-		List<ApplicationListenerMethodAdapter> _listeners = cache.get(eventType);
-		if (_listeners == null) {
-			synchronized (locker) {
-				if (_listeners == null) {
-					_listeners = initListeners(listeners, eventType);
-					cache.putAll(eventType, _listeners);
+		List<ApplicationListenerMethodAdapter> listenerList = cache.get(eventType);
+		if (listenerList == null) {
+			synchronized (EventKit.class) {
+				if (listenerList == null) {
+					listenerList = initListeners(listeners, eventType);
+					cache.putAll(eventType, listenerList);
 				}
 			}
 		}
-		return _listeners;
+		return listenerList;
 	}
 	
 	/**
 	 * 初始化监听器
 	 */
 	private static List<ApplicationListenerMethodAdapter> initListeners(List<ApplicationListenerMethodAdapter> listeners, Class<?> eventType) {
-		final List<ApplicationListenerMethodAdapter> list = new ArrayList<ApplicationListenerMethodAdapter>();
+		final List<ApplicationListenerMethodAdapter> list = new ArrayList<>();
 		for (ApplicationListenerMethodAdapter listener : listeners) {
 			// 方法参数事件类型
 			Class<?> paramType = listener.getParamType();
@@ -92,13 +86,7 @@ public class EventKit {
 		}
 		// 对兼听器排序
 		if (list.size() > 1) {
-			Collections.sort(list, new Comparator<ApplicationListenerMethodAdapter>() {
-				@Override
-				public int compare(ApplicationListenerMethodAdapter o1, ApplicationListenerMethodAdapter o2) {
-					int x = o1.getOrder(); int y = o2.getOrder();
-					return (x < y) ? -1 : ((x == y) ? 0 : 1);
-				}
-			});
+			list.sort(Comparator.comparingInt(ApplicationListenerMethodAdapter::getOrder));
 		}
 		return list;
 	}
@@ -108,15 +96,10 @@ public class EventKit {
 	 * @param event ApplicationEvent
 	 */
 	public static void post(final ApplicationEvent<?> event) {
-		final List<ApplicationListenerMethodAdapter> _listeners = getListener(event);
-		for (final ApplicationListenerMethodAdapter listener : _listeners) {
+		final List<ApplicationListenerMethodAdapter> listenerList = getListener(event);
+		for (final ApplicationListenerMethodAdapter listener : listenerList) {
 			if (null != pool && listener.isAsync()) {
-				pool.submit(new Runnable() {
-					@Override
-					public void run() {
-						listener.onApplicationEvent(event);
-					}
-				});
+				pool.submit(() -> listener.onApplicationEvent(event));
 			} else {
 				listener.onApplicationEvent(event);
 			}

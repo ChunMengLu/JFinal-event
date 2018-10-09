@@ -6,19 +6,19 @@ package net.dreamlu.event.holder;
  * @author L.cm
  */
 public class CtrlHolderKit {
-	private static final ThreadLocal<CtrlHolder> tl = new ThreadLocal<CtrlHolder>();
+	private static final ThreadLocal<CtrlHolder> TL = new ThreadLocal<CtrlHolder>();
 	
 	static void set(CtrlHolder value) {
-		tl.set(value);
+		TL.set(value);
 	}
 	
 	static void remove() {
 		CtrlHolder holder = get();
 		holder.requestCompleted();
-		tl.remove();
+		TL.remove();
 	}
 	
 	public static CtrlHolder get() {
-		return tl.get();
+		return TL.get();
 	}
 }

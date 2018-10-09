@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -50,7 +47,7 @@ public final class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, boolean inJar, final Class<? extends Annotation> annotationClass) {
-		final Set<Class<?>> classes = new HashSet<Class<?>>();
+		final Set<Class<?>> classes = new HashSet<>();
 		
 		scanPackage(packageName, inJar, new ClassFilter() {
 			@Override
@@ -75,7 +72,7 @@ public final class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, boolean inJar, final Class<?> superClass) {
-		final Set<Class<?>> classes = new HashSet<Class<?>>();
+		final Set<Class<?>> classes = new HashSet<>();
 		
 		scanPackage(packageName, inJar, new ClassFilter() {
 			@Override
@@ -242,7 +239,6 @@ public final class ClassUtil {
 	 * @param path Class文件路径或者所在目录Jar包路径
 	 * @param packageName 需要扫面的包名
 	 * @param classFilter class过滤器
-	 * @param classes List 集合
 	 */
 	private static void fillClasses(String path, String packageName, ClassFilter classFilter) {
 		//判定给定的路径是否为Jar
@@ -265,7 +261,6 @@ public final class ClassUtil {
 	 * @param file Class文件或者所在目录Jar包文件
 	 * @param packageName 需要扫面的包名
 	 * @param classFilter class过滤器
-	 * @param classes List 集合
 	 */
 	private static void fillClasses(String classPath, File file, String packageName, ClassFilter classFilter) {
 		if (file.isDirectory()) {
@@ -283,11 +278,13 @@ public final class ClassUtil {
 	 * @param directory 目录
 	 * @param packageName 包名
 	 * @param classFilter 类过滤器
-	 * @param classes 类集合
 	 */
 	private static void processDirectory(String classPath, File directory, String packageName, ClassFilter classFilter) {
-		for (File file : directory.listFiles(fileFilter)) {
-			fillClasses(classPath, file, packageName, classFilter);
+		File[] files = directory.listFiles(fileFilter);
+		if (files != null) {
+			for (File file : files) {
+				fillClasses(classPath, file, packageName, classFilter);
+			}
 		}
 	}
 
@@ -298,10 +295,9 @@ public final class ClassUtil {
 	 * @param file class文件
 	 * @param packageName 包名
 	 * @param classFilter 类过滤器
-	 * @param classes 类集合
 	 */
 	private static void processClassFile(String classPath, File file, String packageName, ClassFilter classFilter) {
-		if(false == classPath.endsWith(File.separator)) {
+		if(!classPath.endsWith(File.separator)) {
 			classPath += File.separatorChar;
 		}
 		String path = file.getAbsolutePath();
@@ -325,7 +321,6 @@ public final class ClassUtil {
 	 * @param file jar文件
 	 * @param packageName 包名
 	 * @param classFilter 类过滤器
-	 * @param classes 类集合
 	 */
 	private static void processJarFile(File file, String packageName, ClassFilter classFilter) {
 		try {
@@ -345,14 +340,13 @@ public final class ClassUtil {
 	 * 
 	 * @param className 类名
 	 * @param packageName 包名
-	 * @param classes 类集合
 	 * @param classFilter 类过滤器
 	 */
 	private static void fillClass(String className, String packageName, ClassFilter classFilter) {
 		if (className.startsWith(packageName)) {
 			try {
 				final Class<?> clazz = ClassUtil.loadClass(className);
-				if (classFilter == null || classFilter.accept(clazz)) {
+				if (classFilter != null && classFilter.accept(clazz)) {
 					classFilter.addClass(clazz);
 				}
 			} catch (Throwable ex) {
@@ -380,7 +374,7 @@ public final class ClassUtil {
 
 	/**
 	 * @param file 文件
-	 * @return是否为Jar文件
+	 * @return 是否为Jar文件
 	 */
 	private static boolean isJarFile(File file) {
 		return file.getName().endsWith(JAR_FILE_EXT);

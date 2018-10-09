@@ -19,7 +19,7 @@ class MethodEventFilter implements ClassFilter {
 	private final Class<? extends Annotation> annotationClass;
 	private final Set<Method> methodSet;
 	
-	public MethodEventFilter(Class<? extends Annotation> annotationClass) {
+	MethodEventFilter(Class<? extends Annotation> annotationClass) {
 		this.annotationClass = annotationClass;
 		this.methodSet = new HashSet<Method>();
 	}
@@ -29,9 +29,9 @@ class MethodEventFilter implements ClassFilter {
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 			Annotation ann = method.getAnnotation(annotationClass);
-			if (ann == null) continue;
+			if (ann == null) { continue; }
 			Class<?>[] paramTypes = method.getParameterTypes();
-			if (paramTypes.length != 1) continue;
+			if (paramTypes.length != 1) { continue; }
 			Class<?> eventType = paramTypes[0];
 			if (ApplicationEvent.class.isAssignableFrom(eventType)) {
 				methodSet.add(method);
@@ -43,11 +43,11 @@ class MethodEventFilter implements ClassFilter {
 	@Override
 	public void addClass(Class<?> clazz) {}
 
-	public Set<Method> getListeners() {
+	Set<Method> getListeners() {
 		return methodSet;
 	}
 
-	public void filter(Set<Class<?>> registeredClass) {
+	void filter(Set<Class<?>> registeredClass) {
 		for (Class<?> clazz : registeredClass) {
 			accept(clazz);
 		}

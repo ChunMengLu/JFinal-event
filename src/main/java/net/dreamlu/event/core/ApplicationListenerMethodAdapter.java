@@ -43,7 +43,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 		// 事件注解上的信息
 		EventListener ann = method.getAnnotation(EventListener.class);
 		this.declaredEventClasses = Arrays.asList(ann.events());
-		this.condition = (ann != null ? ann.condition() : null);
+		this.condition = ann.condition();
 		this.order = ann.order();
 		this.async = ann.async();
 	}

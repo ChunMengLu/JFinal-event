@@ -100,9 +100,9 @@ public class CtrlHolder {
 	
 	private Map<String, Object> getAttrMap(HttpServletRequest request) {
 		Enumeration<String> attrs = request.getAttributeNames();
-		Map<String, Object> attrMap = new HashMap<String, Object>();
+		Map<String, Object> attrMap = new HashMap<>();
 		while (attrs.hasMoreElements()) {
-			String attr = (String) attrs.nextElement();
+			String attr = attrs.nextElement();
 			attrMap.put(attr, request.getAttribute(attr));
 		}
 		return attrMap;
@@ -110,9 +110,9 @@ public class CtrlHolder {
 	
 	private Map<String, String> getHeaderMap(HttpServletRequest request) {
 		Enumeration<String> headers = request.getHeaderNames();
-		Map<String, String> headerMap = new HashMap<String, String>();
+		Map<String, String> headerMap = new HashMap<>();
 		while (headers.hasMoreElements()) {
-			String header = (String) headers.nextElement();
+			String header = headers.nextElement();
 			headerMap.put(header, request.getHeader(header));
 		}
 		return headerMap;
@@ -123,10 +123,10 @@ public class CtrlHolder {
 		if (session == null) {
 			return Collections.emptyMap();
 		}
-		Map<String, Object> sessionMap = new HashMap<String, Object>();
+		Map<String, Object> sessionMap = new HashMap<>();
 		Enumeration<String> sessionKeys = session.getAttributeNames();
 		while (sessionKeys.hasMoreElements()) {
-			String key = (String) sessionKeys.nextElement();
+			String key = sessionKeys.nextElement();
 			sessionMap.put(key, session.getAttribute(key));
 		}
 		return sessionMap;

@@ -7,7 +7,6 @@ import org.junit.Test;
 import net.dreamlu.event.EventKit;
 import net.dreamlu.event.EventPlugin;
 import net.dreamlu.event.EventThreadFactory;
-import net.dreamlu.event.support.DuangBeanFactory;
 import net.dreamlu.event.support.ObjenesisBeanFactory;
 
 public class EventPluginTest {
@@ -48,13 +47,9 @@ public class EventPluginTest {
 	@Test
 	public void test2() {
 		EventPlugin plugin = new EventPlugin();
-		plugin.beanFactory(new DuangBeanFactory());
 		plugin.async();
-
 		plugin.start();
-
 		EventKit.post(new Test1Event("hello test2"));
-
 		plugin.stop();
 	}
 
@@ -102,7 +97,6 @@ public class EventPluginTest {
 	 * 
 	 * ObjenesisBeanFactory
 	 */
-	@Test(expected = RuntimeException.class)
 	public void testX2() {
 		EventPlugin plugin = new EventPlugin();
 		plugin.beanFactory(new ObjenesisBeanFactory());

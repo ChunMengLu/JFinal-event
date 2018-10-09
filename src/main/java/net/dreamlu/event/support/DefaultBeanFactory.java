@@ -1,5 +1,6 @@
 package net.dreamlu.event.support;
 
+import com.jfinal.aop.Aop;
 import net.dreamlu.event.core.IBeanFactory;
 
 /**
@@ -14,7 +15,7 @@ public class DefaultBeanFactory implements IBeanFactory {
 
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws Exception {
-		return requiredType.newInstance();
+		return Aop.get(requiredType);
 	}
 
 }

@@ -1,8 +1,8 @@
 package net.dreamlu.event.support;
 
+import com.jfinal.aop.Aop;
+import com.jfinal.kit.LogKit;
 import org.objenesis.ObjenesisStd;
-
-import net.dreamlu.event.core.IBeanFactory;
 
 /**
  * Objenesis bean 工厂
@@ -12,13 +12,20 @@ import net.dreamlu.event.core.IBeanFactory;
  * @author L.cm
  *
  */
-public class ObjenesisBeanFactory implements IBeanFactory {
+public class ObjenesisBeanFactory extends DefaultBeanFactory {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd(true);
 	
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws Exception {
-		return objenesis.newInstance(requiredType);
+		// 如果 bean 已经被 jFinal 的 aop 初始化过，则直接获取
+		try {
+			return super.getBean(requiredType);
+		} catch (Exception e) {
+			LogKit.warn(e.getMessage(), e);
+		}
+		T bean = objenesis.newInstance(requiredType);
+		return Aop.inject(bean);
 	}
 
 }

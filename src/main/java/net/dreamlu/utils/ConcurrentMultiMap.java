@@ -16,11 +16,11 @@ public class ConcurrentMultiMap<K, V> {
 	private transient final ConcurrentMap<K, List<V>> map;
 	
 	public ConcurrentMultiMap() {
-		map = new ConcurrentHashMap<K, List<V>>();
+		map = new ConcurrentHashMap<>();
 	}
 	
-	List<V> createlist() {
-		return new ArrayList<V>();
+	private List<V> createlist() {
+		return new ArrayList<>();
 	}
 	
 	/**
@@ -67,8 +67,7 @@ public class ConcurrentMultiMap<K, V> {
 	 * @return List
 	 */
 	public List<V> get(K key) {
-		List<V> list = map.get(key);
-		return list;
+		return map.get(key);
 	}
 	
 	/**

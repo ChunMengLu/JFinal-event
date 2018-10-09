@@ -166,7 +166,7 @@ public class EventPlugin implements IPlugin {
 			log.warn("@EventListener is empty! Please check it!");
 		}
 		// 装载兼听
-		List<ApplicationListenerMethodAdapter> allListeners = new ArrayList<ApplicationListenerMethodAdapter>();
+		List<ApplicationListenerMethodAdapter> allListeners = new ArrayList<>();
 		for (Method method : methodSet) {
 			Class<?> targetClass = method.getDeclaringClass();
 			allListeners.add(new ApplicationListenerMethodAdapter(beanFactory, targetClass, method));
@@ -176,7 +176,7 @@ public class EventPlugin implements IPlugin {
 			log.warn("EventListener List is empty! Please check @EventListener is right?");
 		}
 		
-		listenerList = new ArrayList<ApplicationListenerMethodAdapter>();
+		listenerList = new ArrayList<>();
 		for (ApplicationListenerMethodAdapter applicationListener : allListeners) {
 			listenerList.add(applicationListener);
 			if (log.isDebugEnabled()) {

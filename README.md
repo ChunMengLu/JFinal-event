@@ -91,13 +91,18 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>2.2.1</version>
+    <version>2.2.2</version>
 </dependency>
 ```
 
 欢迎拍砖~~~
 
 ## 更新说明
+>## 2018-10-09 v2.2.2
+> 升级到jfinal 3.5 (不兼容老版本)支持新版本inject，升级到java 8优化部分代码。
+> DefaultBeanFactory改为jfinal 3.5 aop 创建，删除 DuangBeanFactory。
+> 优化 ObjenesisBeanFactory 支持jfinal 3.5 inject
+
 >## 2018-08-14 v2.2.1
 > ApplicationEvent 添加泛型，方便类型转换。
 
