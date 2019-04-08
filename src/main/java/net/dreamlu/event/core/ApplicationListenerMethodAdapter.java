@@ -1,17 +1,18 @@
 package net.dreamlu.event.core;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-
 import com.jfinal.kit.ElKit;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.log.Log;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 监听器封装
+ *
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
@@ -38,7 +39,8 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 		this.targetClass = targetClass;
 		// 事件注解上的信息
 		EventListener ann = method.getAnnotation(EventListener.class);
-		this.declaredEventClasses = Arrays.asList(ann.events());
+		// 支持 EventListener value() 和 events()
+		this.declaredEventClasses = ApplicationListenerMethodAdapter.join(ann.value(), ann.events());
 		this.condition = ann.condition();
 		this.order = ann.order();
 		this.async = ann.async();
@@ -56,12 +58,14 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 		}
 		try {
 			Object bean = beanFactory.getBean(this.targetClass);
+			Object[] args;
 			// 兼容没有参数的监听器
 			if (this.paramCount == 0) {
-				this.method.invoke(bean);
+				args = new Object[0];
 			} else {
-				this.method.invoke(bean, event);
+				args = new Object[]{event};
 			}
+			this.method.invoke(bean, args);
 		} catch (Exception e) {
 			handleException(e);
 		}
@@ -72,7 +76,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 	 */
 	private void handleException(Exception e) {
 		if (e instanceof IllegalAccessException || e instanceof IllegalArgumentException
-				|| e instanceof NoSuchMethodException) {
+			|| e instanceof NoSuchMethodException) {
 			throw new IllegalArgumentException(e);
 		} else if (e instanceof InvocationTargetException) {
 			throw new RuntimeException(((InvocationTargetException) e).getTargetException());
@@ -120,4 +124,9 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 		return "@EventListener [" + method + "]";
 	}
 
+	private static List<Class<?>> join(Class<?>[] first, Class<?>[] second) {
+		Class<?>[] result = Arrays.copyOf(first, first.length + second.length);
+		System.arraycopy(second, 0, result, first.length, second.length);
+		return Arrays.asList(result);
+	}
 }

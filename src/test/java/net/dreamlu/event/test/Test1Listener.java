@@ -3,6 +3,7 @@ package net.dreamlu.event.test;
 import com.jfinal.kit.ElKit;
 import com.jfinal.kit.Kv;
 
+import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.event.core.EventListener;
 
 public class Test1Listener {
@@ -35,6 +36,14 @@ public class Test1Listener {
 	 */
 	@EventListener
 	public void xxxx() {
+		System.out.println("😃😃😃😃");
+	}
+
+	/**
+	 * source event 测试
+	 */
+	@EventListener(ApplicationEvent.class)
+	public void xxxxx() {
 		System.out.println("😃😃😃😃");
 	}
 

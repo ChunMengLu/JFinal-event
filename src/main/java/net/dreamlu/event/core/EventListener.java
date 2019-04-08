@@ -19,6 +19,14 @@ import java.lang.annotation.Target;
 public @interface EventListener {
 
 	/**
+	 * 同 events，简化使用
+	 *
+	 * @see #events()
+	 * @return Class[]
+	 */
+	Class<?>[] value() default {};
+
+	/**
 	 * The event classes that this listener handles.
 	 * <p>If this attribute is specified with a single value, the
 	 * annotated method may optionally accept a single parameter.
@@ -27,7 +35,7 @@ public @interface EventListener {
 	 * @return Class[]
 	 */
 	Class<?>[] events() default {};
-	
+
 	/**
 	 * The order value. Default is {@link Integer#MAX_VALUE}.
 	 * @return order

@@ -60,7 +60,7 @@ public class EventKit {
 				boolean canExec = false;
 				for (Class<?> annType : declaredEventClasses) {
 					// 2.判断注解类型
-					if (sourceEventClass.isAssignableFrom(annType)) {
+					if (annType.isAssignableFrom(sourceEventClass)) {
 						canExec = true;
 						break;
 					}

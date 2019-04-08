@@ -67,7 +67,7 @@ EventKit.post(event);
 ```
 
 ### 说明
-> `events`支持的事件类型数组，用于将事件方法定义为`ApplicationEvent`或者自定义父类。
+> `value` 或 `events`支持的事件类型数组，用于将事件方法定义为`ApplicationEvent`或者自定义父类。
 
 ```java
 @EventListener(events = Test1Event.class)

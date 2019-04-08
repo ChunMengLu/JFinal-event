@@ -101,6 +101,7 @@ public class EventPluginTest {
 	public void testX2() {
 		EventPlugin plugin = new EventPlugin();
 		plugin.beanFactory(new ObjenesisBeanFactory());
+		plugin.stop();
 		plugin.start();
 		EventKit.post(new TestXEvent(10000));
 		plugin.stop();

@@ -4,6 +4,8 @@
 > 支持 `@EventListener` 方法可以无参数。
 > `ObjenesisBeanFactory` 和 jfinal Aop inject 冲突，去掉对 JFinal inject 支持，标记为弃用。
 > 新增 `SourceClass` 作为 event 事件源（同 Spring PayloadApplicationEvent），event模型不再需要实现 `ApplicationEvent`。
+> `@EventListener` 新增 value 变量，功能同 events。
+> 修复 `@EventListener` events 参数类型判断bug。
 
 >## 2018-10-09 v2.2.2
 > 升级到jfinal 3.5 (不兼容老版本)支持新版本inject，升级到java 8优化部分代码。
