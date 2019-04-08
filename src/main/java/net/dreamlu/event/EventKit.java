@@ -7,8 +7,7 @@ import com.jfinal.log.Log;
 
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
-import net.dreamlu.event.core.SourceApplicationEvent;
-import net.dreamlu.event.core.SourceEventType;
+import net.dreamlu.event.core.EventType;
 import net.dreamlu.utils.ConcurrentMultiMap;
 
 /**
@@ -26,7 +25,7 @@ public class EventKit {
 	/**
 	 * 缓存提高性能
 	 */
-	static ConcurrentMultiMap<SourceEventType, ApplicationListenerMethodAdapter> cache
+	static ConcurrentMultiMap<EventType, ApplicationListenerMethodAdapter> cache
 			= new ConcurrentMultiMap<>();
 
 	static void init(List<ApplicationListenerMethodAdapter> listeners, ExecutorService pool) {
@@ -37,7 +36,7 @@ public class EventKit {
 	/**
 	 * 获取监听器
 	 */
-	private static List<ApplicationListenerMethodAdapter> getListener(SourceEventType eventType) {
+	private static List<ApplicationListenerMethodAdapter> getListener(EventType eventType) {
 		Objects.requireNonNull(listeners, "listeners is null, 请先初始化EventPlugin");
 		if (listeners.isEmpty()) {
 			log.error("EventListener is empty!");
@@ -49,10 +48,10 @@ public class EventKit {
 	/**
 	 * 初始化监听器
 	 */
-	private static List<ApplicationListenerMethodAdapter> initListeners(List<ApplicationListenerMethodAdapter> listeners, SourceEventType eventType) {
+	private static List<ApplicationListenerMethodAdapter> initListeners(List<ApplicationListenerMethodAdapter> listeners, EventType eventType) {
 		final Class<?> eventClass = eventType.getEventClass();
-		final Class<?> genericClass = eventType.getGenericClass();
-		final Class<?> sourceEventClass = genericClass == null ? eventClass : genericClass;
+		final Class<?> sourceClass = eventType.getSourceClass();
+		final Class<?> sourceEventClass = sourceClass == null ? eventClass : sourceClass;
 		final List<ApplicationListenerMethodAdapter> list = new ArrayList<>();
 		for (ApplicationListenerMethodAdapter listener : listeners) {
 			// 1. 注解上的事件类型
@@ -96,13 +95,11 @@ public class EventKit {
 	public static void post(Object event) {
 		Objects.requireNonNull(event, "EventKit post event 不能为null");
 		Class<?> eventClass = event.getClass();
-		SourceEventType eventType;
-		if (event instanceof SourceApplicationEvent) {
-			eventType = new SourceEventType(eventClass, ((SourceApplicationEvent) event).getSourceClass());
-		} else if (event instanceof ApplicationEvent){
-			eventType = new SourceEventType(eventClass, null);
+		EventType eventType;
+		if (event instanceof ApplicationEvent){
+			eventType = new EventType(eventClass, null);
 		} else {
-			eventType = new SourceEventType(SourceApplicationEvent.class, event.getClass());
+			eventType = new EventType(ApplicationEvent.class, event.getClass());
 		}
 		post(event, eventType);
 	}
@@ -112,7 +109,7 @@ public class EventKit {
 	 * @param event Object
 	 * @param eventType SourceEventType
 	 */
-	private static void post(final Object event, SourceEventType eventType) {
+	private static void post(final Object event, EventType eventType) {
 		final List<ApplicationListenerMethodAdapter> listenerList = getListener(eventType);
 		for (final ApplicationListenerMethodAdapter listener : listenerList) {
 			if (null != pool && listener.isAsync()) {

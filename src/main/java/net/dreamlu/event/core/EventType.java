@@ -7,21 +7,21 @@ import java.util.Objects;
  *
  * @author L.cm
  */
-public class SourceEventType {
+public class EventType {
 	private final Class<?> eventClass;
-	private final Class<?> genericClass;
+	private final Class<?> sourceClass;
 
-	public SourceEventType(Class<?> eventClass, Class<?> genericClass) {
+	public EventType(Class<?> eventClass, Class<?> sourceClass) {
 		this.eventClass = eventClass;
-		this.genericClass = genericClass;
+		this.sourceClass = sourceClass;
 	}
 
 	public Class<?> getEventClass() {
 		return eventClass;
 	}
 
-	public Class<?> getGenericClass() {
-		return genericClass;
+	public Class<?> getSourceClass() {
+		return sourceClass;
 	}
 
 	@Override
@@ -32,13 +32,13 @@ public class SourceEventType {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		SourceEventType that = (SourceEventType) o;
-		return Objects.equals(eventClass, that.eventClass) &&
-			Objects.equals(genericClass, that.genericClass);
+		EventType eventType = (EventType) o;
+		return Objects.equals(eventClass, eventType.eventClass) &&
+			Objects.equals(sourceClass, eventType.sourceClass);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(eventClass, genericClass);
+		return Objects.hash(eventClass, sourceClass);
 	}
 }

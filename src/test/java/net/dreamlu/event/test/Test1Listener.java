@@ -30,6 +30,14 @@ public class Test1Listener {
 		System.out.println(event);
 	}
 
+	/**
+	 * source event 测试
+	 */
+	@EventListener
+	public void xxxx() {
+		System.out.println("😃😃😃😃");
+	}
+
 	public static void main(String[] args) {
 		boolean x = ElKit.eval("event.isExec()", Kv.by("event", new Test1Event("hello")));
 		System.out.println(x);

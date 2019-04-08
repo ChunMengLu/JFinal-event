@@ -14,6 +14,7 @@ public abstract class ApplicationEvent<T> implements java.io.Serializable {
 
 	/**
 	 * Create a new ApplicationEvent.
+	 *
 	 * @param source the component that published the event (never {@code null})
 	 */
 	public ApplicationEvent(T source) {
@@ -26,23 +27,35 @@ public abstract class ApplicationEvent<T> implements java.io.Serializable {
 
 	/**
 	 * The object on which the Event initially occurred.
-	 * @return   The object on which the Event initially occurred.
+	 *
+	 * @return The object on which the Event initially occurred.
 	 */
 	public T getSource() {
 		return source;
 	}
 
 	/**
+	 * 获取 source 的类型
+	 *
+	 * @return 类型
+	 */
+	public Class<?> getSourceClass() {
+		return this.source.getClass();
+	}
+
+	/**
 	 * Returns a String representation of this EventObject.
-	 * @return  A a String representation of this EventObject.
+	 *
+	 * @return A a String representation of this EventObject.
 	 */
 	@Override
 	public String toString() {
 		return getClass().getName() + "[source=" + source + "]";
 	}
-	
+
 	/**
 	 * Return the system time in milliseconds when the event happened.
+	 *
 	 * @return Return the system time in milliseconds
 	 */
 	public final long getTimestamp() {
