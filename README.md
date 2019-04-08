@@ -30,7 +30,7 @@ plugin.stop();
 
 ## 新建事件类（任意模型即可 2.3.0支持）
 ```java
-public class Test1Event {
+public class AccountEvent {
 
 	private Integer id;
 	private String name;
@@ -44,8 +44,8 @@ public class Test1Event {
 ## 编写监听
 ```java
 @EventListener
-public void listenTest1Event(Test1Event event) {
-    System.out.println("Test1Event：" + event.getSource());
+public void listenTest1Event(AccountEvent event) {
+    System.out.println("AccountEvent：" + event);
 }
 ```
 
