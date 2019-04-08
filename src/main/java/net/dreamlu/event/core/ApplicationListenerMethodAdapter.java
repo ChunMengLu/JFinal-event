@@ -17,28 +17,24 @@ import com.jfinal.log.Log;
  * site:http://www.dreamlu.net
  * date 2017年10月10日上午11:27:24
  */
-public class ApplicationListenerMethodAdapter implements ApplicationListener<ApplicationEvent<?>> {
+public class ApplicationListenerMethodAdapter implements ApplicationListener<Object> {
 	private static Log log = Log.getLog(ApplicationListenerMethodAdapter.class);
+
 	private final IBeanFactory beanFactory;
-
 	private final Method method;
-
+	private final int paramCount;
 	private final Class<?> paramType;
-
 	private final Class<?> targetClass;
-
 	private final List<Class<?>> declaredEventClasses;
-
 	private final String condition;
-
 	private final int order;
-
 	private final boolean async;
 
 	public ApplicationListenerMethodAdapter(IBeanFactory beanFactory, Class<?> targetClass, Method method) {
 		this.beanFactory = beanFactory;
 		this.method = method;
-		this.paramType = method.getParameterTypes()[0];
+		this.paramCount = method.getParameterCount();
+		this.paramType = this.paramCount > 0 ? method.getParameterTypes()[0] : null;
 		this.targetClass = targetClass;
 		// 事件注解上的信息
 		EventListener ann = method.getAnnotation(EventListener.class);
@@ -49,7 +45,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 	}
 
 	@Override
-	public void onApplicationEvent(ApplicationEvent<?> event) {
+	public void onApplicationEvent(Object event) {
 		// 判断表达式
 		if (StrKit.notBlank(this.condition)) {
 			boolean elPass = ElKit.eval(this.condition, Kv.by("event", event));
@@ -60,7 +56,12 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 		}
 		try {
 			Object bean = beanFactory.getBean(this.targetClass);
-			this.method.invoke(bean, event);
+			// 兼容没有参数的监听器
+			if (this.paramCount == 0) {
+				this.method.invoke(bean);
+			} else {
+				this.method.invoke(bean, event);
+			}
 		} catch (Exception e) {
 			handleException(e);
 		}
@@ -84,6 +85,10 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<App
 
 	public Method getMethod() {
 		return method;
+	}
+
+	public int getParamCount() {
+		return paramCount;
 	}
 
 	public Class<?> getParamType() {

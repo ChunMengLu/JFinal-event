@@ -5,7 +5,7 @@ import net.dreamlu.event.core.EventListener;
 
 /**
  * 测试 不含有默认构造器的
- * 
+ *
  * @author L.cm
  *
  */

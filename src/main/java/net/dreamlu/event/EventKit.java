@@ -7,6 +7,8 @@ import com.jfinal.log.Log;
 
 import net.dreamlu.event.core.ApplicationEvent;
 import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
+import net.dreamlu.event.core.SourceApplicationEvent;
+import net.dreamlu.event.core.SourceEventType;
 import net.dreamlu.utils.ConcurrentMultiMap;
 
 /**
@@ -18,67 +20,62 @@ import net.dreamlu.utils.ConcurrentMultiMap;
  */
 public class EventKit {
 	private static Log log = Log.getLog(EventKit.class);
-	
+
 	private static List<ApplicationListenerMethodAdapter> listeners;
 	private static ExecutorService pool;
 	/**
 	 * 缓存提高性能
 	 */
-	static ConcurrentMultiMap<Class<?>, ApplicationListenerMethodAdapter> cache
+	static ConcurrentMultiMap<SourceEventType, ApplicationListenerMethodAdapter> cache
 			= new ConcurrentMultiMap<>();
 
 	static void init(List<ApplicationListenerMethodAdapter> listeners, ExecutorService pool) {
 		EventKit.listeners = listeners;
 		EventKit.pool = pool;
 	}
-	
+
 	/**
 	 * 获取监听器
 	 */
-	private static List<ApplicationListenerMethodAdapter> getListener(final ApplicationEvent<?> event) {
+	private static List<ApplicationListenerMethodAdapter> getListener(SourceEventType eventType) {
 		Objects.requireNonNull(listeners, "listeners is null, 请先初始化EventPlugin");
 		if (listeners.isEmpty()) {
 			log.error("EventListener is empty!");
 			return Collections.emptyList();
 		}
-		// 事件类
-		Class<?> eventType = event.getClass();
-		List<ApplicationListenerMethodAdapter> listenerList = cache.get(eventType);
-		if (listenerList == null) {
-			synchronized (EventKit.class) {
-				if (listenerList == null) {
-					listenerList = initListeners(listeners, eventType);
-					cache.putAll(eventType, listenerList);
-				}
-			}
-		}
-		return listenerList;
+		return cache.computeIfAbsent(eventType, (key) -> initListeners(listeners, key));
 	}
-	
+
 	/**
 	 * 初始化监听器
 	 */
-	private static List<ApplicationListenerMethodAdapter> initListeners(List<ApplicationListenerMethodAdapter> listeners, Class<?> eventType) {
+	private static List<ApplicationListenerMethodAdapter> initListeners(List<ApplicationListenerMethodAdapter> listeners, SourceEventType eventType) {
+		final Class<?> eventClass = eventType.getEventClass();
+		final Class<?> genericClass = eventType.getGenericClass();
+		final Class<?> sourceEventClass = genericClass == null ? eventClass : genericClass;
 		final List<ApplicationListenerMethodAdapter> list = new ArrayList<>();
 		for (ApplicationListenerMethodAdapter listener : listeners) {
-			// 方法参数事件类型
-			Class<?> paramType = listener.getParamType();
-			// 1.判断参数类型
-			if (!paramType.isAssignableFrom(eventType)) {
-				continue;
-			}
-			// 注解上的事件类型
+			// 1. 注解上的事件类型
 			List<Class<?>> declaredEventClasses = listener.getDeclaredEventClasses();
 			if (!declaredEventClasses.isEmpty()) {
 				boolean canExec = false;
 				for (Class<?> annType : declaredEventClasses) {
 					// 2.判断注解类型
-					if (eventType.isAssignableFrom(annType)) {
+					if (sourceEventClass.isAssignableFrom(annType)) {
 						canExec = true;
 						break;
 					}
 				}
 				if (!canExec) {
+					continue;
+				}
+			}
+			// 2. 判断方法参数类型
+			if (listener.getParamCount() > 0) {
+				// 方法参数事件类型
+				Class<?> paramType = listener.getParamType();
+				// 参数类型不支持跳出
+				if (!paramType.isAssignableFrom(sourceEventClass)) {
 					continue;
 				}
 			}
@@ -90,13 +87,33 @@ public class EventKit {
 		}
 		return list;
 	}
-	
+
+
 	/**
 	 * 发布事件
-	 * @param event ApplicationEvent
+	 * @param event Object
 	 */
-	public static void post(final ApplicationEvent<?> event) {
-		final List<ApplicationListenerMethodAdapter> listenerList = getListener(event);
+	public static void post(Object event) {
+		Objects.requireNonNull(event, "EventKit post event 不能为null");
+		Class<?> eventClass = event.getClass();
+		SourceEventType eventType;
+		if (event instanceof SourceApplicationEvent) {
+			eventType = new SourceEventType(eventClass, ((SourceApplicationEvent) event).getSourceClass());
+		} else if (event instanceof ApplicationEvent){
+			eventType = new SourceEventType(eventClass, null);
+		} else {
+			eventType = new SourceEventType(SourceApplicationEvent.class, event.getClass());
+		}
+		post(event, eventType);
+	}
+
+	/**
+	 * 发布事件
+	 * @param event Object
+	 * @param eventType SourceEventType
+	 */
+	private static void post(final Object event, SourceEventType eventType) {
+		final List<ApplicationListenerMethodAdapter> listenerList = getListener(eventType);
 		for (final ApplicationListenerMethodAdapter listener : listenerList) {
 			if (null != pool && listener.isAsync()) {
 				pool.submit(() -> listener.onApplicationEvent(event));

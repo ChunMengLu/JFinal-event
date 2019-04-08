@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
 /**
  * 自己实现的ConcurrentMultiMap 重复key的map，使用监听的type，取出所有的监听器
@@ -14,15 +15,15 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ConcurrentMultiMap<K, V> {
 	private transient final ConcurrentMap<K, List<V>> map;
-	
+
 	public ConcurrentMultiMap() {
 		map = new ConcurrentHashMap<>();
 	}
-	
+
 	private List<V> createlist() {
 		return new ArrayList<>();
 	}
-	
+
 	/**
 	 * put to ConcurrentMultiMap
 	 * @param key 键
@@ -45,7 +46,7 @@ public class ConcurrentMultiMap<K, V> {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * put list to ConcurrentMultiMap
 	 * @param key 键
@@ -60,7 +61,7 @@ public class ConcurrentMultiMap<K, V> {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * get List by key
 	 * @param key 键
@@ -69,12 +70,22 @@ public class ConcurrentMultiMap<K, V> {
 	public List<V> get(K key) {
 		return map.get(key);
 	}
-	
+
 	/**
 	 * clear ConcurrentMultiMap
 	 */
 	public void clear() {
 		map.clear();
+	}
+
+	/**
+	 * computeIfAbsent
+	 * @param key key
+	 * @param mappingFunction fun
+	 * @return List
+	 */
+	public List<V> computeIfAbsent(K key, Function<? super K, ? extends List<V>> mappingFunction) {
+		return map.computeIfAbsent(key, mappingFunction);
 	}
 
 }

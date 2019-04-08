@@ -38,14 +38,14 @@ public class EventPlugin implements IPlugin {
 	private IBeanFactory beanFactory;
 	// 手动注册的监听类
 	private Set<Class<?>> registeredClass = new HashSet<Class<?>>();
-	
+
 	/**
 	 * 构造EventPlugin
 	 */
 	public EventPlugin() {
 		this.beanFactory = new DefaultBeanFactory();
 	}
-	
+
 	/**
 	 * 构造EventPlugin
 	 * @param scanJar 是否扫描jar
@@ -56,7 +56,7 @@ public class EventPlugin implements IPlugin {
 		this.scanJar = scanJar;
 		this.scanPackage = scanPackage;
 	}
-	
+
 	/**
 	 * 构造EventPlugin
 	 * @param scanJar 是否扫描jar
@@ -69,7 +69,7 @@ public class EventPlugin implements IPlugin {
 			async();
 		}
 	}
-	
+
 	/**
 	 * 构造EventPlugin
 	 * @param scanJar 是否扫描jar
@@ -80,7 +80,7 @@ public class EventPlugin implements IPlugin {
 		this(scanJar, scanPackage);
 		pool = executorService;
 	}
-	
+
 	/**
 	 * 异步，默认SingleThreadExecutor
 	 * @return EventPlugin
@@ -91,7 +91,7 @@ public class EventPlugin implements IPlugin {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 自定义线程池
 	 * @param executorService 线程池
@@ -101,7 +101,7 @@ public class EventPlugin implements IPlugin {
 		pool = executorService;
 		return this;
 	}
-	
+
 	/**
 	 * 从jar包中搜索监听器
 	 * @return EventPlugin
@@ -120,7 +120,7 @@ public class EventPlugin implements IPlugin {
 		this.scanPackage = scanPackage;
 		return this;
 	}
-	
+
 	/**
 	 * 设定bean工厂
 	 * @param beanFactory 设定bean工厂
@@ -130,7 +130,7 @@ public class EventPlugin implements IPlugin {
 		this.beanFactory = beanFactory;
 		return this;
 	}
-	
+
 	/**
 	 * 手动注册的监听类
 	 * @param clazz 包含监听注解的类
@@ -140,7 +140,7 @@ public class EventPlugin implements IPlugin {
 		registeredClass.add(clazz);
 		return this;
 	}
-	
+
 	@Override
 	public boolean start() {
 		create();
@@ -160,7 +160,7 @@ public class EventPlugin implements IPlugin {
 		ClassUtil.scanPackage(scanPackage, scanJar, filter);
 		// 读取手动注册的类
 		filter.filter(registeredClass);
-		
+
 		Set<Method> methodSet = filter.getListeners();
 		if (methodSet.isEmpty()) {
 			log.warn("@EventListener is empty! Please check it!");
@@ -171,11 +171,11 @@ public class EventPlugin implements IPlugin {
 			Class<?> targetClass = method.getDeclaringClass();
 			allListeners.add(new ApplicationListenerMethodAdapter(beanFactory, targetClass, method));
 		}
-		
+
 		if (allListeners.isEmpty()) {
 			log.warn("EventListener List is empty! Please check @EventListener is right?");
 		}
-		
+
 		listenerList = new ArrayList<>();
 		for (ApplicationListenerMethodAdapter applicationListener : allListeners) {
 			listenerList.add(applicationListener);

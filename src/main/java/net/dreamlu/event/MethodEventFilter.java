@@ -1,15 +1,15 @@
 package net.dreamlu.event;
 
+import net.dreamlu.utils.ClassUtil.ClassFilter;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.dreamlu.event.core.ApplicationEvent;
-import net.dreamlu.utils.ClassUtil.ClassFilter;
-
 /**
  * 类方法查找器
+ *
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
@@ -18,7 +18,7 @@ import net.dreamlu.utils.ClassUtil.ClassFilter;
 class MethodEventFilter implements ClassFilter {
 	private final Class<? extends Annotation> annotationClass;
 	private final Set<Method> methodSet;
-	
+
 	MethodEventFilter(Class<? extends Annotation> annotationClass) {
 		this.annotationClass = annotationClass;
 		this.methodSet = new HashSet<Method>();
@@ -29,19 +29,22 @@ class MethodEventFilter implements ClassFilter {
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 			Annotation ann = method.getAnnotation(annotationClass);
-			if (ann == null) { continue; }
-			Class<?>[] paramTypes = method.getParameterTypes();
-			if (paramTypes.length != 1) { continue; }
-			Class<?> eventType = paramTypes[0];
-			if (ApplicationEvent.class.isAssignableFrom(eventType)) {
-				methodSet.add(method);
+			if (ann == null) {
+				continue;
 			}
+			// 支持参数个数为 0 或者 1
+			int parameterCount = method.getParameterCount();
+			if (parameterCount > 1) {
+				continue;
+			}
+			methodSet.add(method);
 		}
 		return false;
 	}
 
 	@Override
-	public void addClass(Class<?> clazz) {}
+	public void addClass(Class<?> clazz) {
+	}
 
 	Set<Method> getListeners() {
 		return methodSet;

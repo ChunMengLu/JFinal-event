@@ -6,16 +6,16 @@ import org.objenesis.ObjenesisStd;
 
 /**
  * Objenesis bean 工厂
- * 
+ *
  * 实现不需要默认构造器
- * 
+ *
  * @author L.cm
  *
  */
 public class ObjenesisBeanFactory extends DefaultBeanFactory {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd(true);
-	
+
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws Exception {
 		// 如果 bean 已经被 jFinal 的 aop 初始化过，则直接获取

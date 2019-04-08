@@ -16,7 +16,7 @@ import java.util.EventListener;
  * @author Juergen Hoeller
  * @param <E> the specific ApplicationEvent subclass to listen to
  */
-public interface ApplicationListener<E extends ApplicationEvent<?>> extends EventListener {
+public interface ApplicationListener<E> extends EventListener {
 
 	/**
 	 * Handle an application event.

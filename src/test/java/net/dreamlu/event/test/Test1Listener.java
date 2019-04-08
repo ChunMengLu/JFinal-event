@@ -12,7 +12,7 @@ public class Test1Listener {
 		String xx = event.getSource();
 		System.out.println(Thread.currentThread().getName() + "\tsource:" + xx);
 	}
-	
+
 	@EventListener
 	public void xxx(Test2Event event) {
 		if (event.getSource() instanceof Integer) {
@@ -20,7 +20,16 @@ public class Test1Listener {
 			throw new RuntimeException("测试抛出异常～～～");
 		}
 	}
-	
+
+	/**
+	 * source event 测试
+	 * @param event AccountEvent
+	 */
+	@EventListener
+	public void xxx(AccountEvent event) {
+		System.out.println(event);
+	}
+
 	public static void main(String[] args) {
 		boolean x = ElKit.eval("event.isExec()", Kv.by("event", new Test1Event("hello")));
 		System.out.println(x);
