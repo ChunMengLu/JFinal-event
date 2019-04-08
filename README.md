@@ -18,8 +18,8 @@ plugin.scanJar();
 // 设置监听器默认包，多个包名使用;分割，默认全扫描
 plugin.scanPackage("net.dreamlu");
 // bean工厂，默认为DefaultBeanFactory，可实现IBeanFactory自定义扩展
-// 对于将@EventListener写在不含无参构造器的类需要使用`ObjenesisBeanFactory`
-plugin.beanFactory(new DuangBeanFactory());
+// 对于将@EventListener写在不含无参构造器的类需要使用`ObjenesisBeanFactory`（2.3.0 已经不推荐使用）
+plugin.beanFactory(new ObjenesisBeanFactory());
 
 // 手动启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 plugin.start();
@@ -70,10 +70,13 @@ EventKit.post(event);
 > `value` 或 `events`支持的事件类型数组，用于将事件方法定义为`ApplicationEvent`或者自定义父类。
 
 ```java
-@EventListener(events = Test1Event.class)
-public void applicationEvent(ApplicationEvent event) {
-    String xx = (String) event.getSource();
-    System.out.println(Thread.currentThread().getName() + "\tsource:" + xx);
+public class Test {
+
+    @EventListener({Test1Event.class, Test2Event.class})
+    public void applicationEvent(ApplicationEvent event) {
+        String xx = (String) event.getSource();
+        System.out.println(Thread.currentThread().getName() + "\tsource:" + xx);
+    }
 }
 ```
 
