@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  */
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("*")
-@SupportedOptions("debug")
 public class EventListenerProcessor extends AbstractProcessor {
 	private static final Charset UTF_8 = StandardCharsets.UTF_8;
 	/**
