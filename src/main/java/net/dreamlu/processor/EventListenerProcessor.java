@@ -58,12 +58,12 @@ public class EventListenerProcessor extends AbstractProcessor {
 		if (roundEnv.processingOver()) {
 			generateDreamEventFiles();
 		} else {
-			processAnnotations(annotations, roundEnv);
+			processAnnotations(roundEnv);
 		}
 		return false;
 	}
 
-	private void processAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+	private void processAnnotations(RoundEnvironment roundEnv) {
 		Set<? extends Element> elementSet = roundEnv.getRootElements();
 
 		// 过滤 TypeElement
