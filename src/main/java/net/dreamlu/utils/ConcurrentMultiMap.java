@@ -2,12 +2,14 @@ package net.dreamlu.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
 /**
  * 自己实现的ConcurrentMultiMap 重复key的map，使用监听的type，取出所有的监听器
+ *
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
@@ -26,7 +28,8 @@ public class ConcurrentMultiMap<K, V> {
 
 	/**
 	 * put to ConcurrentMultiMap
-	 * @param key 键
+	 *
+	 * @param key   键
 	 * @param value 值
 	 * @return boolean
 	 */
@@ -49,7 +52,8 @@ public class ConcurrentMultiMap<K, V> {
 
 	/**
 	 * put list to ConcurrentMultiMap
-	 * @param key 键
+	 *
+	 * @param key  键
 	 * @param list 值列表
 	 * @return boolean
 	 */
@@ -64,11 +68,35 @@ public class ConcurrentMultiMap<K, V> {
 
 	/**
 	 * get List by key
+	 *
 	 * @param key 键
 	 * @return List
 	 */
 	public List<V> get(K key) {
 		return map.get(key);
+	}
+
+	/**
+	 * get List by key
+	 *
+	 * @param key          key
+	 * @param defaultValue 默认值
+	 * @return List
+	 */
+	public List<V> getOrDefault(K key, List<V> defaultValue) {
+		List<V> list;
+		return (((list = map.get(key)) != null) || map.containsKey(key))
+			? list
+			: defaultValue;
+	}
+
+	/**
+	 * return keySet
+	 *
+	 * @return Set
+	 */
+	public Set<K> keySet() {
+		return map.keySet();
 	}
 
 	/**
@@ -79,8 +107,18 @@ public class ConcurrentMultiMap<K, V> {
 	}
 
 	/**
+	 * return isEmpty
+	 *
+	 * @return boolean
+	 */
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
+
+	/**
 	 * computeIfAbsent
-	 * @param key key
+	 *
+	 * @param key             key
 	 * @param mappingFunction fun
 	 * @return List
 	 */

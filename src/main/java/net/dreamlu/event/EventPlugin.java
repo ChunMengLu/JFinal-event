@@ -1,5 +1,12 @@
 package net.dreamlu.event;
 
+import com.jfinal.log.Log;
+import com.jfinal.plugin.IPlugin;
+import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
+import net.dreamlu.event.core.IBeanFactory;
+import net.dreamlu.event.support.DefaultBeanFactory;
+import net.dreamlu.processor.DreamEventsLoader;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,15 +14,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.jfinal.log.Log;
-import com.jfinal.plugin.IPlugin;
-
-import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
-import net.dreamlu.event.core.EventListener;
-import net.dreamlu.event.core.IBeanFactory;
-import net.dreamlu.event.support.DefaultBeanFactory;
-import net.dreamlu.utils.ClassUtil;
 
 /**
  * 模拟spring的消息机制插件
@@ -27,44 +25,28 @@ import net.dreamlu.utils.ClassUtil;
 public class EventPlugin implements IPlugin {
 	private static Log log = Log.getLog(EventPlugin.class);
 	// 事件监听处理器
-	private static List<ApplicationListenerMethodAdapter> listenerList = null;
+	private final List<ApplicationListenerMethodAdapter> listenerList;
 	// 线程池
-	private static ExecutorService pool = null;
-	// 默认不扫描jar包
-	private boolean scanJar = false;
-	// 默认扫描所有的包
-	private String scanPackage = "";
+	private ExecutorService pool = null;
 	// Bean工厂，方便扩展
 	private IBeanFactory beanFactory;
 	// 手动注册的监听类
-	private Set<Class<?>> registeredClass = new HashSet<Class<?>>();
+	private Set<Class<?>> registeredClass = new HashSet<>();
 
 	/**
 	 * 构造EventPlugin
 	 */
 	public EventPlugin() {
 		this.beanFactory = new DefaultBeanFactory();
+		this.listenerList = new ArrayList<>();
 	}
 
 	/**
 	 * 构造EventPlugin
-	 * @param scanJar 是否扫描jar
-	 * @param scanPackage 扫描的包名
-	 */
-	public EventPlugin(boolean scanJar, String scanPackage) {
-		this();
-		this.scanJar = scanJar;
-		this.scanPackage = scanPackage;
-	}
-
-	/**
-	 * 构造EventPlugin
-	 * @param scanJar 是否扫描jar
-	 * @param scanPackage 扫描的包名
 	 * @param async 是否异步
 	 */
-	public EventPlugin(boolean scanJar, String scanPackage, boolean async) {
-		this(scanJar, scanPackage);
+	public EventPlugin(boolean async) {
+		this();
 		if (async) {
 			async();
 		}
@@ -72,12 +54,10 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 构造EventPlugin
-	 * @param scanJar 是否扫描jar
-	 * @param scanPackage 扫描的包名
 	 * @param executorService 自定义线程池
 	 */
-	public EventPlugin(boolean scanJar, String scanPackage, ExecutorService executorService) {
-		this(scanJar, scanPackage);
+	public EventPlugin(ExecutorService executorService) {
+		this();
 		pool = executorService;
 	}
 
@@ -99,25 +79,6 @@ public class EventPlugin implements IPlugin {
 	 */
 	public EventPlugin threadPool(ExecutorService executorService) {
 		pool = executorService;
-		return this;
-	}
-
-	/**
-	 * 从jar包中搜索监听器
-	 * @return EventPlugin
-	 */
-	public EventPlugin scanJar() {
-		this.scanJar = true;
-		return this;
-	}
-
-	/**
-	 * 指定扫描的包
-	 * @param scanPackage 指定扫描的包
-	 * @return EventPlugin
-	 */
-	public EventPlugin scanPackage(String scanPackage) {
-		this.scanPackage = scanPackage;
 		return this;
 	}
 
@@ -152,16 +113,11 @@ public class EventPlugin implements IPlugin {
 	 * 构造
 	 */
 	private void create() {
-		if (null != listenerList) {
+		if (!listenerList.isEmpty()) {
 			return;
 		}
-		// 扫描注解 {@code EventListener}
-		MethodEventFilter filter = new MethodEventFilter(EventListener.class);
-		ClassUtil.scanPackage(scanPackage, scanJar, filter);
-		// 读取手动注册的类
-		filter.filter(registeredClass);
-
-		Set<Method> methodSet = filter.getListeners();
+		// 加载并包含手动注册的类
+		Set<Method> methodSet = DreamEventsLoader.loadEventMethods(registeredClass);
 		if (methodSet.isEmpty()) {
 			log.warn("@EventListener is empty! Please check it!");
 		}
@@ -176,7 +132,6 @@ public class EventPlugin implements IPlugin {
 			log.warn("EventListener List is empty! Please check @EventListener is right?");
 		}
 
-		listenerList = new ArrayList<>();
 		for (ApplicationListenerMethodAdapter applicationListener : allListeners) {
 			listenerList.add(applicationListener);
 			if (log.isDebugEnabled()) {
@@ -191,10 +146,7 @@ public class EventPlugin implements IPlugin {
 			pool.shutdown();
 			pool = null;
 		}
-		if (null != listenerList) {
-			listenerList.clear();
-			listenerList = null;
-		}
+		listenerList.clear();
 		EventKit.cache.clear();
 		return true;
 	}

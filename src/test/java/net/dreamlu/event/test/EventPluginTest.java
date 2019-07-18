@@ -21,11 +21,6 @@ public class EventPluginTest {
 		//plugin.threadPool(Executors.newCachedThreadPool(new EventThreadFactory()));
 		// EventThreadFactory 中对异常进行了处理，避免影响控制器中的请求
 
-		// 设置扫描jar包，默认不扫描
-		plugin.scanJar();
-		// 设置默认扫描的包命，默认全扫描
-		plugin.scanPackage("net.dreamlu.a;net.dreamlu.b;net.dreamlu");
-
 		// 启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 		plugin.start();
 
@@ -55,7 +50,7 @@ public class EventPluginTest {
 
 	@Test
 	public void test3() {
-		EventPlugin plugin = new EventPlugin(false, "net.dreamlu");
+		EventPlugin plugin = new EventPlugin(false);
 		plugin.async();
 		plugin.start();
 
@@ -66,7 +61,7 @@ public class EventPluginTest {
 
 	@Test(expected = RuntimeException.class)
 	public void test4() throws InterruptedException {
-		EventPlugin plugin = new EventPlugin(false, "net.dreamlu", Executors.newCachedThreadPool(new EventThreadFactory()));
+		EventPlugin plugin = new EventPlugin(Executors.newCachedThreadPool(new EventThreadFactory()));
 		plugin.start();
 
 		EventKit.post(new Test2Event(123123));

@@ -13,10 +13,6 @@ EventPlugin plugin = new EventPlugin();
 // 设置为异步，默认同步，或者使用`threadPool(ExecutorService executorService)`自定义线程池。
 plugin.async();
 
-// 设置扫描jar包，默认不扫描
-plugin.scanJar();
-// 设置监听器默认包，多个包名使用;分割，默认全扫描
-plugin.scanPackage("net.dreamlu");
 // bean工厂，默认为DefaultBeanFactory，可实现IBeanFactory自定义扩展
 // 对于将@EventListener写在不含无参构造器的类需要使用`ObjenesisBeanFactory`（2.3.0 已经不推荐使用）
 plugin.beanFactory(new ObjenesisBeanFactory());
@@ -98,7 +94,7 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>2.3.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
