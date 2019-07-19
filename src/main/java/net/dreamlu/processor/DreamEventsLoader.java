@@ -38,6 +38,7 @@ public final class DreamEventsLoader {
 	/**
 	 * 加载所以事件的方法
 	 *
+	 * @param registeredClass 手动注册的类
 	 * @return 方法集合
 	 */
 	public static Set<Method> loadEventMethods(Set<Class<?>> registeredClass) {
