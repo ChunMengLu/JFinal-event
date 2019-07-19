@@ -3,7 +3,6 @@ package net.dreamlu.processor;
 import com.jfinal.log.Log;
 import net.dreamlu.event.EventPlugin;
 import net.dreamlu.event.core.EventListener;
-import net.dreamlu.utils.ConcurrentMultiMap;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -42,9 +41,8 @@ public final class DreamEventsLoader {
 	 * @return 方法集合
 	 */
 	public static Set<Method> loadEventMethods(Set<Class<?>> registeredClass) {
-		Class<?> factoryType = EventPlugin.class;
-		ClassLoader classLoader = factoryType.getClassLoader();
-		Set<Class<?>> eventClassSet = loadEventClass(factoryType, classLoader);
+		ClassLoader classLoader = EventPlugin.class.getClassLoader();
+		Set<Class<?>> eventClassSet = loadEventClass(classLoader);
 		eventClassSet.addAll(registeredClass);
 		Set<Method> methodSet = new HashSet<>();
 		for (Class<?> eventClass : eventClassSet) {
@@ -66,44 +64,13 @@ public final class DreamEventsLoader {
 	}
 
 	/**
-	 * 获取对应的class列表
-	 *
-	 * @param factoryType factoryType
-	 * @param classLoader classLoader
-	 * @return clazz列表
-	 */
-	public static Set<Class<?>> loadEventClass(Class<?> factoryType, @Nullable ClassLoader classLoader) {
-		Objects.requireNonNull(factoryType, "'factoryType' must not be null");
-		ClassLoader classLoaderToUse = classLoader;
-		if (classLoaderToUse == null) {
-			classLoaderToUse = DreamEventsLoader.class.getClassLoader();
-		}
-		List<String> factoryImplNames = loadEventClassNames(factoryType, classLoaderToUse);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Loaded [" + factoryType.getName() + "] names: " + factoryImplNames);
-		}
-		Set<Class<?>> result = new HashSet<>(factoryImplNames.size());
-		for (String factoryImplementationName : factoryImplNames) {
-			result.add(loadClazz(factoryImplementationName, classLoaderToUse));
-		}
-		return result;
-	}
-
-	/**
 	 * 加载组件类列表
 	 *
-	 * @param factoryType factoryType
 	 * @param classLoader ClassLoader
 	 * @return 类列表
 	 */
-	public static List<String> loadEventClassNames(Class<?> factoryType, @Nullable ClassLoader classLoader) {
-		Objects.requireNonNull(factoryType, "'factoryType' must not be null");
-		String factoryTypeName = factoryType.getName();
-		return loadEventClass(classLoader).getOrDefault(factoryTypeName, Collections.emptyList());
-	}
-
-	private static ConcurrentMultiMap<String, String> loadEventClass(@Nullable ClassLoader classLoader) {
-		ConcurrentMultiMap<String, String> result = new ConcurrentMultiMap<>();
+	private static Set<Class<?>> loadEventClass(@Nullable ClassLoader classLoader) {
+		Set<Class<?>> result = new HashSet<>();
 		try {
 			Enumeration<URL> urls = (classLoader != null ?
 				classLoader.getResources(DREAM_EVENTS_RESOURCE_LOCATION) :
@@ -113,24 +80,17 @@ public final class DreamEventsLoader {
 				Properties properties = new Properties();
 				properties.load(url.openStream());
 				for (Map.Entry<?, ?> entry : properties.entrySet()) {
-					String factoryTypeName = ((String) entry.getKey()).trim();
-					for (String factoryValue : delimitedListToStringArray((String) entry.getValue())) {
-						String factoryImplementationName = factoryValue.trim();
-						if (logger.isDebugEnabled()) {
-							logger.debug("Found " + factoryTypeName + " value: " + factoryImplementationName);
-						}
-						result.put(factoryTypeName, factoryImplementationName);
+					String eventClazz = ((String) entry.getKey()).trim();
+					if (logger.isDebugEnabled()) {
+						logger.debug("Loaded event class [" + eventClazz + "]");
 					}
+					result.add(loadClazz(eventClazz, classLoader));
 				}
 			}
 			return result;
 		} catch (IOException ex) {
 			throw new IllegalArgumentException("Unable to load factories from location [" + DREAM_EVENTS_RESOURCE_LOCATION + "]", ex);
 		}
-	}
-
-	private static String[] delimitedListToStringArray(String value) {
-		return value.split(",");
 	}
 
 	private static Class<?> loadClazz(String name, ClassLoader clToUse) {

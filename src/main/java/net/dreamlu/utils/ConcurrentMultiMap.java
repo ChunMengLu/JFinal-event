@@ -2,7 +2,6 @@ package net.dreamlu.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -74,29 +73,6 @@ public class ConcurrentMultiMap<K, V> {
 	 */
 	public List<V> get(K key) {
 		return map.get(key);
-	}
-
-	/**
-	 * get List by key
-	 *
-	 * @param key          key
-	 * @param defaultValue 默认值
-	 * @return List
-	 */
-	public List<V> getOrDefault(K key, List<V> defaultValue) {
-		List<V> list;
-		return (((list = map.get(key)) != null) || map.containsKey(key))
-			? list
-			: defaultValue;
-	}
-
-	/**
-	 * return keySet
-	 *
-	 * @return Set
-	 */
-	public Set<K> keySet() {
-		return map.keySet();
 	}
 
 	/**
