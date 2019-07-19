@@ -1,3 +1,8 @@
+# JFinal event 事件驱动
+
+[![Mica Maven release](https://img.shields.io/nexus/r/https/oss.sonatype.org/net.dreamlu/JFinal-event.svg?style=flat-square)](https://mvnrepository.com/artifact/net.dreamlu/JFinal-event)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/917161e0c2174fa6aff8d92a7f4a47a3)](https://www.codacy.com/app/ChunMengLu/JFinal-event?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ChunMengLu/JFinal-event&amp;utm_campaign=Badge_Grade)
+
 模仿的Spring中的消息事件：[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
 专为JFinal设计，无任何第三方依赖，小巧玲珑。
