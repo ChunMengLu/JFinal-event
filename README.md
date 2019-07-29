@@ -131,8 +131,6 @@ net.dreamlu.event.test.Test2Listener
 
 * 另外可以参考 JFinal 社区对 3.0.0 的讨论：https://www.jfinal.com/share/1739
 
-欢迎拍砖~~~
-
 ## License
 
 ( The MIT License )
