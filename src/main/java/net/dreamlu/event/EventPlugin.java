@@ -3,20 +3,20 @@ package net.dreamlu.event;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.IPlugin;
 import net.dreamlu.event.core.ApplicationListenerMethodAdapter;
+import net.dreamlu.event.core.EventListener;
 import net.dreamlu.event.core.IBeanFactory;
 import net.dreamlu.event.support.DefaultBeanFactory;
 import net.dreamlu.processor.DreamEventsLoader;
+import net.dreamlu.utils.ClassUtil;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * 模拟spring的消息机制插件
+ *
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
@@ -24,14 +24,26 @@ import java.util.concurrent.Executors;
  */
 public class EventPlugin implements IPlugin {
 	private static Log log = Log.getLog(EventPlugin.class);
-	// 事件监听处理器
+	/**
+	 * 事件监听处理器
+	 */
 	private final List<ApplicationListenerMethodAdapter> listenerList;
-	// 线程池
+	/**
+	 * 线程池
+	 */
 	private ExecutorService pool = null;
-	// Bean工厂，方便扩展
+	/**
+	 * Bean工厂，方便扩展
+	 */
 	private IBeanFactory beanFactory;
-	// 手动注册的监听类
+	/**
+	 * 手动注册的监听类集合
+	 */
 	private Set<Class<?>> registeredClass = new HashSet<>();
+	/**
+	 * 类扫描，默认不开启
+	 */
+	private boolean classScan = false;
 
 	/**
 	 * 构造EventPlugin
@@ -43,6 +55,7 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 构造EventPlugin
+	 *
 	 * @param async 是否异步
 	 */
 	public EventPlugin(boolean async) {
@@ -54,6 +67,7 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 构造EventPlugin
+	 *
 	 * @param executorService 自定义线程池
 	 */
 	public EventPlugin(ExecutorService executorService) {
@@ -63,6 +77,7 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 异步，默认SingleThreadExecutor
+	 *
 	 * @return EventPlugin
 	 */
 	public EventPlugin async() {
@@ -74,6 +89,7 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 自定义线程池
+	 *
 	 * @param executorService 线程池
 	 * @return EventPlugin
 	 */
@@ -84,6 +100,7 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 设定bean工厂
+	 *
 	 * @param beanFactory 设定bean工厂
 	 * @return EventPlugin
 	 */
@@ -94,11 +111,22 @@ public class EventPlugin implements IPlugin {
 
 	/**
 	 * 手动注册的监听类
+	 *
 	 * @param clazz 包含监听注解的类
 	 * @return EventPlugin
 	 */
 	public EventPlugin register(Class<?> clazz) {
 		registeredClass.add(clazz);
+		return this;
+	}
+
+	/**
+	 * 开启类扫描
+	 *
+	 * @return EventPlugin
+	 */
+	public EventPlugin enableClassScan() {
+		this.classScan = true;
 		return this;
 	}
 
@@ -116,8 +144,17 @@ public class EventPlugin implements IPlugin {
 		if (!listenerList.isEmpty()) {
 			return;
 		}
-		// 加载并包含手动注册的类
-		Set<Method> methodSet = DreamEventsLoader.loadEventMethods(registeredClass);
+		// 判断是否开发模式，开发模式下采用类扫描
+		Set<Method> methodSet = new LinkedHashSet<>();
+		if (classScan) {
+			// 扫描注解 {@code EventListener}
+			MethodEventFilter filter = new MethodEventFilter(EventListener.class);
+			ClassUtil.scanAllPackage(true, filter);
+			// 类扫描出来的
+			methodSet.addAll(filter.getListeners());
+		}
+		// dream.events 扫描和手动注册的类
+		methodSet.addAll(DreamEventsLoader.loadEventMethods(registeredClass));
 		if (methodSet.isEmpty()) {
 			log.warn("@EventListener is empty! Please check it!");
 		}

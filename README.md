@@ -17,11 +17,8 @@
 EventPlugin plugin = new EventPlugin();
 // 设置为异步，默认同步，或者使用`threadPool(ExecutorService executorService)`自定义线程池。
 plugin.async();
-
-// bean工厂，默认为DefaultBeanFactory，可实现IBeanFactory自定义扩展
-// 对于将@EventListener写在不含无参构造器的类需要使用`ObjenesisBeanFactory`（2.3.0 已经不推荐使用）
-plugin.beanFactory(new ObjenesisBeanFactory());
-
+// 开启类扫描，默认为 false，用于不支持 注解处理器的情况
+plugin.enableClassScan();
 // 手动启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 plugin.start();
 

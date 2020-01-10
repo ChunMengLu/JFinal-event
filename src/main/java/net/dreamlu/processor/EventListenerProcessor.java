@@ -1,7 +1,7 @@
 package net.dreamlu.processor;
 
-import com.google.auto.service.AutoService;
 import net.dreamlu.event.core.EventListener;
+import net.dreamlu.mica.auto.annotation.AutoService;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;

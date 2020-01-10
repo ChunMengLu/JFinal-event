@@ -7,7 +7,6 @@ import org.junit.Test;
 import net.dreamlu.event.EventKit;
 import net.dreamlu.event.EventPlugin;
 import net.dreamlu.event.EventThreadFactory;
-import net.dreamlu.event.support.ObjenesisBeanFactory;
 
 public class EventPluginTest {
 
