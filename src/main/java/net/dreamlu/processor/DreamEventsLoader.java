@@ -4,7 +4,6 @@ import com.jfinal.log.Log;
 import net.dreamlu.event.EventPlugin;
 import net.dreamlu.event.core.EventListener;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -70,7 +69,7 @@ public final class DreamEventsLoader {
 	 * @param classLoader ClassLoader
 	 * @return 类列表
 	 */
-	private static Set<Class<?>> loadEventClass(@Nullable ClassLoader classLoader) {
+	private static Set<Class<?>> loadEventClass(ClassLoader classLoader) {
 		Set<Class<?>> result = new HashSet<>();
 		try {
 			Enumeration<URL> urls = (classLoader != null ?

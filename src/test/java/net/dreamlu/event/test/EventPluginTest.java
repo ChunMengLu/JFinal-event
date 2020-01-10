@@ -92,21 +92,6 @@ public class EventPluginTest {
 	 * ObjenesisBeanFactory
 	 */
 	@Test
-	public void testX2() {
-		EventPlugin plugin = new EventPlugin();
-		plugin.beanFactory(new ObjenesisBeanFactory());
-		plugin.stop();
-		plugin.start();
-		EventKit.post(new TestXEvent(10000));
-		plugin.stop();
-	}
-
-	/**
-	 * 测试不含默认构造器
-	 *
-	 * ObjenesisBeanFactory
-	 */
-	@Test
 	public void testSource() {
 		EventPlugin plugin = new EventPlugin();
 		plugin.start();
