@@ -57,7 +57,6 @@ public final class ClassUtil {
 	 *
 	 * @param inJar       在jar包中查找
 	 * @param classFilter class过滤器，过滤掉不需要的class
-	 * @return 类集合
 	 */
 	public static void scanAllPackage(boolean inJar, ClassFilter classFilter) {
 		scanPackage(null, inJar, classFilter);
