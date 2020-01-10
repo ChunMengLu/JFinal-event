@@ -98,35 +98,27 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
 </dependency>
 ```
 
 ### gradle >= 5.x
 
 ```groovy
-api("net.dreamlu:JFinal-event:3.0.0")
-annotationProcessor("net.dreamlu:JFinal-event:3.0.0")
+api("net.dreamlu:JFinal-event:3.1.0")
+annotationProcessor("net.dreamlu:JFinal-event:3.1.0")
 ```
 
 ### gradle < 5.x
 
 ```groovy
-compile("net.dreamlu:JFinal-event:3.0.0")
+compile("net.dreamlu:JFinal-event:3.1.0")
 ```
 
 ### `注意`
 
 * `3.0.0` 由于使用了 `Annotation Processor` 技术，Idea 需要开启注解处理器。
-* `3.0.0` 功能上和 `2.3.0` 一样，还是有问题建议还是使用 `2.3.0`。
-* `3.0.0` 对于手动导入 `jar`（非 maven、gradle）依赖管理的（建议使用 `2.3.0`），您需要手动注入事件类或者在 classes 目录下新建 `META-INF/dream.events` 文件，格式如下:
-
-```properties
-net.dreamlu.event.test.Test1Listener
-net.dreamlu.event.test.Test2Listener
-```
-
-* 另外可以参考 JFinal 社区对 3.0.0 的讨论：https://www.jfinal.com/share/1739
+* 如果你的开发工具不支持 `Annotation Processor`，3.1.0 可开启类扫描。
 
 ## License
 
