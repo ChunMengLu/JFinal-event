@@ -12,12 +12,14 @@
 :laughing: `JFinal-event` 插件，`老版本`使用请查看[文档 wiki](http://git.oschina.net/596392912/JFinal-event/wikis/home)
 
 ## 初始化插件
-```
+```java
 // 初始化插件
 EventPlugin plugin = new EventPlugin();
 // 设置为异步，默认同步，或者使用`threadPool(ExecutorService executorService)`自定义线程池。
 plugin.async();
+
 // 开启类扫描，默认为 false，用于不支持注解处理器的情况，用于不使用 maven 或者不支持注解处理器的情况。
+// 你也可以根据 JFinal.me().getConstants().getDevMode()，判断是否开启类扫描，因为注解处理器 maven 是支持的。
 plugin.enableClassScan();
 // 扫描 jar 里的 监听器，默认不扫描，在开启 enableClassScan 有效果
 plugin.scanJar();
