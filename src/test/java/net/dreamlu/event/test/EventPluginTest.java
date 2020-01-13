@@ -20,6 +20,12 @@ public class EventPluginTest {
 		//plugin.threadPool(Executors.newCachedThreadPool(new EventThreadFactory()));
 		// EventThreadFactory 中对异常进行了处理，避免影响控制器中的请求
 
+		//-idea + maven 可直接开启注解处理器，而不用类扫描，提升项目启动速度-//
+		plugin.enableClassScan();
+		plugin.scanJar();
+		plugin.scanPackage("net.dreamlu");
+		//-idea + maven 可直接开启注解处理器，而不用类扫描，提升项目启动速度-//
+
 		// 启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 		plugin.start();
 

@@ -17,8 +17,13 @@
 EventPlugin plugin = new EventPlugin();
 // 设置为异步，默认同步，或者使用`threadPool(ExecutorService executorService)`自定义线程池。
 plugin.async();
-// 开启类扫描，默认为 false，用于不支持 注解处理器的情况
+// 开启类扫描，默认为 false，用于不支持注解处理器的情况，用于不使用 maven 或者不支持注解处理器的情况。
 plugin.enableClassScan();
+// 扫描 jar 里的 监听器，默认不扫描，在开启 enableClassScan 有效果
+plugin.scanJar();
+// 扫描的包，默认全扫描，可提升启动速度，在开启 enableClassScan 有效果
+plugin.scanPackage("com.xxx.包名");
+
 // 手动启动插件，用于main方法启动，jfinal中不需要，添加插件即可。
 plugin.start();
 
@@ -98,27 +103,27 @@ http://central.maven.org/maven2/net/dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
 </dependency>
 ```
 
 ### gradle >= 5.x
 
 ```groovy
-api("net.dreamlu:JFinal-event:3.1.0")
-annotationProcessor("net.dreamlu:JFinal-event:3.1.0")
+api("net.dreamlu:JFinal-event:3.1.1")
+annotationProcessor("net.dreamlu:JFinal-event:3.1.1")
 ```
 
 ### gradle < 5.x
 
 ```groovy
-compile("net.dreamlu:JFinal-event:3.1.0")
+compile("net.dreamlu:JFinal-event:3.1.1")
 ```
 
 ### `注意`
 
 * `3.0.0` 由于使用了 `Annotation Processor` 技术，Idea 需要开启注解处理器。
-* 如果你的开发工具不支持 `Annotation Processor`，3.1.0 可开启类扫描。
+* 如果你的开发工具不支持 `Annotation Processor`，3.1.1 可开启类扫描。
 
 ## License
 

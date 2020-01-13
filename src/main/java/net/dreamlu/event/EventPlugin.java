@@ -44,6 +44,14 @@ public class EventPlugin implements IPlugin {
 	 * 类扫描，默认不开启
 	 */
 	private boolean classScan = false;
+	/**
+	 * 默认不扫描jar包
+ 	 */
+	private boolean scanJar = false;
+	/**
+	 * 类扫描包
+	 */
+	private String scanPackage = "";
 
 	/**
 	 * 构造EventPlugin
@@ -130,6 +138,25 @@ public class EventPlugin implements IPlugin {
 		return this;
 	}
 
+	/**
+	 * 从jar包中搜索监听器
+	 * @return EventPlugin
+	 */
+	public EventPlugin scanJar() {
+		this.scanJar = true;
+		return this;
+	}
+
+	/**
+	 * 指定扫描的包
+	 * @param scanPackage 指定扫描的包
+	 * @return EventPlugin
+	 */
+	public EventPlugin scanPackage(String scanPackage) {
+		this.scanPackage = scanPackage;
+		return this;
+	}
+
 	@Override
 	public boolean start() {
 		create();
@@ -149,7 +176,7 @@ public class EventPlugin implements IPlugin {
 		if (classScan) {
 			// 扫描注解 {@code EventListener}
 			MethodEventFilter filter = new MethodEventFilter(EventListener.class);
-			ClassUtil.scanAllPackage(true, filter);
+			ClassUtil.scanPackage(scanPackage, scanJar, filter);
 			// 类扫描出来的
 			methodSet.addAll(filter.getListeners());
 		}

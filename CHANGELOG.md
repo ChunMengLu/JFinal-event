@@ -1,4 +1,8 @@
 ## 更新说明
+## 2020-01-10 v3.1.1
+* 支持老的 `plugin.scanJar();`
+* 支持老的 `plugin.scanPackage("com.xxx.包名");`
+
 ## 2020-01-10 v3.1.0
 * 升级到jfinal 4.8。
 * google-auto 调整为自家的 mica-auto。

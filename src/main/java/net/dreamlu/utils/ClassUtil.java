@@ -53,16 +53,6 @@ public final class ClassUtil {
 	private static final String PATH_FILE_PRE = "file:";
 
 	/**
-	 * 扫描所有包路径下所有指定类的子类
-	 *
-	 * @param inJar       在jar包中查找
-	 * @param classFilter class过滤器，过滤掉不需要的class
-	 */
-	public static void scanAllPackage(boolean inJar, ClassFilter classFilter) {
-		scanPackage(null, inJar, classFilter);
-	}
-
-	/**
 	 * 扫面包路径下满足class过滤器条件的所有class文件
 	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException
 	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改
