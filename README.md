@@ -95,7 +95,8 @@ public class Test {
 请参考[详解Spring事件驱动模型](http://jinnianshilongnian.iteye.com/blog/1902886)
 
 jar包下载
-http://central.maven.org/maven2/net/dreamlu/JFinal-event/
+https://repo1.maven.org/maven2/net/dreamlu/JFinal-event/
+
 
 以上版本均已上传到maven仓库~
 
