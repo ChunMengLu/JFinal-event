@@ -7,10 +7,9 @@
 
 专为JFinal设计，无任何第三方依赖，小巧玲珑。
 
-## **目录说明**
-1. JFinal-event，JFinal-event 源码。
-2. JFinal-event-demo，JFinal-event 使用 demo。
-3. JFinal-eventx，Idea 插件。
+[更新记录](CHANGELOG.md)
+
+:laughing: `JFinal-event` 插件，`老版本`使用请查看[文档 wiki](http://git.oschina.net/596392912/JFinal-event/wikis/home)
 
 ## 初始化插件
 ```java

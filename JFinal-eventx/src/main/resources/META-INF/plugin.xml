@@ -1,0 +1,29 @@
+<idea-plugin url="https://github.com/lets-mica/mica-pi">
+    <id>net.dreamlu.event</id>
+    <name>JFinal-eventx</name>
+    <version>0.0.1</version>
+    <vendor email="596392912@qq.com" url="https://www.dreamlu.net/">如梦技术</vendor>
+
+    <description><![CDATA[
+      JFinal-event idea plugin.<br>
+      <em>JFinal-event</em> idea auxiliary plugin.
+    ]]></description>
+
+    <change-notes><![CDATA[
+      <h4>2020.02.08</h4>
+      <p>JFinal-eventx v0.0.1</p>
+      <ul>
+          <li>1. Tag of event post and listener.</li>
+          <li>2. Jump of event post and listener.</li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="192.*" until-build="*.*"/>
+    <extensions defaultExtensionNs="com.intellij">
+        <semContributor implementation="net.dreamlu.event.plugin.jam.EventSemContributor"/>
+        <codeInsight.lineMarkerProvider language="UAST" order="last"
+                                        implementationClass="net.dreamlu.event.plugin.annotator.EventLineMarkerAnnotator"/>
+    </extensions>
+
+</idea-plugin>

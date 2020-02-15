@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id "org.jetbrains.intellij" version "0.4.15"
+}
+
+ext {
+    javaVersion = JavaVersion.VERSION_1_8
+    lombokVersion = "1.18.10"
+}
+
+group 'org.intellij.sdk'
+version '0.0.1'
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+repositories {
+    mavenLocal()
+    maven { url "https://maven.aliyun.com/repository/public" }
+    mavenCentral()
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    plugins = ['java']
+    pluginName = 'JFinal-eventx'
+    localPath = "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2019.3.2"
+    sandboxDirectory = "${rootProject.rootDir}/.sandbox"
+    updateSinceUntilBuild = false
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
+patchPluginXml {
+    version = project.version
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
