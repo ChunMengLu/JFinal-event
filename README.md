@@ -10,7 +10,7 @@
 ## **目录说明**
 1. JFinal-event，JFinal-event 源码。
 2. JFinal-event-demo，JFinal-event 使用 demo。
-3. JFinal-eventx，Idea 插件。
+3. JFinal-eventx，Idea 插件 [试用下载](https://gitee.com/596392912/JFinal-event/attach_files) 
 
 ## 初始化插件
 ```java
