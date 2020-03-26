@@ -1,4 +1,4 @@
-<idea-plugin url="https://github.com/lets-mica/mica-pi">
+<idea-plugin url="https://github.com/ChunMengLu/JFinal-event">
     <id>net.dreamlu.event</id>
     <name>JFinal-eventx</name>
     <version>0.0.1</version>
@@ -19,7 +19,9 @@
     ]]>
     </change-notes>
 
-    <idea-version since-build="192.*" until-build="*.*"/>
+    <depends>com.intellij.modules.java</depends>
+
+    <idea-version since-build="192" until-build="193.*"/>
     <extensions defaultExtensionNs="com.intellij">
         <semContributor implementation="net.dreamlu.event.plugin.jam.EventSemContributor"/>
         <codeInsight.lineMarkerProvider language="UAST" order="last"

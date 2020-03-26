@@ -8,8 +8,8 @@ ext {
     lombokVersion = "1.18.10"
 }
 
-group 'org.intellij.sdk'
-version '0.0.1'
+group = GROUPID
+version = VERSION
 
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
@@ -22,9 +22,12 @@ repositories {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
+//    version '2019.3.4'
+//    type 'IU'
     plugins = ['java']
     pluginName = 'JFinal-eventx'
-    localPath = "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2019.3.2"
+    localPath = "/Applications/IntelliJ IDEA.app"
+//    localPath = "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2019.3.2"
     sandboxDirectory = "${rootProject.rootDir}/.sandbox"
     updateSinceUntilBuild = false
 }
@@ -40,4 +43,8 @@ patchPluginXml {
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+publishPlugin {
+    token System.getenv("IJ_PLUGIN_TOKEN") ?: IJ_PLUGIN_TOKEN
 }

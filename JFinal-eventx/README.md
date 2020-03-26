@@ -1,17 +1,25 @@
 # JFinal event idea 插件
 
 ## 功能
+
 1. Event post 和监听器的标记。
 2. Event post 和监听器的跳转。
 
 ## 效果
+
 ![效果图1](docs/jfinal-eventx-001.png)
 ![效果图1](docs/jfinal-eventx-002.png)
 
+## 插件地址
+
+https://plugins.jetbrains.com/plugin/14002-jfinal-eventx
+
 ## 鸣谢
+
 **由衷感谢**参与此次 `JFinal-event` **Idea 插件众筹**的伙伴们。
 
 ## 众筹详情
+
 | 昵称         | 金额              |
 | ------------ | ----------------- |
 | LINQI        | ￥20              |
@@ -26,3 +34,7 @@
 | 合计：       | ￥548             |
 
 **活动详情** 请见：https://jfinal.com/share/1973
+
+## License（LGPL v3）
+
+GNU Lesser General Public License v3.0
