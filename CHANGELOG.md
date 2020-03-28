@@ -1,6 +1,6 @@
 ## 更新说明
 ## 2020-01-10 v3.1.2
-* 完成 gitee #I195BH PayloadApplicationEvent 支持监听 ApplicationEvent 万能事件。
+* 完成 gitee #I195BH PayloadApplicationEvent 支持万能事件监听。
 
 ## 2020-01-10 v3.1.1
 * 支持老的 `plugin.scanJar();`
