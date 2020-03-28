@@ -6,9 +6,14 @@ import net.dreamlu.event.core.EventListener;
 
 public class BlogEventListener {
 
-	@EventListener(value = ApplicationEvent.class)
-	public void onSave() {
-		System.out.println("onSave");
+	@EventListener
+	public void allEvent() {
+		System.out.println("allEvent");
+	}
+
+	@EventListener
+	public void allEvent(Object event) {
+		System.out.println("allEvent:\t" + event);
 	}
 
     @EventListener(value = ApplicationEvent.class)
