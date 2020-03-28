@@ -58,6 +58,12 @@ public class AccountEvent {
 public void listenTest1Event(AccountEvent event) {
     System.out.println("AccountEvent：" + event);
 }
+
+@EventListener
+public void allEvent(Object event) {
+    // 监听所有的事件
+    System.out.println("allEvent:\t" + event);
+}
 ```
 
 ## 发送事件
