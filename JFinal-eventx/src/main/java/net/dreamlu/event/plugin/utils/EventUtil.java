@@ -101,7 +101,7 @@ public class EventUtil {
 				UCallExpression callExpression = UastUtils.getUCallExpression(expression);
 				if (callExpression != null) {
 					List<UExpression> arguments = callExpression.getValueArguments();
-					if (!arguments.isEmpty()) {
+					if (1 == arguments.size()) {
 						set.add(new PubMethodPointDescriptor(callExpression));
 					}
 				}
@@ -152,10 +152,7 @@ public class EventUtil {
 		}
 		List<String> annotationAttrs = getAnnotationValue(annotation);
 		// 1. 先过滤注解
-		boolean isAnnMatch = annotationAttrs.isEmpty() || annotationAttrs.stream().anyMatch(eventType -> {
-			// 如果注解是万能 ApplicationEvent 直接为 true
-			return EventConstant.EVENT_PARENT.equals(eventType) || InheritanceUtil.isInheritor(publishType, eventType);
-		});
+		boolean isAnnMatch = annotationAttrs.isEmpty() || annotationAttrs.stream().anyMatch(eventType -> InheritanceUtil.isInheritor(publishType, eventType));
 		// 注解就不匹配，直接跳出
 		if (!isAnnMatch) {
 			return false;
@@ -182,8 +179,6 @@ public class EventUtil {
 			return CachedValueProvider.Result.createSingleDependency(cacheValue, PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
 		});
 	}
-
-
 
 	private static List<String> getAnnotationValue(@NotNull PsiAnnotation psiAnnotation) {
 		// 注解 value
