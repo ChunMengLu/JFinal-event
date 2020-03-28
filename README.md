@@ -112,21 +112,21 @@ https://repo1.maven.org/maven2/net/dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>3.1.1</version>
+    <version>3.1.2</version>
 </dependency>
 ```
 
 ### gradle >= 5.x
 
 ```groovy
-api("net.dreamlu:JFinal-event:3.1.1")
-annotationProcessor("net.dreamlu:JFinal-event:3.1.1")
+api("net.dreamlu:JFinal-event:3.1.2")
+annotationProcessor("net.dreamlu:JFinal-event:3.1.2")
 ```
 
 ### gradle < 5.x
 
 ```groovy
-compile("net.dreamlu:JFinal-event:3.1.1")
+compile("net.dreamlu:JFinal-event:3.1.2")
 ```
 
 ### `注意`

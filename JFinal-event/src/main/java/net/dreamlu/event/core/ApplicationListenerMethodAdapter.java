@@ -25,6 +25,10 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 	private final Method method;
 	private final int paramCount;
 	private final Class<?> paramType;
+	/**
+	 * 参数为全能的类型
+	 */
+	private final boolean isAlmightyParam;
 	private final Class<?> targetClass;
 	private final List<Class<?>> declaredEventClasses;
 	private final String condition;
@@ -36,6 +40,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 		this.method = method;
 		this.paramCount = method.getParameterCount();
 		this.paramType = this.paramCount > 0 ? method.getParameterTypes()[0] : null;
+		this.isAlmightyParam = Object.class == this.paramType;
 		this.targetClass = targetClass;
 		// 事件注解上的信息
 		EventListener ann = method.getAnnotation(EventListener.class);
@@ -71,22 +76,6 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 		}
 	}
 
-	/**
-	 * 将异常抛出更加合理
-	 */
-	private void handleException(Exception e) {
-		if (e instanceof IllegalAccessException || e instanceof IllegalArgumentException
-			|| e instanceof NoSuchMethodException) {
-			throw new IllegalArgumentException(e);
-		} else if (e instanceof InvocationTargetException) {
-			throw new RuntimeException(((InvocationTargetException) e).getTargetException());
-		} else if (e instanceof RuntimeException) {
-			throw (RuntimeException) e;
-		} else {
-			throw new RuntimeException(e);
-		}
-	}
-
 	public Method getMethod() {
 		return method;
 	}
@@ -97,6 +86,10 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 
 	public Class<?> getParamType() {
 		return paramType;
+	}
+
+	public boolean isAlmightyParam() {
+		return isAlmightyParam;
 	}
 
 	public Class<?> getTargetClass() {
@@ -124,9 +117,53 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 		return "@EventListener [" + method + "]";
 	}
 
+	/**
+	 * 组合数组
+	 *
+	 * @param first  数组1
+	 * @param second 数组2
+	 * @return 组合后的数组
+	 */
 	private static List<Class<?>> join(Class<?>[] first, Class<?>[] second) {
 		Class<?>[] result = Arrays.copyOf(first, first.length + second.length);
 		System.arraycopy(second, 0, result, first.length, second.length);
 		return Arrays.asList(result);
 	}
+
+	/**
+	 * 将CheckedException转换为UncheckedException.
+	 *
+	 * @param e Throwable
+	 * @return {RuntimeException}
+	 */
+	private static RuntimeException handleException(Throwable e) {
+		if (e instanceof Error) {
+			throw (Error) e;
+		} else if (e instanceof IllegalAccessException ||
+			e instanceof IllegalArgumentException ||
+			e instanceof NoSuchMethodException) {
+			return new IllegalArgumentException(e);
+		} else if (e instanceof InvocationTargetException) {
+			return runtime(((InvocationTargetException) e).getTargetException());
+		} else if (e instanceof RuntimeException) {
+			return (RuntimeException) e;
+		} else if (e instanceof InterruptedException) {
+			Thread.currentThread().interrupt();
+		}
+		return runtime(e);
+	}
+
+	/**
+	 * 不采用 RuntimeException 包装，直接抛出，使异常更加精准
+	 *
+	 * @param throwable Throwable
+	 * @param <T>       泛型标记
+	 * @return Throwable
+	 * @throws T 泛型
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T extends Throwable> T runtime(Throwable throwable) throws T {
+		throw (T) throwable;
+	}
+
 }

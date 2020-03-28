@@ -59,8 +59,8 @@ public class EventKit {
 			if (!declaredEventClasses.isEmpty()) {
 				boolean canExec = false;
 				for (Class<?> annType : declaredEventClasses) {
-					// 2.判断注解类型，ApplicationEvent 为万能事件类型
-					if (ApplicationEvent.class.isAssignableFrom(sourceEventClass) || annType.isAssignableFrom(sourceEventClass)) {
+					// 1.1 判断注解类型，ApplicationEvent 为万能事件类型
+					if (ApplicationEvent.class == annType || annType.isAssignableFrom(sourceEventClass)) {
 						canExec = true;
 						break;
 					}
@@ -71,10 +71,15 @@ public class EventKit {
 			}
 			// 2. 判断方法参数类型
 			if (listener.getParamCount() > 0) {
+				// 2.1 ApplicationEvent 为万能事件类型
+				if (listener.isAlmightyParam()) {
+					list.add(listener);
+					continue;
+				}
 				// 方法参数事件类型
 				Class<?> paramType = listener.getParamType();
-				// 参数类型不支持跳出，ApplicationEvent 为万能事件类型
-				if (!ApplicationEvent.class.isAssignableFrom(sourceEventClass) || !paramType.isAssignableFrom(sourceEventClass)) {
+				// 2.2 参数类型不支持跳出
+				if (!paramType.isAssignableFrom(sourceEventClass)) {
 					continue;
 				}
 			}

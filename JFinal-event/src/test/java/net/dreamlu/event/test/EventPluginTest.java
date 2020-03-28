@@ -84,7 +84,7 @@ public class EventPluginTest {
 	 *
 	 * DefaultBeanFactory
 	 */
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testX1() {
 		EventPlugin plugin = new EventPlugin();
 		plugin.start();
