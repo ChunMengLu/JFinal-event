@@ -6,15 +6,16 @@
 
     <description><![CDATA[
       JFinal-event idea plugin.<br>
-      <em>JFinal-event</em> idea auxiliary plugin.
+      <em>JFinal-event</em> idea auxiliary plugin.<br>
+      <em>JFinal-event</em> is a plugin for Java Web Framework JFinal.
     ]]></description>
 
     <change-notes><![CDATA[
       <h4>2020.02.08</h4>
       <p>JFinal-eventx v0.0.1</p>
       <ul>
-          <li>1. Tag of event post and listener.</li>
-          <li>2. Jump of event post and listener.</li>
+          <li>1. Tag of JFinal-event event post and listener.</li>
+          <li>2. Jump of JFinal-event event post and listener.</li>
       </ul>
     ]]>
     </change-notes>
