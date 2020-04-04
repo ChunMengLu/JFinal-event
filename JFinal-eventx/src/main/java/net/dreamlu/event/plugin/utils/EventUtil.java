@@ -46,8 +46,8 @@ public class EventUtil {
 	}
 
 	private static boolean filterPostPoint(@NotNull PubMethodPointDescriptor descriptor,
-										  @NotNull PsiParameter[] parameters,
-										  @NotNull List<String> annotationAttrs) {
+										   @NotNull PsiParameter[] parameters,
+										   @NotNull List<String> annotationAttrs) {
 		// EventKit post publishType
 		PsiType publishType = descriptor.getPostEventType();
 		// 1. 先过滤注解
@@ -80,7 +80,7 @@ public class EventUtil {
 				descriptors.addAll(searchPublishPoints(publishEventMethod, scope));
 			}
 			Set<PubMethodPointDescriptor> cacheValue = descriptors.isEmpty() ? Collections.emptySet() : new HashSet<>(descriptors);
-			return CachedValueProvider.Result.createSingleDependency(cacheValue, PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
+			return CachedValueProvider.Result.createSingleDependency(cacheValue, PsiModificationTracker.MODIFICATION_COUNT);
 		});
 	}
 
@@ -125,7 +125,7 @@ public class EventUtil {
 			JavaPsiFacade facade = JavaPsiFacade.getInstance(project);
 			GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module);
 			PsiClass cacheClass = facade.findClass(className, scope);
-			return CachedValueProvider.Result.createSingleDependency(cacheClass, PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
+			return CachedValueProvider.Result.createSingleDependency(cacheClass, PsiModificationTracker.MODIFICATION_COUNT);
 		});
 	}
 
@@ -176,7 +176,7 @@ public class EventUtil {
 			GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module);
 			List<JamEventListener> elements = service.getJamMethodElements(JamEventListener.LISTENER_JAM_KEY, EventConstant.ANNOTATION_LISTENER, scope);
 			List<JamEventListener> cacheValue = elements.isEmpty() ? Collections.emptyList() : new ArrayList<>(elements);
-			return CachedValueProvider.Result.createSingleDependency(cacheValue, PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
+			return CachedValueProvider.Result.createSingleDependency(cacheValue, PsiModificationTracker.MODIFICATION_COUNT);
 		});
 	}
 
