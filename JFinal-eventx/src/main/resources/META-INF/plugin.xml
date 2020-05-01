@@ -22,7 +22,7 @@
 
     <depends>com.intellij.modules.java</depends>
 
-    <idea-version since-build="192" until-build="193.*"/>
+    <idea-version since-build="190.00" />
     <extensions defaultExtensionNs="com.intellij">
         <semContributor implementation="net.dreamlu.event.plugin.jam.EventSemContributor"/>
         <codeInsight.lineMarkerProvider language="UAST" order="last"
