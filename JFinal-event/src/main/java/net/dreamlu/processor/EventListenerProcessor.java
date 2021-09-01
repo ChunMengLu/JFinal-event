@@ -1,5 +1,6 @@
 package net.dreamlu.processor;
 
+import com.jfinal.kit.StrKit;
 import net.dreamlu.event.core.EventListener;
 import net.dreamlu.mica.auto.annotation.AutoService;
 
@@ -97,7 +98,18 @@ public class EventListenerProcessor extends AbstractProcessor {
 		}
 		Filer filer = processingEnv.getFiler();
 		try {
-			// 1. spring.factories
+			// 1. read dream.events
+			try {
+				FileObject existingFile = filer.getResource(StandardLocation.CLASS_OUTPUT, "", DREAM_EVENTS_RESOURCE_LOCATION);
+				// 查找是否已经存在 spring.factories
+				printMessage(Kind.NOTE, "Looking for existing dream.events file at " + existingFile.toUri());
+				Set<String> existingSet = readDreamEventsFile(existingFile);
+				printMessage(Kind.NOTE, "Existing dream.events entries: " + existingSet);
+				dreamEventsClazzSet.addAll(existingSet);
+			} catch (IOException e) {
+				printMessage(Kind.ERROR, "dream.events resource file did not already exist.");
+			}
+			// 2. writer dream.events
 			FileObject eventFile = filer.createResource(StandardLocation.CLASS_OUTPUT, "", DREAM_EVENTS_RESOURCE_LOCATION);
 			OutputStream outputStream = eventFile.openOutputStream();
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8));
@@ -114,6 +126,22 @@ public class EventListenerProcessor extends AbstractProcessor {
 		} catch (IOException e) {
 			fatalError(e);
 		}
+	}
+
+	private static Set<String> readDreamEventsFile(FileObject fileObject) throws IOException {
+		Set<String> clazzSet = new LinkedHashSet<>();
+		try (
+			InputStream input = fileObject.openInputStream();
+			InputStreamReader inputStreamReader = new InputStreamReader(input);
+			BufferedReader reader = new BufferedReader(inputStreamReader);
+		) {
+			reader.lines().forEach(line -> {
+				if (StrKit.notBlank(line) && !line.trim().startsWith("#")) {
+					clazzSet.add(line.trim());
+				}
+			});
+		}
+		return clazzSet;
 	}
 
 	@Override
