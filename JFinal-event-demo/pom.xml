@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
-            <version>1.7.29</version>
+            <version>1.7.32</version>
             <!-- 打包前改成 provided，此处使用 compile 仅为支持 IDEA -->
             <scope>compile</scope>
         </dependency>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <version>8.0.25</version>
         </dependency>
         <!-- druid 数据源连接池 -->
         <dependency>
@@ -69,18 +69,18 @@
         <dependency>
             <groupId>com.jfinal</groupId>
             <artifactId>cos</artifactId>
-            <version>2019.8</version>
+            <version>2020.4</version>
         </dependency>
         <!-- JFinal-event -->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>JFinal-event</artifactId>
-            <version>3.1.1</version>
+            <version>3.1.3</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>17.0.0</version>
+            <version>22.0.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

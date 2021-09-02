@@ -118,27 +118,27 @@ https://repo1.maven.org/maven2/net/dreamlu/JFinal-event/
 <dependency>
     <groupId>net.dreamlu</groupId>
     <artifactId>JFinal-event</artifactId>
-    <version>3.1.2</version>
+    <version>3.1.3</version>
 </dependency>
 ```
 
 ### gradle >= 5.x
 
 ```groovy
-api("net.dreamlu:JFinal-event:3.1.2")
-annotationProcessor("net.dreamlu:JFinal-event:3.1.2")
+api("net.dreamlu:JFinal-event:3.1.3")
+annotationProcessor("net.dreamlu:JFinal-event:3.1.3")
 ```
 
 ### gradle < 5.x
 
 ```groovy
-compile("net.dreamlu:JFinal-event:3.1.2")
+compile("net.dreamlu:JFinal-event:3.1.3")
 ```
 
 ### `注意`
 
 * `3.0.0` 由于使用了 `Annotation Processor` 技术，Idea 需要开启注解处理器。
-* 如果你的开发工具不支持 `Annotation Processor`，3.1.1 可开启类扫描。
+* 如果你的开发工具不支持 `Annotation Processor`，3.1.3 可开启类扫描。
 
 ## License
 

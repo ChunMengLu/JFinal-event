@@ -1,4 +1,9 @@
 ## 更新说明
+## 2021-09-02 v3.1.3
+- :sparkles: 代码优化。
+- :bug: 修复注解处理器增量编译问题。
+- :arrow_up: 和依赖升级。
+
 ## 2020-01-10 v3.1.2
 * 完成 gitee #I195BH PayloadApplicationEvent 支持万能事件监听。
 
