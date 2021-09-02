@@ -5,6 +5,13 @@ import net.dreamlu.event.core.EventListener;
 
 public class Test2Listener {
 
+
+	@EventListener
+	public void test3(TestXEvent event) {
+		Integer xx = (Integer) event.getSource();
+		System.out.println(Thread.currentThread().getName() + " " + this.getClass() + " " + "\tsource:" + xx);
+	}
+
 	@EventListener(order = 1, value = Test1Event.class)
 	public void xxxx(ApplicationEvent<Object> event) {
 		Object xx = event.getSource();

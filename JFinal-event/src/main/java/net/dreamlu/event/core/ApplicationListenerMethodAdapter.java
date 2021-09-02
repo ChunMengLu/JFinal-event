@@ -72,7 +72,7 @@ public class ApplicationListenerMethodAdapter implements ApplicationListener<Obj
 			}
 			this.method.invoke(bean, args);
 		} catch (Exception e) {
-			handleException(e);
+			throw handleException(e);
 		}
 	}
 

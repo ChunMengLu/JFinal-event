@@ -1,7 +1,6 @@
 package net.dreamlu.event.test;
 
 import net.dreamlu.event.core.ApplicationEvent;
-import net.dreamlu.event.core.EventListener;
 
 /**
  * 测试 不含有默认构造器的
@@ -17,9 +16,4 @@ public class TestXEvent extends ApplicationEvent<Object> {
 		super(source);
 	}
 
-	@EventListener
-	public void test3(TestXEvent event) {
-		Integer xx = (Integer) event.getSource();
-		System.out.println(Thread.currentThread().getName() + " " + this.getClass() + " " + "\tsource:" + xx);
-	}
 }

@@ -21,7 +21,7 @@ public class ConcurrentMultiMap<K, V> {
 		map = new ConcurrentHashMap<>();
 	}
 
-	private List<V> createlist() {
+	private List<V> createList() {
 		return new ArrayList<>();
 	}
 
@@ -35,7 +35,7 @@ public class ConcurrentMultiMap<K, V> {
 	public boolean put(K key, V value) {
 		List<V> list = map.get(key);
 		if (list == null) {
-			list = createlist();
+			list = createList();
 			if (list.add(value)) {
 				map.put(key, list);
 				return true;
